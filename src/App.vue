@@ -14,6 +14,16 @@ const gameStore = useGameStore();
 const saveStore = useSaveStore();
 
 onMounted(() => {
+  // 清除旧格式的存档数据
+  try {
+    const savedData = localStorage.getItem('hacker_game_saves');
+    if (savedData && !savedData.includes('"saves"')) {
+      localStorage.removeItem('hacker_game_saves');
+    }
+  } catch (error) {
+    console.error('Failed to check old saves:', error);
+  }
+  
   saveStore.loadSavesFromStorage();
 });
 </script>

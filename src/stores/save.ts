@@ -8,23 +8,48 @@ const MAX_SAVES = 5;
 
 interface SaveState {
   saves: SaveSlot[];
+  nextId: number;
 }
 
 export const useSaveStore = defineStore('save', {
   state: (): SaveState => ({
-    saves: []
+    saves: [],
+    nextId: 1
   }),
 
   actions: {
     loadSavesFromStorage() {
-      const savedData = localStorage.getItem(SAVE_KEY);
-      if (savedData) {
-        this.saves = JSON.parse(savedData);
+      try {
+        const savedData = localStorage.getItem(SAVE_KEY);
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          // 验证数据格式
+          if (data && typeof data === 'object') {
+            this.saves = Array.isArray(data.saves) ? data.saves : [];
+            this.nextId = typeof data.nextId === 'number' ? data.nextId : 1;
+          } else {
+            // 如果数据格式不正确，重置状态
+            this.saves = [];
+            this.nextId = 1;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load saves:', error);
+        // 出错时重置状态
+        this.saves = [];
+        this.nextId = 1;
       }
     },
 
     savesToStorage() {
-      localStorage.setItem(SAVE_KEY, JSON.stringify(this.saves));
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify({
+          saves: this.saves,
+          nextId: this.nextId
+        }));
+      } catch (error) {
+        console.error('Failed to save:', error);
+      }
     },
 
     createSave(name: string): number {
@@ -40,7 +65,7 @@ export const useSaveStore = defineStore('save', {
         commandHistory: terminalStore.commandHistory
       };
 
-      const id = this.saves.length + 1;
+      const id = this.nextId++;
       this.saves.push({ id, name, save });
       
       // 保持最大存档数量
@@ -59,23 +84,28 @@ export const useSaveStore = defineStore('save', {
       const gameStore = useGameStore();
       const terminalStore = useTerminalStore();
 
-      // 恢复游戏状态
-      gameStore.currentLevel = saveData.save.currentLevel;
-      gameStore.currentDirectory = saveData.save.currentDirectory;
-      gameStore.inventory = [...saveData.save.inventory];
-      gameStore.completedTasks = [...saveData.save.completedTasks];
-      
-      // 确保 commandHistory 存在且是数组
-      if (Array.isArray(saveData.save.commandHistory)) {
-        terminalStore.setCommandHistory(saveData.save.commandHistory);
-      } else {
-        terminalStore.setCommandHistory([]);
-      }
+      try {
+        // 恢复游戏状态
+        gameStore.currentLevel = saveData.save.currentLevel;
+        gameStore.currentDirectory = saveData.save.currentDirectory;
+        gameStore.inventory = Array.isArray(saveData.save.inventory) ? [...saveData.save.inventory] : [];
+        gameStore.completedTasks = Array.isArray(saveData.save.completedTasks) ? [...saveData.save.completedTasks] : [];
+        
+        // 确保 commandHistory 存在且是数组
+        if (Array.isArray(saveData.save.commandHistory)) {
+          terminalStore.setCommandHistory([...saveData.save.commandHistory]);
+        } else {
+          terminalStore.setCommandHistory([]);
+        }
 
-      // 清除当前终端历史
-      terminalStore.clearHistory();
-      
-      return true;
+        // 清除当前终端历史
+        terminalStore.clearHistory();
+        
+        return true;
+      } catch (error) {
+        console.error('Failed to load save:', error);
+        return false;
+      }
     },
 
     deleteSave(id: number) {
@@ -87,10 +117,20 @@ export const useSaveStore = defineStore('save', {
     },
 
     getSaves(): SaveSlot[] {
-      return this.saves.map(save => ({
-        ...save,
-        name: `${save.name} (Level ${save.save.currentLevel})`
-      }));
+      try {
+        // 确保 saves 是数组
+        const validSaves = Array.isArray(this.saves) ? this.saves : [];
+        // 按 ID 降序排序，使最新的存档显示在前面
+        return [...validSaves]
+          .sort((a, b) => b.id - a.id)
+          .map(save => ({
+            ...save,
+            name: `${save.name} (Level ${save.save.currentLevel})`
+          }));
+      } catch (error) {
+        console.error('Failed to get saves:', error);
+        return [];
+      }
     }
   }
 }); 

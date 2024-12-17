@@ -186,6 +186,16 @@ export const unlockCommand: Command = {
         }
         break;
 
+      case 4:
+        if (!gameStore.completedTasks.includes('repair_data')) {
+          return '你需要先修复损坏的数据文件！';
+        }
+        if (password === 'D@t@B@se_2024') {
+          gameStore.completeLevel();
+          return '密码正确！欢迎进入下一关...';
+        }
+        break;
+
       // ... 其他关卡的逻辑
     }
 
@@ -219,6 +229,13 @@ export const hintCommand: Command = {
 6. 进入目录后使用 cat 命令查看文件内容
 7. 将两个密钥碎片按 XXXX-XXXX 格式组合
 8. 最后使用 unlock 命令输入完整密钥`;
+      case 4:
+        return `提示：
+1. 使用 scan corrupted_data.db 分析损坏的文件
+2. 检查 logs 目录下的日志文件，找出数据库损坏的具体时间
+3. 在 backup 目录中找到损坏时间之前的最后一个备份
+4. 使用 repair 命令修复文件：repair corrupted_data.db backup_0401.bak
+5. 修复后的数据就是解锁密码`;
       default:
         return '当前关卡暂无提示';
     }
@@ -317,5 +334,62 @@ export const deleteSaveCommand: Command = {
     const saveStore = useSaveStore();
     saveStore.deleteSave(saveId);
     return `存档 #${saveId} 已删除`;
+  }
+};
+
+export const scanCommand: Command = {
+  name: 'scan',
+  description: '扫描分析文件',
+  execute: (args: string[]) => {
+    if (!args.length) {
+      return 'Usage: scan <filename>';
+    }
+
+    const gameStore = useGameStore();
+    const levelData = getCurrentLevelData(gameStore.currentLevel);
+    const filename = args[0];
+
+    if (!levelData.fileContents[filename]) {
+      return `scan: ${filename}: 文件不存在`;
+    }
+
+    if (filename === 'corrupted_data.db') {
+      gameStore.completeTask('analyze_corrupt');
+      return `扫描结果：
+1. 文件状态：已损坏
+2. 损坏时间：2024-04-01 23:59:59
+3. 损坏部分：字符替换
+4. 建议操作：使用正确的备份文件修复
+5. 备份时间：在损坏发生之前`;
+    }
+
+    return `扫描结果：文件完整，无需修复`;
+  }
+};
+
+export const repairCommand: Command = {
+  name: 'repair',
+  description: '修复损坏的文件',
+  execute: (args: string[]) => {
+    if (args.length !== 2) {
+      return 'Usage: repair <源文件> <备份文件>';
+    }
+
+    const gameStore = useGameStore();
+    const levelData = getCurrentLevelData(gameStore.currentLevel);
+    const [sourceFile, backupFile] = args;
+
+    if (!levelData.fileContents[sourceFile] || !levelData.fileContents[backupFile]) {
+      return '指定的文件不存在';
+    }
+
+    if (sourceFile === 'corrupted_data.db' && backupFile === 'backup_0401.bak') {
+      gameStore.completeTask('repair_data');
+      return `修复成功！
+原始数据已恢复：D@t@B@se_2024
+这就是你需要的密码！`;
+    }
+
+    return '修复失败：备份文件不匹配或已损坏';
   }
 }; 
