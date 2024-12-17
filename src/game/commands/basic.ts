@@ -16,7 +16,11 @@ export const helpCommand: Command = {
   clear - 清除终端屏幕
   decode <text> - 解密文本
   unlock <密码> - 使用密码解锁下一关
-  status - 查看当前任务状态
+  scan <文件> - 扫描分析文件
+  repair <源文件> <备份文件> - 修复损坏的文件
+  ping <IP> - 测试网络连接
+  connect <IP> <用户名> <密码> - 连接服务器
+  download <文件名> - 下载服务器文件
   save <名称> - 保存游戏进度
   load [ID] - 查看或加载存档
   deletesave <ID> - 删除存档`;
@@ -121,8 +125,9 @@ export const catCommand: Command = {
       gameStore.markSecretFound();
     }
 
-    // 如果查看的是密钥碎片，标记任务完成
-    if (filename === 'key_fragment_1' || filename === 'key_fragment_2') {
+    // 如果查看了第三关的关键文件，标记任务完成
+    if (gameStore.currentLevel === 3 && 
+        (filename === 'diary.txt' || filename === 'access_log.txt' || filename === '.private')) {
       gameStore.completeTask('find_key');
     }
     
@@ -178,7 +183,7 @@ export const unlockCommand: Command = {
       case 3:
         // 第三关的逻辑
         if (!gameStore.completedTasks.includes('find_key')) {
-          return '你需要先找到密钥碎片！';
+          return '你需要先查看相关文件获取密码线索！';
         }
         if (password === 'HACK-0401') {
           gameStore.completeLevel();
@@ -191,6 +196,16 @@ export const unlockCommand: Command = {
           return '你需要先修复损坏的数据文件！';
         }
         if (password === 'D@t@B@se_2024') {
+          gameStore.completeLevel();
+          return '密码正确！欢迎进入下一关...';
+        }
+        break;
+
+      case 5:
+        if (!gameStore.completedTasks.includes('get_data')) {
+          return '你需要先从服务器下载数据！';
+        }
+        if (password === 'C0nnected@2024') {
           gameStore.completeLevel();
           return '密码正确！欢迎进入下一关...';
         }
@@ -391,5 +406,76 @@ export const repairCommand: Command = {
     }
 
     return '修复失败：备份文件不匹配或已损坏';
+  }
+};
+
+export const pingCommand: Command = {
+  name: 'ping',
+  description: '测试网络连接',
+  execute: (args: string[]) => {
+    if (!args.length) {
+      return 'Usage: ping <IP>';
+    }
+
+    const ip = args[0];
+    if (ip === '192.168.1.200') {
+      return `正在 Ping ${ip}...
+来自 192.168.1.200 的回复: 时间<1ms
+来自 192.168.1.200 的回复: 时间<1ms
+来自 192.168.1.200 的回复: 时间<1ms
+
+192.168.1.200 的 Ping 统计信息:
+    数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
+往返行程的估计时间(以毫秒为单位):
+    最短 = 0ms，最长 = 1ms，平均 = 0ms`;
+    }
+
+    return `Ping 请求找不到主机 ${ip}。请检查该名称，然后重试。`;
+  }
+};
+
+export const connectCommand: Command = {
+  name: 'connect',
+  description: '连接远程服务器',
+  execute: (args: string[]) => {
+    if (args.length !== 3) {
+      return 'Usage: connect <IP> <username> <password>';
+    }
+
+    const gameStore = useGameStore();
+    const [ip, username, password] = args;
+
+    if (ip === '192.168.1.200' && username === 'admin' && password === 'Netw0rk@2024') {
+      gameStore.completeTask('connect_server');
+      return '连接成功！服务器已就绪。\n可以使用 download 命令下载数据。';
+    }
+
+    return '连接失败：认证错误。请检查 IP、用户名和密码。';
+  }
+};
+
+export const downloadCommand: Command = {
+  name: 'download',
+  description: '下载服务器数据',
+  execute: (args: string[]) => {
+    if (!args.length) {
+      return 'Usage: download <filename>';
+    }
+
+    const gameStore = useGameStore();
+    if (!gameStore.completedTasks.includes('connect_server')) {
+      return '错误：未连接到服务器！请先使用 connect 命令建立连接。';
+    }
+
+    const filename = args[0];
+    if (filename === 'secret_data') {
+      gameStore.completeTask('get_data');
+      return `正在下载 ${filename}...
+下载完成！
+文件内容：C0nnected@2024
+这是通关密码！`;
+    }
+
+    return `错误：文件 '${filename}' 不存在或无法访问。`;
   }
 }; 

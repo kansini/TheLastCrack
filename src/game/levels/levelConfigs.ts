@@ -20,7 +20,7 @@ export const levelConfigs: Record<number, LevelData> = {
     fileContents: {
       'welcome.txt': '欢迎来到终端世界！\n你的第一个任务是找到隐藏在某处的秘密文件。\n提示：并不是所有文件都会直接显示...',
       '.secret': '恭喜你找到了隐藏文件！\n这是你的第一步，接下来的挑战会更加有趣。\n密码提示：MOON_LIGHT',
-      'intro.md': '# 终端使用指南\n\n在这个世界中，使用各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
+      'intro.md': '# 终端使用指南\n\n在这个世界中，���用各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
       'guide.txt': '记住，在终端中，以 . 开头的文件通常是隐藏文件。\n使用 ls -a 可以查看所有文件，包括隐藏文件。',
       'day1.txt': '今天是我的第一天，还在适应这个系统。\n导师说要特别注意隐藏文件...',
       'reminder.txt': '备忘：\n1. 检查所有可能的位置\n2. 留意文件中的特殊提示\n3. 记录找到的密码',
@@ -40,7 +40,7 @@ export const levelConfigs: Record<number, LevelData> = {
     objectives: [
       '找到加密的信息',
       '使用解密工具破解密码',
-      '使用解密后的密钥访问加密文件夹'
+      '使用解密后的密钥���问加密文件夹'
     ],
     requiredTasks: ['decode_text'],
     fileSystem: {
@@ -107,7 +107,7 @@ export const levelConfigs: Record<number, LevelData> = {
   4: {
     id: 4,
     title: '数据恢复',
-    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个数据库文件被损坏，但幸运的是存在备份。',
+    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个数据库文件被��坏，但幸运的是存在备份。',
     objectives: [
       '分析损坏的数据文件',
       '找到并使用正确的备份文件',
@@ -138,6 +138,50 @@ export const levelConfigs: Record<number, LevelData> = {
       '比较不同时间的备份文件',
       '使用 scan 命令分析损坏的文件',
       '使用正确的备份文件进行修复'
+    ]
+  },
+
+  5: {
+    id: 5,
+    title: '网络连接',
+    description: '这一关你需要建立网络连接并从远程服务器获取重要数据。系统管理员留下了一些网络配置文件。',
+    objectives: [
+      '配置网络连接',
+      '连接远程服务器',
+      '获取服务器数据',
+      '破解数据加密'
+    ],
+    requiredTasks: ['config_network', 'connect_server', 'get_data'],
+    fileSystem: {
+      '~': ['readme.txt', 'network', 'remote', 'config'],
+      '~/network': ['ifconfig.conf', 'connection.log', 'ping.exe'],
+      '~/remote': ['server_list.txt', 'connect.exe', 'download.exe'],
+      '~/config': ['network.conf', '.credentials', 'settings.json']
+    },
+    fileContents: {
+      'readme.txt': '网络连接指南：\n1. 检查网络配置文件\n2. 使用正确的凭据连接服务器\n3. 下载加密数据\n\n提示：配置文件可能包含默认密码',
+      
+      // network 目录文件
+      'ifconfig.conf': '网络配置：\nIP: 192.168.1.100\nMASK: 255.255.255.0\nGATEWAY: 192.168.1.1\nSERVER: 192.168.1.200',
+      'connection.log': '连接日志：\n[成功] 本地网络配置加载完成\n[错误] 远程连接失败：需要认证\n[提示] 默认用户名：admin',
+      'ping.exe': '[系统提示] 这是一个网络测试工具。使用方法：ping <IP地址>',
+      
+      // remote 目录文件
+      'server_list.txt': '可用服务器列表：\n1. 192.168.1.200 (主服务器)\n2. 192.168.1.201 (备用服务器)\n\n注意：使用 connect 命令连接服务器',
+      'connect.exe': '[系统提示] 这是一个远程连接工具。使用方法：connect <IP> <用户名> <密码>',
+      'download.exe': '[系统提示] 这是一个数据下载工具。使用方法：download <文件名>',
+      
+      // config 目录文件
+      'network.conf': '系统配置：\nHOSTNAME: local-machine\nDOMAIN: internal.net\nDEFAULT_USER: admin\nDEFAULT_PASS: Netw0rk@2024',
+      '.credentials': '加密凭据：\n用户名：admin\n密码：Netw0rk@2024\n\n警告：请勿泄露！',
+      'settings.json': '{\n  "network": {\n    "timeout": 30,\n    "retries": 3,\n    "auth_required": true\n  }\n}'
+    },
+    hints: [
+      '先使用 ping 命令测试服务器连通性',
+      '检查配置文件找到登录凭据',
+      '使用 connect 命令连接服务器',
+      '连接成功后使用 download 命令下载数据',
+      '下载的数据就是通关密码'
     ]
   }
 }; 

@@ -33,7 +33,21 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, nextTick } from 'vue';
 import { useTerminalStore } from '@/stores/terminal';
-import { helpCommand, lsCommand, cdCommand, catCommand, clearCommand, unlockCommand, decodeCommand, hintCommand, saveCommand, loadCommand, deleteSaveCommand } from '@/game/commands/basic';
+import { 
+  helpCommand, 
+  lsCommand, 
+  cdCommand, 
+  catCommand, 
+  clearCommand, 
+  unlockCommand,
+  decodeCommand,
+  hintCommand,
+  saveCommand,
+  loadCommand,
+  deleteSaveCommand,
+  scanCommand,
+  repairCommand
+} from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
 // 注册命令
@@ -48,6 +62,8 @@ gameEngine.registerCommand(hintCommand);
 gameEngine.registerCommand(saveCommand);
 gameEngine.registerCommand(loadCommand);
 gameEngine.registerCommand(deleteSaveCommand);
+gameEngine.registerCommand(scanCommand);
+gameEngine.registerCommand(repairCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');
