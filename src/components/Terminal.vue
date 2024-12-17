@@ -46,7 +46,15 @@ import {
   loadCommand,
   deleteSaveCommand,
   scanCommand,
-  repairCommand
+  repairCommand,
+  pingCommand,
+  connectCommand,
+  downloadCommand,
+  psCommand,
+  topCommand,
+  analyzeCommand,
+  killCommand,
+  restoreCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -64,6 +72,14 @@ gameEngine.registerCommand(loadCommand);
 gameEngine.registerCommand(deleteSaveCommand);
 gameEngine.registerCommand(scanCommand);
 gameEngine.registerCommand(repairCommand);
+gameEngine.registerCommand(pingCommand);
+gameEngine.registerCommand(connectCommand);
+gameEngine.registerCommand(downloadCommand);
+gameEngine.registerCommand(psCommand);
+gameEngine.registerCommand(topCommand);
+gameEngine.registerCommand(analyzeCommand);
+gameEngine.registerCommand(killCommand);
+gameEngine.registerCommand(restoreCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');

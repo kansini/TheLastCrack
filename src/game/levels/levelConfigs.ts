@@ -20,7 +20,7 @@ export const levelConfigs: Record<number, LevelData> = {
     fileContents: {
       'welcome.txt': '欢迎来到终端世界！\n你的第一个任务是找到隐藏在某处的秘密文件。\n提示：并不是所有文件都会直接显示...',
       '.secret': '恭喜你找到了隐藏文件！\n这是你的第一步，接下来的挑战会更加有趣。\n密码提示：MOON_LIGHT',
-      'intro.md': '# 终端使用指南\n\n在这个世界中，���用各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
+      'intro.md': '# 终端使用指南\n\n在这个世界中，���各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
       'guide.txt': '记住，在终端中，以 . 开头的文件通常是隐藏文件。\n使用 ls -a 可以查看所有文件，包括隐藏文件。',
       'day1.txt': '今天是我的第一天，还在适应这个系统。\n导师说要特别注意隐藏文件...',
       'reminder.txt': '备忘：\n1. 检查所有可能的位置\n2. 留意文件中的特殊提示\n3. 记录找到的密码',
@@ -40,7 +40,7 @@ export const levelConfigs: Record<number, LevelData> = {
     objectives: [
       '找到加密的信息',
       '使用解密工具破解密码',
-      '使用解密后的密钥���问加密文件夹'
+      '使用解密的密钥问加���文件夹'
     ],
     requiredTasks: ['decode_text'],
     fileSystem: {
@@ -86,7 +86,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // system 目录文件
       'permissions.md': '文件权限说明：\n- r: 读取权限\n- w: 写入权限\n- x: 执行权限\n\n重要提示：\n1. 密钥的第一部分是一个常见的黑客术语\n2. 使用 ls -a 命令可以查看隐藏文件',
       'access_log.txt': '访问记录：\n[警告] 未授权访问尝试\n[提示] 密钥格式：XXXX-XXXX\n[提示] 第二部分是一个4位数字，看起来像日期格式\n[记录] 系统安装日期：04/01',
-      'protected_data.enc': '此文件已加密。\n需要完整的密钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
+      'protected_data.enc': '此文���已加密。\n需要完整的密钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
       
       // personal 目录文件
       'diary.txt': '今天学习了权限系统...\n管理员说密钥的第一部分是"HACK"\n这个词真形象，就是黑客的行为。\n第二部分好像是某个日期...',
@@ -107,7 +107,7 @@ export const levelConfigs: Record<number, LevelData> = {
   4: {
     id: 4,
     title: '数据恢复',
-    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个数据库文件被��坏，但幸运的是存在备份。',
+    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被坏，但幸运的是存在备份。',
     objectives: [
       '分析损坏的数据文件',
       '找到并使用正确的备份文件',
@@ -155,25 +155,26 @@ export const levelConfigs: Record<number, LevelData> = {
     fileSystem: {
       '~': ['readme.txt', 'network', 'remote', 'config'],
       '~/network': ['ifconfig.conf', 'connection.log', 'ping.exe'],
-      '~/remote': ['server_list.txt', 'connect.exe', 'download.exe'],
+      '~/remote': ['server_list.txt', 'connect.exe', 'download.exe', 'access.log'],
       '~/config': ['network.conf', '.credentials', 'settings.json']
     },
     fileContents: {
-      'readme.txt': '网络连接指南：\n1. 检查网络配置文件\n2. 使用正确的凭据连接服务器\n3. 下载加密数据\n\n提示：配置文件可能包含默认密码',
+      'readme.txt': '网络连接指南：\n1. 检查网络配置文件\n2. 使用正确的凭据连接服务器\n3. 从主服务器下载加密数据\n\n提示：\n- 查看服务器列表获取详细信息\n- 检查访问日志了解历史记录',
       
       // network 目录文件
       'ifconfig.conf': '网络配置：\nIP: 192.168.1.100\nMASK: 255.255.255.0\nGATEWAY: 192.168.1.1\nSERVER: 192.168.1.200',
-      'connection.log': '连接日志：\n[成功] 本地网络配置加载完成\n[错误] 远程连接失败：需要认证\n[提示] 默认用户名：admin',
+      'connection.log': '连接日志：\n[成功] 本地网络配置加载完成\n[错误] 远程连接失败：需要认证\n[提示] 默认用户名：kansini',
       'ping.exe': '[系统提示] 这是一个网络测试工具。使用方法：ping <IP地址>',
       
       // remote 目录文件
-      'server_list.txt': '可用服务器列表：\n1. 192.168.1.200 (主服务器)\n2. 192.168.1.201 (备用服务器)\n\n注意：使用 connect 命令连接服务器',
-      'connect.exe': '[系统提示] 这是一个远程连接工具。使用方法：connect <IP> <用户名> <密码>',
-      'download.exe': '[系统提示] 这是一个数据下载工具。使用方法：download <文件名>',
+      'server_list.txt': '可用服务器列表：\n1. 192.168.1.200 (主服务器)\n  - 状态：在线\n  - 服务：文件传输\n  - 备注：重要数据备份服务器\n2. 192.168.1.201 (备用服务器)\n  - 状态：离线\n\n注意：使用 connect 命令连接服务器',
+      'connect.exe': '[系统提示] 这是一个远程连接工具。\n使用方法：connect <IP> <用户名> <密码>',
+      'download.exe': '[系统提示] 这是一个数据下载工具。\n使用方法：download <文件名>\n\n注意：请查看访问日志了解可下载的文件',
+      'access.log': '访问记录：\n[INFO] 文件传输服务启动\n[INFO] 用户 kansini 登录成功\n[WARN] 尝试访问: private_data (拒绝访问)\n[INFO] 下载文件: secret_data (成功)\n[INFO] 文件大小: 1.2MB\n[INFO] 传输完成: 2024-04-01 12:00:00',
       
       // config 目录文件
-      'network.conf': '系统配置：\nHOSTNAME: local-machine\nDOMAIN: internal.net\nDEFAULT_USER: admin\nDEFAULT_PASS: Netw0rk@2024',
-      '.credentials': '加密凭据：\n用户名：admin\n密码：Netw0rk@2024\n\n警告：请勿泄露！',
+      'network.conf': '系统配置：\nHOSTNAME: local-machine\nDOMAIN: internal.net\nDEFAULT_USER: kansini\nDEFAULT_PASS: Netw0rk@2024\n\n可访问文件：\n- system_backup\n- secret_data (需要权限)\n- user_profile',
+      '.credentials': '加密凭据：\n用户名：kansini\n密码：Netw0rk@2024\n\n警告：请勿泄露！',
       'settings.json': '{\n  "network": {\n    "timeout": 30,\n    "retries": 3,\n    "auth_required": true\n  }\n}'
     },
     hints: [
@@ -182,6 +183,92 @@ export const levelConfigs: Record<number, LevelData> = {
       '使用 connect 命令连接服务器',
       '连接成功后使用 download 命令下载数据',
       '下载的数据就是通关密码'
+    ]
+  },
+
+  6: {
+    id: 6,
+    title: '进程管理',
+    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留下了一些系统监控工具。',
+    objectives: [
+      '查看系统进程',
+      '分析可疑进程',
+      '终止恶意进程',
+      '恢复系统状态'
+    ],
+    requiredTasks: ['analyze_process', 'kill_malware', 'system_restore'],
+    fileSystem: {
+      '~': ['readme.txt', 'system', 'monitor', 'tools'],
+      '~/system': ['processes.list', 'services.conf', 'startup.log'],
+      '~/monitor': ['top.exe', 'ps.exe', 'status.log'],
+      '~/tools': ['kill.exe', 'analyze.exe', 'restore.exe']
+    },
+    fileContents: {
+      'readme.txt': '系统监控指南：\n1. 使用 ps 命令查看进程列表\n2. 使用 top 命令监控系统资源\n3. 使用 kill 命令终止进程\n\n警告：请谨慎操作，错误的操作可能导致系统崩溃',
+      
+      // system 目录文件
+      'processes.list': '当前进程列表：\nPID   名称          CPU   内存   状态\n1     systemd        0.1%  1.2MB  运行中\n666   malware.exe   99.9% 512MB  运行中\n888   backdoor.exe  45.2% 128MB  运行中\n',
+      'services.conf': '系统服务配置：\n1. systemd - 系统核心服务\n2. network - 网络服务\n3. security - 安全服务（已停止）',
+      'startup.log': '启动日志：\n[警告] 发现可疑进程自启动\n[错误] 安全服务无法启动\n[提示] 使用 analyze 命令分析可疑进程',
+      
+      // monitor 目录���件
+      'status.log': '系统状态：\n- CPU 使用率异常\n- 内存占用过高\n- 可疑网络连接\n- 多个未知进程\n\n建议：使用 top 命令实时监控',
+      'top.exe': '[系统提示] 这是一个系统监控工具。使用方法：top',
+      'ps.exe': '[系统提示] 这是一个进程查看工具。使用方法：ps',
+      
+      // tools 目录文件
+      'kill.exe': '[系统提示] 这是一个进程终止工具。使用方法：kill <PID>',
+      'analyze.exe': '[系统提示] 这是一个进程分析工具。使用方法：analyze <PID>',
+      'restore.exe': '[系统提示] 这是一个系统恢复工具。使用方法：restore'
+    },
+    hints: [
+      '使用 ps 命令查看所有进程',
+      '注意进程的 CPU 和内存占用',
+      '分析 PID 为 666 的可疑进程',
+      '使用 kill 命令终止恶意进程',
+      '最后使用 restore 命令恢复系统'
+    ]
+  },
+
+  7: {
+    id: 7,
+    title: '权限提升',
+    description: '你需要获取更高的系统权限来访问受保护的文件。系统中存在一个可利用的漏洞。',
+    objectives: [
+      '分析系统权限',
+      '寻找提权漏洞',
+      '获取 root 权限',
+      '访问管理员文件'
+    ],
+    requiredTasks: ['check_permission', 'find_exploit', 'get_root'],
+    fileSystem: {
+      '~': ['readme.txt', 'bin', 'etc', 'usr'],
+      '~/bin': ['whoami.exe', 'sudo.exe', 'chmod.exe'],
+      '~/etc': ['passwd', 'shadow', 'sudoers'],
+      '~/usr': ['local', 'share', '.hidden']
+    },
+    fileContents: {
+      'readme.txt': '系统维护说明：\n1. 使用 whoami 查看当前用户\n2. 使用 sudo 执行特权命令\n3. 使用 chmod 修改文件权限\n\n注意：某些命令可能存在安全漏洞',
+      
+      // bin 目录文件
+      'whoami.exe': '[系统提示] 显示当前用户。使用方法：whoami\n版本：1.0.2 (存在已知漏洞)',
+      'sudo.exe': '[系统提示] 以管理员权限执行命令。使用方法：sudo <命令>',
+      'chmod.exe': '[系统提示] 修改文件权限。使用方法：chmod <权限> <文件>',
+      
+      // etc 目录文件
+      'passwd': '系统用户列表：\nroot:x:0:0\nuser:x:1000:1000\nguest:x:1001:1001',
+      'shadow': '权限不足：需要 root 权限才能查看此文件',
+      'sudoers': '# sudoers 文件\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL',
+      
+      // usr 目录文件
+      '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug="$(python -c \'print "A"*128 + "\\x90"*32\')"',
+    },
+    hints: [
+      '先使用 whoami 查看当前权限',
+      '检查所有命令的版本信息',
+      '寻找可能存在漏洞的程序',
+      '在隐藏文件中可能有漏洞利用的线索',
+      '成功提权后使用 sudo cat shadow 查看加密的密码'
     ]
   }
 }; 
