@@ -1,4 +1,4 @@
-import type { LevelData } from '@/types/game';
+import { LevelData } from '@/types/game';
 
 const level2: LevelData = {
   id: 2,
@@ -15,7 +15,7 @@ const level2: LevelData = {
     '~/tools': ['decoder.exe', 'readme.md']
   },
   fileContents: {
-    'encrypted.txt': 'Uif!Dpef!Xpsme!\n这段文字被简单加密了，每个字母都被移动了一位...',
+    'encrypted.txt': 'Pme!Gmppe!\n这段文字被简单加密了，每个字母都被移动了一位...',
     'readme.md': '解密工具使用说明：\n使用 decode <text> 命令来尝试解密文本',
     'decoder.exe': '[系统提示] 这是一个可执行文件，使用 run decoder 来运行它'
   },

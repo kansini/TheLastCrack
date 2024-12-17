@@ -33,7 +33,7 @@ export const useGameStore = defineStore('game', {
     },
     
     loadLevel(level: number) {
-      const levelData = getCurrentLevelData(level);
+      getCurrentLevelData(level)
       this.currentLevel = level;
       this.currentDirectory = '~';
       this.completedTasks = [];

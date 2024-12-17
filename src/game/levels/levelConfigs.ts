@@ -49,7 +49,7 @@ export const levelConfigs: Record<number, LevelData> = {
       '~/notes': ['crypto_basics.txt', 'hints.md']
     },
     fileContents: {
-      'encrypted.txt': 'Uif!Dpef!Xpsme!\n这段文字被简单加密了，每个字母都被移动了一位...\n解密这段文字，用解密后的内容作为密码来解锁下一关。',
+      'encrypted.txt': 'Pme!Gmppe!\n这段文字被简单加密了，每个字母都被移动了一位...\n解密这段文字，用解密后的内容作为密码来解锁下一关。',
       'readme.md': '解密工具使用说明：\n使用 decode <text> 命令来尝试解密文本',
       'examples.txt': '加密示例：\nHello -> Ifmmp\nWorld -> Xpsme\n\n发现规律了吗？',
       'crypto_basics.txt': '凯撒密码是最基本的加密方式之一，\n它将每个字母移动固定的位数来实现加密。\n比如：将每个字母向后移动1位。',

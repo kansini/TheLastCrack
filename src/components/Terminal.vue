@@ -108,7 +108,7 @@ const handleCommand = async () => {
       store.addLine('output', output);
     }
   } catch (error) {
-    store.addLine('output', `Error: ${error.message}`);
+    store.addLine('output', `Error: ${error}`);
   }
   
   inputContent.value = '';

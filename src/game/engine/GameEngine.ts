@@ -18,7 +18,7 @@ export class GameEngine {
     try {
       return await command.execute(args);
     } catch (error) {
-      return `Error executing command: ${error.message}`;
+      return `Error executing command: ${error}`;
     }
   }
 }
