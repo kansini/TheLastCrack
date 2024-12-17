@@ -1,42 +1,47 @@
 import { defineStore } from 'pinia';
-import type { TerminalState, TerminalLine } from '@/types/terminal';
+
+interface TerminalState {
+  history: Array<{
+    type: 'input' | 'output';
+    content: string;
+    timestamp: number;
+    directory?: string;
+  }>;
+  currentDirectory: string;
+  commandHistory: string[];
+}
 
 export const useTerminalStore = defineStore('terminal', {
   state: (): TerminalState => ({
     history: [],
     currentDirectory: '~',
-    currentLevel: 1,
-    commandHistory: [],
+    commandHistory: []
   }),
-  
+
   actions: {
+    setCurrentDirectory(path: string) {
+      this.currentDirectory = path;
+    },
+
     addLine(type: 'input' | 'output', content: string, directory?: string) {
       this.history.push({
         type,
         content,
         timestamp: Date.now(),
-        directory
+        directory: directory || this.currentDirectory
       });
 
-      if (type === 'input') {
+      if (type === 'input' && content.trim()) {
         this.commandHistory.push(content);
       }
     },
-    
+
     clearHistory() {
       this.history = [];
-    },
-    
-    setCurrentDirectory(path: string) {
-      this.currentDirectory = path;
-    },
-    
-    setCurrentLevel(level: number) {
-      this.currentLevel = level;
     },
 
     setCommandHistory(history: string[]) {
       this.commandHistory = [...history];
     }
-  },
+  }
 }); 

@@ -36,11 +36,12 @@ export const lsCommand: Command = {
     const currentDir = gameStore.currentDirectory;
     
     // 确保目录存在
-    if (!levelData.fileSystem[currentDir]) {
+    const dirToCheck = currentDir === '~' ? '~' : `${currentDir}`;
+    if (!levelData.fileSystem[dirToCheck]) {
       return `ls: 无法访问 '${currentDir}': 目录不存在`;
     }
     
-    const files = levelData.fileSystem[currentDir];
+    const files = levelData.fileSystem[dirToCheck];
     
     // 检查是否使用了 -a 参数
     const showHidden = args.includes('-a');
@@ -64,6 +65,7 @@ export const cdCommand: Command = {
     const gameStore = useGameStore();
     const path = args[0] || '~';
     const currentDir = gameStore.currentDirectory;
+    const levelData = getCurrentLevelData(gameStore.currentLevel);
     
     // 处理特殊路径
     if (path === '~') {
@@ -73,29 +75,43 @@ export const cdCommand: Command = {
     
     if (path === '..') {
       if (currentDir === '~') {
-        return ''; // 已经在根目录，不做任何操作
+        return '已经在根目录了';
       }
       // 移除最后一个目录
-      const parts = currentDir.split('/');
-      parts.pop();
-      // 如果只剩下 ~ 或空，则返回根目录
-      const newPath = parts.length <= 1 ? '~' : parts.join('/');
-      gameStore.setCurrentDirectory(newPath);
+      const parts = currentDir.split('/').filter(p => p && p !== '~');
+      if (parts.length === 0) {
+        gameStore.setCurrentDirectory('~');
+      } else {
+        parts.pop();
+        const newPath = parts.length === 0 ? '~' : `~/${parts.join('/')}`;
+        gameStore.setCurrentDirectory(newPath);
+      }
       return '';
     }
     
-    // 构建新路径
-    let newPath: string;
+    // 处理绝对路径（以 ~ 开头）
+    if (path.startsWith('~/')) {
+      const targetPath = path;
+      const dirToCheck = targetPath === '~' ? '~' : `${targetPath}`;
+      if (levelData.fileSystem[dirToCheck]) {
+        gameStore.setCurrentDirectory(targetPath);
+        return '';
+      }
+      return `cd: ${path}: 目录不存在`;
+    }
+    
+    // 处理相对路径
+    let targetPath: string;
     if (currentDir === '~') {
-      newPath = `~/${path}`;
+      targetPath = `~/${path}`;
     } else {
-      newPath = `${currentDir}/${path}`;
+      targetPath = `${currentDir}/${path}`;
     }
     
     // 检查目录是否存在
-    const levelData = getCurrentLevelData(gameStore.currentLevel);
-    if (levelData.fileSystem[newPath]) {
-      gameStore.setCurrentDirectory(newPath);
+    const dirToCheck = targetPath === '~' ? '~' : `${targetPath}`;
+    if (levelData.fileSystem[dirToCheck]) {
+      gameStore.setCurrentDirectory(targetPath);
       return '';
     }
     
@@ -174,7 +190,7 @@ export const unlockCommand: Command = {
         if (!gameStore.completedTasks.includes('decode_text')) {
           return '你需要先使用 decode 命令解密文本！';
         }
-        if (password === 'The Code World') {
+        if (password === 'Old Flood') {
           gameStore.completeLevel();
           return '密码正确！欢迎进入下一关...';
         }
@@ -230,16 +246,16 @@ export const hintCommand: Command = {
         return '提示：使用 ls -a 命令可以查看隐藏文件';
       case 2:
         return `提示：
-1. 加密文本 "Uif!Dpef!Xpsme!" 中的每个字母都被向后移动了一位
+1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一位
 2. 例如：'T' 变成了 'U', 'h' 变成了 'i'
-3. 解密后的文本是 "The Code World!"
-4. 试试在工具目录中寻找解密工具`;
+3. 解密后的文本 "Old Flood"
+4. 试试在工具目录中找解密工具`;
       case 3:
         return `提示：
 1. 使用 cd <目录名> 进入目录，使用 cd .. 返回上级目录
 2. 密钥被分成了两个部分（XXXX-XXXX 格式）
 3. 第一部分在 .keys 目录中的 key_fragment_1 文件里
-4. 第二部分在 .keys 目录中的 key_fragment_2 文件里
+4. 第���部分在 .keys 目录中的 key_fragment_2 文件里
 5. 使用 ls -a 可以看到隐藏的 .keys 目录
 6. 进入目录后使用 cat 命令查看文件内容
 7. 将两个密钥碎片按 XXXX-XXXX 格式组合
@@ -279,7 +295,7 @@ export const decodeCommand: Command = {
     }).join('');
 
     // 如果解密的是目标文本，标记任务完成
-    if (text === 'Uif!Dpef!Xpsme!') {
+    if (text === 'Pme!Gmppe!') {
       gameStore.completeTask('decode_text');
       return `解密成功！解密结果：${decrypted}\n恭喜你发现了密码！`;
     }
@@ -425,7 +441,7 @@ export const pingCommand: Command = {
 来自 192.168.1.200 的回复: 时间<1ms
 
 192.168.1.200 的 Ping 统计信息:
-    数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
+    数包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
 往返行程的估计时间(以毫秒为单位):
     最短 = 0ms，最长 = 1ms，平均 = 0ms`;
     }

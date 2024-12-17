@@ -1,24 +1,31 @@
 import { defineStore } from 'pinia';
+import { useTerminalStore } from './terminal';
 import { getCurrentLevelData } from '@/game/levels';
 
 interface GameState {
+  gameStarted: boolean;
   currentLevel: number;
   currentDirectory: string;
   inventory: string[];
   completedTasks: string[];
-  gameStarted: boolean;
 }
 
 export const useGameStore = defineStore('game', {
   state: (): GameState => ({
+    gameStarted: false,
     currentLevel: 1,
     currentDirectory: '~',
     inventory: [],
-    completedTasks: [],
-    gameStarted: false,
+    completedTasks: []
   }),
-  
+
   actions: {
+    setCurrentDirectory(path: string) {
+      this.currentDirectory = path;
+      const terminalStore = useTerminalStore();
+      terminalStore.setCurrentDirectory(path);
+    },
+
     startGame() {
       this.gameStarted = true;
       this.currentLevel = 1;
@@ -58,10 +65,6 @@ export const useGameStore = defineStore('game', {
         this.completedTasks.push('find_secret');
       }
     },
-
-    setCurrentDirectory(path: string) {
-      this.currentDirectory = path;
-    }
   },
   
   getters: {

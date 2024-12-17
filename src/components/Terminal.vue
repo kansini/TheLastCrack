@@ -4,7 +4,7 @@
       <div class="terminal-history">
         <div v-for="(line, index) in history" :key="index" class="terminal-line">
           <template v-if="line.type === 'input'">
-            <span class="prompt">{{ line.directory }} $</span>
+            <span class="prompt">{{ formatPrompt(line.directory as string) }} $</span>
             <span class="input">{{ line.content }}</span>
           </template>
           <template v-else>
@@ -14,7 +14,7 @@
       </div>
       
       <div class="terminal-input">
-        <span class="prompt">{{ currentDirectory }} $</span>
+        <span class="prompt">{{ formatPrompt(currentDirectory) }} $</span>
         <input
           ref="inputRef"
           v-model="inputContent"
@@ -78,7 +78,20 @@ const tempInput = ref('');
 const commandHistory = computed(() => store.commandHistory);
 
 const currentDirectory = computed(() => store.currentDirectory);
-const history = computed(() => store.history);
+interface IHistoryLine {
+  type: 'input' | 'output';
+  content: string;
+  timestamp: number;
+  directory?: string
+}
+const history = computed<IHistoryLine[]>(() => store.history);
+
+// 修改格式化提示符的函数
+const formatPrompt = (path: string) => {
+  if (!path || path === '~') return '~';
+  // 直接返回完整路径，因为 path 已经包含了完整的路径（如 ~/network）
+  return path;
+};
 
 const handleCommand = async () => {
   if (!inputContent.value.trim()) return;
@@ -151,9 +164,9 @@ onMounted(() => {
 });
 
 // 确保输入框始终获得焦点
-const handleClick = () => {
-  inputRef.value?.focus();
-};
+// const handleClick = () => {
+//   inputRef.value?.focus();
+// };
 </script>
 
 <style lang="scss" scoped>
@@ -205,7 +218,7 @@ const handleClick = () => {
       color: inherit;
       font-family: inherit;
       font-size: inherit;
-      padding: 0 $spacing-sm;
+      padding: 0;
       outline: none;
       caret-color: $caret-color;
     }
@@ -213,7 +226,7 @@ const handleClick = () => {
   
   .prompt {
     color: $prompt-color;
-    margin-right: $spacing-sm;
+    margin-right: $spacing-xs;
     user-select: none;
   }
   
