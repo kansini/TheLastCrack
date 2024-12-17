@@ -1,0 +1,32 @@
+// 主题色
+$primary-color: #43fc4a;
+$primary-color-light: rgba(76, 175, 80, 0.5);
+
+// 背景色
+$bg-primary: #000;
+$bg-secondary: #252525;
+$bg-tertiary: #2d2d2d;
+$bg-scrollbar: #4a4a4a;
+
+// 文字颜色
+$text-primary: #3cd542;
+$text-secondary: #36be3c;
+
+// 字体
+$font-family-mono: 'Courier New', monospace;
+
+// 间距
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 2rem;
+
+// 圆角
+$border-radius: 4px;
+
+// 动画
+$transition-duration: 0.3s;
+
+// 终端相关
+$prompt-color: $primary-color;
+$caret-color: $primary-color; 

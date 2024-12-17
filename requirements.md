@@ -1,4 +1,4 @@
-vue3.5+vite6.1+typescript+sass+pinia 搭建好了前端项目
+已经用vue3.5+vite6.1+typescript+sass+pinia+axios 搭建好了前端项目
 现在要实现一款黑客游戏，采用terminal界面的形式，通过命令行输入逐步破解。
 游戏玩法：
 
@@ -47,4 +47,3 @@ vue3.5+vite6.1+typescript+sass+pinia 搭建好了前端项目
 	•	查看任务：显示当前关卡任务。
 	•	查看线索：查看当前已获得的线索。
 	•	返回主菜单：返回主菜单。
-请先
