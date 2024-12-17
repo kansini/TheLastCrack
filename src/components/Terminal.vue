@@ -54,7 +54,10 @@ import {
   topCommand,
   analyzeCommand,
   killCommand,
-  restoreCommand
+  restoreCommand,
+  whoamiCommand,
+  sudoCommand,
+  chmodCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -80,6 +83,9 @@ gameEngine.registerCommand(topCommand);
 gameEngine.registerCommand(analyzeCommand);
 gameEngine.registerCommand(killCommand);
 gameEngine.registerCommand(restoreCommand);
+gameEngine.registerCommand(whoamiCommand);
+gameEngine.registerCommand(sudoCommand);
+gameEngine.registerCommand(chmodCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');

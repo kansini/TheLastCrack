@@ -452,7 +452,7 @@ export const repairCommand: Command = {
             gameStore.completeTask("repair_data");
             return `修复成功！
 原始数据已恢复：D@t@B@se_2024
-这就是你需要��密码！`;
+这就是你需要的密码！`;
         }
 
         return "修复失败：备份文件不匹配或已损坏";
@@ -497,7 +497,7 @@ export const connectCommand: Command = {
 
         if (ip === "192.168.1.200" && username === "kansini" && password === "Netw0rk@2024") {
             gameStore.completeTask("connect_server");
-            return "连接成功！服务器已就绪。\n可以使用 download 命��下载数据。";
+            return "连接成功！服务器已就绪。\n可以使用 download 命令下载数据。";
         }
 
         return "连接失败：认证错误。请检查 IP、用户名和密码。";
@@ -523,7 +523,7 @@ export const downloadCommand: Command = {
             return `正在下载 ${filename}...
 下载完成！
 文件内容：C0nnected@2024
-这���通关密码！`;
+这是通关密码！`;
         }
 
         return `错误：文件 '${filename}' 不存在或无法访问。`;
@@ -660,4 +660,77 @@ export const restoreCommand: Command = {
 
 恢复密码：OlDHong_2077`;
     }
+};
+
+export const whoamiCommand: Command = {
+  name: 'whoami',
+  description: '显示当前用户',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 7) {
+      return 'whoami: 命令不可用';
+    }
+
+    // 检查是否是漏洞利用参数
+    if (args[0] && args[0].startsWith('--debug=')) {
+      const payload = args[0].substring(8);  // 去掉 '--debug=' 前缀
+      if (payload.includes('A'.repeat(128) + '\\x90'.repeat(32))) {
+        gameStore.completeTask('get_root');
+        return `[漏洞触发成功]
+权限提升：user -> root
+当前用户：root
+用户组：root wheel admin`;
+      }
+    }
+
+    return 'user';  // 默认显示普通用户
+  }
+};
+
+export const sudoCommand: Command = {
+  name: 'sudo',
+  description: '以管理员权限执行命令',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 7) {
+      return 'sudo: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: sudo <command>';
+    }
+
+    if (!gameStore.completedTasks.includes('get_root')) {
+      return '错误：用户不在 sudoers 文件中。此事将被报告。';
+    }
+
+    const command = args.join(' ');
+    if (command === 'cat shadow') {
+      gameStore.completeTask('read_shadow');
+      return `root:$6$xyz$hash:19000:0:99999:7:::
+user:$6$abc$hash:19000:0:99999:7:::
+guest:$6$def$hash:19000:0:99999:7:::
+
+解密后的 root 密码：Pr1v1l3ge_2024`;
+    }
+
+    return `sudo: ${args[0]}: 命令未找到`;
+  }
+};
+
+export const chmodCommand: Command = {
+  name: 'chmod',
+  description: '修改文件权限',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 7) {
+      return 'chmod: 命令不可用';
+    }
+
+    if (args.length !== 2) {
+      return 'Usage: chmod <权限> <文件>';
+    }
+
+    return '权限不足：需要 root 权限';
+  }
 }; 
