@@ -57,7 +57,10 @@ import {
   restoreCommand,
   whoamiCommand,
   sudoCommand,
-  chmodCommand
+  chmodCommand,
+  tcpdumpCommand,
+  wiresharkCommand,
+  iptablesCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -86,6 +89,9 @@ gameEngine.registerCommand(restoreCommand);
 gameEngine.registerCommand(whoamiCommand);
 gameEngine.registerCommand(sudoCommand);
 gameEngine.registerCommand(chmodCommand);
+gameEngine.registerCommand(tcpdumpCommand);
+gameEngine.registerCommand(wiresharkCommand);
+gameEngine.registerCommand(iptablesCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');

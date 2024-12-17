@@ -237,7 +237,18 @@ export const unlockCommand: Command = {
                 }
                 break;
 
-            // ... 其他关卡的逻辑
+            case 7:
+                if (!gameStore.completedTasks.includes('read_shadow')) {
+                    return '你需要先获取 shadow 文件中的密码！';
+                }
+                if (password === 'Pr1v1l3ge_2024') {
+                    gameStore.completeLevel();
+                    return '密码正确！欢迎进入下一关...';
+                }
+                break;
+
+            default:
+                return '关卡 ' + level + ' 正在紧张开发中...';
         }
 
         return "密码错误，请继续寻找线索。";
@@ -256,7 +267,7 @@ export const hintCommand: Command = {
                 return "提示：使用 ls -a 命令可以查看隐藏文件";
             case 2:
                 return `提示：
-1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一位
+1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一��
 2. 例如：'T' 变成了 'U', 'h' 变成了 'i'
 3. 解密后的文本 "Old Flood"
 4. 试试在工具目录中找解密工具`;
@@ -283,7 +294,7 @@ export const hintCommand: Command = {
 2. 使用 ping 命令测试服务器连通性：ping 192.168.1.200
 3. 在 config 目录中寻找登录凭据（注意隐藏文件）
 4. 使用 connect 命令连接服务器：connect 192.168.1.200 kansini <密码>
-5. 连接成功后使用 download 命令下载 secret_data 文件
+5. 连���成功后使用 download 命令下载 secret_data 文件
 6. 下载的数据就是通关密码`;
             case 6:
                 return `提示：
@@ -376,7 +387,7 @@ export const loadCommand: Command = {
 
         const saveStore = useSaveStore();
         if (saveStore.loadSave(saveId)) {
-            return "存档加载成功！";
+            return "存档取成功！";
         } else {
             return `未找到存档 #${saveId}`;
         }
@@ -594,7 +605,7 @@ export const analyzeCommand: Command = {
         if (pid === "666") {
             gameStore.completeTask("analyze_process");
             return `分析报告 - PID 666 (malware.exe)
-危险等级：高
+危等级：高
 特征：
 1. CPU 使用率异常
 2. 可疑的网络连接
@@ -671,16 +682,13 @@ export const whoamiCommand: Command = {
       return 'whoami: 命令不可用';
     }
 
-    // 检查是否是漏洞利用参数
-    if (args[0] && args[0].startsWith('--debug=')) {
-      const payload = args[0].substring(8);  // 去掉 '--debug=' 前缀
-      if (payload.includes('A'.repeat(128) + '\\x90'.repeat(32))) {
-        gameStore.completeTask('get_root');
-        return `[漏洞触发成功]
+    // 简化的漏洞检测逻辑
+    if (args[0] === '--debug=OVERFLOW') {
+      gameStore.completeTask('get_root');
+      return `[漏洞触发成功]
 权限提升：user -> root
 当前用户：root
 用户组：root wheel admin`;
-      }
     }
 
     return 'user';  // 默认显示普通用户
@@ -731,6 +739,94 @@ export const chmodCommand: Command = {
       return 'Usage: chmod <权限> <文件>';
     }
 
-    return '权限不足：需要 root 权限';
+    return '权限不足：需 root 权限';
+  }
+};
+
+export const tcpdumpCommand: Command = {
+  name: 'tcpdump',
+  description: '捕获网络数据包',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 8) {
+      return 'tcpdump: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: tcpdump <过滤器>';
+    }
+
+    if (args.includes('port') && args.includes('31337')) {
+      gameStore.completeTask('start_capture');
+      return `开始捕获数据包...
+
+[21:00:01] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP
+[21:00:02] IP 10.0.0.1.31337 > 10.0.0.100.31337: TCP
+[21:00:03] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP PSH
+数据: "P@ssw0rd_2024"
+
+捕获完成！可疑数据包已保存到 packets.pcap`;
+    }
+
+    return '未发现可疑数据包';
+  }
+};
+
+export const wiresharkCommand: Command = {
+  name: 'wireshark',
+  description: '分析数据包内容',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 8) {
+      return 'wireshark: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: wireshark <文件名>';
+    }
+
+    if (args[0] === 'packets.pcap') {
+      if (!gameStore.completedTasks.includes('start_capture')) {
+        return '错误：文件为空，请先使用 tcpdump 捕获数据包';
+      }
+      gameStore.completeTask('analyze_packet');
+      return `分析结果：
+1. 协议：TCP
+2. 源地址：10.0.0.100:31337
+3. 目标地址：10.0.0.1:31337
+4. 数据内容：P@ssw0rd_2024
+5. 警告：检测到密码泄露！`;
+    }
+
+    return `wireshark: ${args[0]}: 文件不存在`;
+  }
+};
+
+export const iptablesCommand: Command = {
+  name: 'iptables',
+  description: '配置防火墙规则',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 8) {
+      return 'iptables: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: iptables <规则>';
+    }
+
+    // 检查是否是正确的阻止规则
+    const command = args.join(' ');
+    if (command === '-A OUTPUT -d 10.0.0.1 -j DROP') {
+      gameStore.completeTask('block_leak');
+      return `防火墙规则已添加：
+1. 阻止所有到 10.0.0.1 的连接
+2. 数据泄露已被阻止
+3. 系统安全状态：已恢复
+
+发现通关密码：P@ssw0rd_2024`;
+    }
+
+    return '规则格式错误或无效';
   }
 }; 

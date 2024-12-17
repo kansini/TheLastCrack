@@ -20,7 +20,7 @@ export const levelConfigs: Record<number, LevelData> = {
     fileContents: {
       'welcome.txt': '欢迎来到终端世界！\n你的第一个任务是找到隐藏在某处的秘密文件。\n提示：并不是所有文件都会直接显示...',
       '.secret': '恭喜你找到了隐藏文件！\n这是你的第一步，接下来的挑战会更加有趣。\n密码提示：MOON_LIGHT',
-      'intro.md': '# 终端使用指南\n\n在这个世界中，���各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
+      'intro.md': '# 终端使用指南\n\n在这个世界中，�����用各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
       'guide.txt': '记住，在终端中，以 . 开头的文件通常是隐藏文件。\n使用 ls -a 可以查看所有文件，包括隐藏文件。',
       'day1.txt': '今天是我的第一天，还在适应这个系统。\n导师说要特别注意隐藏文件...',
       'reminder.txt': '备忘：\n1. 检查所有可能的位置\n2. 留意文件中的特殊提示\n3. 记录找到的密码',
@@ -40,7 +40,7 @@ export const levelConfigs: Record<number, LevelData> = {
     objectives: [
       '找到加密的信息',
       '使用解密工具破解密码',
-      '使用解密的密钥问加���文件夹'
+      '使用解密的密���问���密文件夹'
     ],
     requiredTasks: ['decode_text'],
     fileSystem: {
@@ -86,7 +86,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // system 目录文件
       'permissions.md': '文件权限说明：\n- r: 读取权限\n- w: 写入权限\n- x: 执行权限\n\n重要提示：\n1. 密钥的第一部分是一个常见的黑客术语\n2. 使用 ls -a 命令可以查看隐藏文件',
       'access_log.txt': '访问记录：\n[警告] 未授权访问尝试\n[提示] 密钥格式：XXXX-XXXX\n[提示] 第二部分是一个4位数字，看起来像日期格式\n[记录] 系统安装日期：04/01',
-      'protected_data.enc': '此文���已加密。\n需要完整的密钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
+      'protected_data.enc': '此���件已加密。\n需要完整的密钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
       
       // personal 目录文件
       'diary.txt': '今天学习了权限系统...\n管理员说密钥的第一部分是"HACK"\n这个词真形象，就是黑客的行为。\n第二部分好像是某个日期...',
@@ -107,7 +107,7 @@ export const levelConfigs: Record<number, LevelData> = {
   4: {
     id: 4,
     title: '数据恢复',
-    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被坏，但幸运的是存在备份。',
+    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被���，但幸运的���存在备份。',
     objectives: [
       '分析损坏的数据文件',
       '找到并使用正确的备份文件',
@@ -126,7 +126,7 @@ export const levelConfigs: Record<number, LevelData> = {
       'readme.txt': '备份说明：\n1. 每日自动备份\n2. 文件格式：backup_MMDD.bak\n3. 使用 repair.exe 工具修复时需要指定正确的备份文件',
       'manual.pdf': '修复工具使用说明：\n1. 使用 scan <文件名> 分析损坏文件\n2. 使用 repair <源文件> <备份文件> 进行修复\n注意：必须使用正确的备份文件，否则可能导致数据进一步损坏',
       'error_log.txt': '错误记录：\n[2024-04-01 23:59:59] 数据库文件意外损坏\n[2024-04-02 00:00:01] 自动备份完成',
-      'system_log.txt': '系统日志：\n最后一次正常访问时间：2024-04-01\n最后一次成功备份：backup_0401.bak',
+      'system_log.txt': '系统日志：\n最后一次正常访问时间：2024-04-01\n最后��次成功备份：backup_0401.bak',
       'backup_log.txt': '备份记录：\n- backup_0401.bak (完整备份)\n- backup_0402.bak (可能不完整)',
       'backup_0401.bak': '[备份数据 - 2024-04-01]\nD@t@B@se_2024',
       'backup_0402.bak': '[备份数据 - 2024-04-02]\nD#t#B#se_2024\n[备份可能不完整]',
@@ -169,7 +169,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // remote 目录文件
       'server_list.txt': '可用服务器列表：\n1. 192.168.1.200 (主服务器)\n  - 状态：在线\n  - 服务：文件传输\n  - 备注：重要数据备份服务器\n2. 192.168.1.201 (备用服务器)\n  - 状态：离线\n\n注意：使用 connect 命令连接服务器',
       'connect.exe': '[系统提示] 这是一个远程连接工具。\n使用方法：connect <IP> <用户名> <密码>',
-      'download.exe': '[系统提示] 这是一个数据下载工具。\n使用方法：download <文件名>\n\n注意：请查看访问日志了解可下载的文件',
+      'download.exe': '[系统提���] 这是一个数据下��工具。\n使用方法：download <文件名>\n\n注意：请查看访问日志了解可下载的文件',
       'access.log': '访问记录：\n[INFO] 文件传输服务启动\n[INFO] 用户 kansini 登录成功\n[WARN] 尝试访问: private_data (拒绝访问)\n[INFO] 下载文件: secret_data (成功)\n[INFO] 文件大小: 1.2MB\n[INFO] 传输完成: 2024-04-01 12:00:00',
       
       // config 目录文件
@@ -189,7 +189,7 @@ export const levelConfigs: Record<number, LevelData> = {
   6: {
     id: 6,
     title: '进程管理',
-    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留下了一些系统监控工具。',
+    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留��了一些系统监控工具��',
     objectives: [
       '查看系统进程',
       '分析可疑进程',
@@ -211,7 +211,7 @@ export const levelConfigs: Record<number, LevelData> = {
       'services.conf': '系统服务配置：\n1. systemd - 系统核心服务\n2. network - 网络服务\n3. security - 安全服务（已停止）',
       'startup.log': '启动日志：\n[警告] 发现可疑进程自启动\n[错误] 安全服务无法启动\n[提示] 使用 analyze 命令分析可疑进程',
       
-      // monitor 目录���件
+      // monitor 目录文件
       'status.log': '系统状态：\n- CPU 使用率异常\n- 内存占用过高\n- 可疑网络连接\n- 多个未知进程\n\n建议：使用 top 命令实时监控',
       'top.exe': '[系统提示] 这是一个系统监控工具。使用方法：top',
       'ps.exe': '[系统提示] 这是一个进程查看工具。使用方法：ps',
@@ -261,7 +261,7 @@ export const levelConfigs: Record<number, LevelData> = {
       'sudoers': '# sudoers 文件\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL',
       
       // usr 目录文件
-      '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug="$(python -c \'print "A"*128 + "\\x90"*32\')"',
+      '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug=OVERFLOW',
     },
     hints: [
       '先使用 whoami 查看当前权限',
@@ -269,6 +269,50 @@ export const levelConfigs: Record<number, LevelData> = {
       '寻找可能存在漏洞的程序',
       '在隐藏文件中可能有漏洞利用的线索',
       '成功提权后使用 sudo cat shadow 查看加密的密码'
+    ]
+  },
+
+  8: {
+    id: 8,
+    title: '网络嗅探',
+    description: '系统检测到可疑的网络流量。你需要使用网络分析工具找出数据泄露的证据。',
+    objectives: [
+      '启动网络监听',
+      '捕获可疑数据包',
+      '分析数据包内容',
+      '阻止数据泄露'
+    ],
+    requiredTasks: ['start_capture', 'find_packet', 'analyze_packet', 'block_leak'],
+    fileSystem: {
+      '~': ['readme.txt', 'network', 'capture', 'tools'],
+      '~/network': ['interfaces.conf', 'traffic.log', 'connections.list'],
+      '~/capture': ['packets.pcap', 'filters.txt', '.secret_data'],
+      '~/tools': ['tcpdump.exe', 'wireshark.exe', 'iptables.exe']
+    },
+    fileContents: {
+      'readme.txt': '网络分析指南：\n1. 使用 tcpdump 捕获网络数据包\n2. 使用 wireshark 分析数据包内容\n3. 使用 iptables 阻止可疑连接\n\n注意：某些数据包可能包含敏感信息',
+      
+      // network 目录文件
+      'interfaces.conf': '网卡配置：\neth0: 192.168.1.100\neth1: 10.0.0.100\n\n可疑流量主要出现在 eth1',
+      'traffic.log': '流量记录：\n[警告] 检测到大量对外连接\n[警告] 端口 31337 有异常流量\n[提示] 使用 tcpdump port 31337 捕获可疑数据包',
+      'connections.list': '当前连接：\n192.168.1.100:80 -> 192.168.1.1:80 (HTTP)\n10.0.0.100:31337 -> 10.0.0.1:31337 (未知协议)',
+      
+      // capture 目录文件
+      'packets.pcap': '[二进制数据包文件]\n需要使用 wireshark 分析',
+      'filters.txt': '常用过滤器：\n1. port 31337\n2. host 10.0.0.1\n3. tcp[13] = 0x02\n\n提示：使用这些过滤器可以找到可疑数据包',
+      '.secret_data': '发现数据泄露：\n1. 目标IP: 10.0.0.1\n2. 目标端口: 31337\n3. 泄露内容: 系统密码\n4. 阻止方法: iptables -A OUTPUT -d 10.0.0.1 -j DROP',
+      
+      // tools 目录文件
+      'tcpdump.exe': '[系统提示] 这是一个数据包捕获工具。使用方法：tcpdump <过滤器>',
+      'wireshark.exe': '[系统提示] 这是一个数据包分析工具。使用方法：wireshark <文件名>',
+      'iptables.exe': '[系统提示] 这是一个防火墙配置工具。使用方法：iptables <规则>'
+    },
+    hints: [
+      '使用 tcpdump 监听端口 31337',
+      '查看 traffic.log 了解可疑流量特征',
+      '使用 wireshark 分析捕获的数据包',
+      '在可疑数据包中寻找密码信息',
+      '使用 iptables 阻止数据泄露'
     ]
   }
 }; 
