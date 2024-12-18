@@ -1,71 +1,10 @@
 <template>
   <div class="main-menu">
     <div class="menu-container">
-      <!-- 左侧信息面板 -->
-      <div class="info-panel">
-        <div class="system-status">
-          <div class="status-header">
-            <div class="status-icon"></div>
-            <span>SYSTEM STATUS</span>
-            <div class="header-line"></div>
-          </div>
-          <div class="status-content">
-            <div class="status-item">
-              <span class="label">UPTIME</span>
-              <span class="value">{{ uptime }}</span>
-            </div>
-            <div class="status-item">
-              <span class="label">MEMORY</span>
-              <div class="progress-bar">
-                <div class="progress" :style="{ width: '75%' }"></div>
-                <span class="progress-text">75%</span>
-              </div>
-            </div>
-            <div class="status-item">
-              <span class="label">CPU LOAD</span>
-              <div class="progress-bar">
-                <div class="progress" :style="{ width: '45%' }"></div>
-                <span class="progress-text">45%</span>
-              </div>
-            </div>
-            <div class="status-item">
-              <span class="label">NETWORK</span>
-              <div class="network-status">
-                <span class="status-dot active"></span>
-                <span>CONNECTED</span>
-                <span class="ping">32ms</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="system-info">
-          <div class="info-header">
-            <span>SYSTEM INFO</span>
-            <div class="header-line"></div>
-          </div>
-          <div class="info-content">
-            <div class="info-item">
-              <span class="label">OS</span>
-              <span class="value">QUANTUM OS v3.6</span>
-            </div>
-            <div class="info-item">
-              <span class="label">KERNEL</span>
-              <span class="value">QK-986.52.1</span>
-            </div>
-            <div class="info-item">
-              <span class="label">SECURITY</span>
-              <span class="value">LEVEL 3</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- 中央主菜单 -->
       <div class="central-menu">
-        <div class="scan-line"></div>
         <div class="grid-overlay"></div>
-        
+
         <div class="title-container">
           <div class="title-line"></div>
           <div class="title-wrapper">
@@ -74,33 +13,36 @@
             <div class="title-decoration right"></div>
           </div>
           <div class="title-line"></div>
+          <button @click="toggleLanguage" class="lang-btn">
+            {{ currentLanguage === "zh" ? "ENG" : "中文" }}
+          </button>
         </div>
-        
+
         <div class="menu-options">
           <button @click="startNewGame" class="menu-btn">
             <div class="btn-content">
-              <span class="btn-text">新游戏</span>
+              <span class="btn-text">{{ t("newGame") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
           <button @click="toggleLoadGame" v-if="hasSaves" class="menu-btn">
             <div class="btn-content">
-              <span class="btn-text">继续游戏</span>
+              <span class="btn-text">{{ t("continueGame") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
           <button @click="showTutorial" class="menu-btn">
             <div class="btn-content">
-              <span class="btn-text">游戏教程</span>
+              <span class="btn-text">{{ t("tutorial") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
           <button @click="showAbout" class="menu-btn">
             <div class="btn-content">
-              <span class="btn-text">关于游戏</span>
+              <span class="btn-text">{{ t("about") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
@@ -109,49 +51,8 @@
 
         <div class="decoration-container">
           <div class="decoration-line"></div>
-          <div class="decoration-text">SYSTEM READY</div>
+          <div class="decoration-text">{{ t("systemReady") }}</div>
           <div class="decoration-line"></div>
-        </div>
-      </div>
-
-      <!-- 右侧状态面板 -->
-      <div class="status-panel">
-        <div class="version-info">
-          <div class="info-header">
-            <span>SYSTEM VERSION</span>
-            <div class="header-line"></div>
-          </div>
-          <div class="version-content">
-            <div class="version-item">
-              <span class="label">VERSION</span>
-              <span class="value">1.0.0</span>
-            </div>
-            <div class="version-item">
-              <span class="label">BUILD</span>
-              <span class="value">#20240101</span>
-            </div>
-            <div class="version-item">
-              <span class="label">BRANCH</span>
-              <span class="value">STABLE</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="status-info">
-          <div class="info-header">
-            <span>STATISTICS</span>
-            <div class="header-line"></div>
-          </div>
-          <div class="stats-content">
-            <div class="stat-item">
-              <span class="label">TOTAL SAVES</span>
-              <span class="value">{{ saves.length }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="label">LAST SAVE</span>
-              <span class="value">{{ lastSaveTime }}</span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -159,12 +60,12 @@
       <div class="save-list" v-if="showSaveList">
         <div class="save-list-container">
           <div class="save-header">
-            <h2>SELECT SAVE FILE</h2>
+            <h2>{{ t("selectSaveFile") }}</h2>
             <button @click="toggleLoadGame" class="close-btn">×</button>
           </div>
           <div class="saves-container">
             <div v-if="saves.length === 0" class="no-saves">
-              NO SAVE FILES FOUND
+              {{ t("noSaves") }}
             </div>
             <div v-else v-for="save in saves" :key="save.id" class="save-item">
               <div class="save-info">
@@ -172,8 +73,8 @@
                 <span class="save-date">{{ formatDate(save.save.timestamp) }}</span>
               </div>
               <div class="save-actions">
-                <button @click="loadGame(save.id)" class="action-btn load">LOAD</button>
-                <button @click="deleteSave(save.id)" class="action-btn delete">DELETE</button>
+                <button @click="loadGame(save.id)" class="action-btn load">{{ t("load") }}</button>
+                <button @click="deleteSave(save.id)" class="action-btn delete">{{ t("delete") }}</button>
               </div>
             </div>
           </div>
@@ -182,10 +83,9 @@
     </div>
 
     <!-- 教程和关于页面 -->
-    <Tutorial :visible="showTutorialModal" @close="closeTutorial" />
-    <About :visible="showAboutModal" @close="closeAbout" />
+    <Tutorial :visible="showTutorialModal" @close="closeTutorial"/>
+    <About :visible="showAboutModal" @close="closeAbout"/>
 
-    <!-- 在 template 中的 main-menu div 内添加新的效果层 -->
     <div class="glitch-effects">
       <div class="glitch-line"></div>
       <div class="glitch-line"></div>
@@ -196,14 +96,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useGameStore } from '@/stores/game';
-import { useSaveStore } from '@/stores/save';
-import Tutorial from './Tutorial.vue';
-import About from './About.vue';
+import {ref, computed, onMounted, onUnmounted} from "vue";
+import {useGameStore} from "@/stores/game";
+import {useSaveStore} from "@/stores/save";
+import {useLanguageStore} from "@/stores/language";
+import Tutorial from "./Tutorial.vue";
+import About from "./About.vue";
 
 const gameStore = useGameStore();
 const saveStore = useSaveStore();
+const languageStore = useLanguageStore();
+
 const showSaveList = ref(false);
 const showTutorialModal = ref(false);
 const showAboutModal = ref(false);
@@ -211,16 +114,18 @@ const uptimeSeconds = ref(0);
 
 const saves = computed(() => saveStore.getSaves());
 const hasSaves = computed(() => saves.value.length > 0);
+const currentLanguage = computed(() => languageStore.currentLanguage);
+const t = computed(() => languageStore.t);
 
 const uptime = computed(() => {
   const hours = Math.floor(uptimeSeconds.value / 3600);
   const minutes = Math.floor((uptimeSeconds.value % 3600) / 60);
   const seconds = uptimeSeconds.value % 60;
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 });
 
 const lastSaveTime = computed(() => {
-  if (saves.value.length === 0) return 'N/A';
+  if (saves.value.length === 0) return "N/A";
   const lastSave = saves.value[saves.value.length - 1];
   return new Date(lastSave.save.timestamp).toLocaleString();
 });
@@ -277,6 +182,10 @@ const showAbout = () => {
 const closeAbout = () => {
   showAboutModal.value = false;
 };
+
+const toggleLanguage = () => {
+  languageStore.toggleLanguage();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -290,7 +199,8 @@ const closeAbout = () => {
   color: $primary-color;
   position: relative;
   overflow: hidden;
-  
+  font-family: 'Share Tech Mono', monospace;
+
   &::before {
     content: '';
     position: absolute;
@@ -298,33 +208,25 @@ const closeAbout = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-      linear-gradient(rgba($primary-color, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba($primary-color, 0.1) 1px, transparent 1px);
+    background: linear-gradient(rgba($primary-color, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba($primary-color, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
     opacity: 0.3;
     animation: gridMove 20s linear infinite;
   }
-  
+
   .menu-container {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 300px 1fr 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: $spacing-lg;
-    gap: $spacing-lg;
     position: relative;
     z-index: 1;
 
     @media (max-width: 768px) {
-      grid-template-columns: 1fr;
       padding: $spacing-md;
-      gap: $spacing-md;
-      
-      .info-panel,
-      .status-panel {
-        display: none;
-      }
     }
   }
 
@@ -371,7 +273,7 @@ const closeAbout = () => {
     display: flex;
     align-items: center;
     margin-bottom: $spacing-md;
-    
+
     span {
       font-size: 0.9rem;
       letter-spacing: 1px;
@@ -440,7 +342,7 @@ const closeAbout = () => {
       height: 8px;
       border-radius: 50%;
       background: $primary-color;
-      
+
       &.active {
         animation: pulse 2s infinite;
       }
@@ -531,6 +433,24 @@ const closeAbout = () => {
       }
     }
 
+    .lang-btn {
+      background: transparent;
+      border: 1px solid $primary-color;
+      color: $primary-color;
+      padding: $spacing-xs $spacing-sm;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin-top: $spacing-md;
+      letter-spacing: 2px;
+
+      &:hover {
+        background: rgba($primary-color, 0.1);
+        border-color: lighten($primary-color, 20%);
+        color: lighten($primary-color, 20%);
+      }
+    }
+
     @media (max-width: 768px) {
       margin-bottom: $spacing-lg;
 
@@ -549,6 +469,11 @@ const closeAbout = () => {
           height: 15px;
         }
       }
+
+      .lang-btn {
+        margin-top: $spacing-sm;
+        font-size: 0.8rem;
+      }
     }
   }
 
@@ -563,12 +488,13 @@ const closeAbout = () => {
     transition: all 0.3s ease;
     overflow: hidden;
     width: 300px;
+    height: 54px;
     z-index: 10;
-    
+
     @media (max-width: 768px) {
       width: 250px;
       padding: $spacing-sm;
-      
+
       .btn-text {
         font-size: 1rem;
       }
@@ -586,15 +512,15 @@ const closeAbout = () => {
       transform-origin: right;
       transition: transform 0.3s ease;
     }
-    
+
     &:hover {
       color: lighten($primary-color, 20%);
-      
+
       &::before {
         transform: scaleX(1);
         transform-origin: left;
       }
-      
+
       .btn-border {
         &::before, &::after {
           transform: scaleX(1);
@@ -605,7 +531,7 @@ const closeAbout = () => {
         opacity: 1;
       }
     }
-    
+
     .btn-content {
       display: flex;
       align-items: center;
@@ -620,7 +546,7 @@ const closeAbout = () => {
       font-size: 1.2rem;
       letter-spacing: 2px;
     }
-    
+
     .btn-border {
       position: absolute;
       top: 0;
@@ -628,14 +554,14 @@ const closeAbout = () => {
       width: 100%;
       height: 100%;
       pointer-events: none;
-      
+
       &::before, &::after {
         content: '';
         position: absolute;
         background: $primary-color;
         transition: transform 0.3s ease;
       }
-      
+
       &::before {
         top: 0;
         left: 0;
@@ -644,7 +570,7 @@ const closeAbout = () => {
         transform: scaleX(0);
         transform-origin: right;
       }
-      
+
       &::after {
         bottom: 0;
         right: 0;
@@ -689,6 +615,7 @@ const closeAbout = () => {
     display: flex;
     align-items: center;
     gap: $spacing-md;
+    position: relative;
 
     .decoration-line {
       flex: 1;
@@ -700,11 +627,14 @@ const closeAbout = () => {
       font-size: 0.9rem;
       letter-spacing: 2px;
       animation: blink 2s infinite;
+      margin: 0 $spacing-md;
     }
 
     @media (max-width: 768px) {
       width: 90%;
       margin-top: $spacing-lg;
+      flex-wrap: wrap;
+      justify-content: center;
 
       .decoration-line {
         width: 60px;
@@ -728,7 +658,7 @@ const closeAbout = () => {
     align-items: center;
     backdrop-filter: blur(5px);
     z-index: 100;
-    
+
     .save-list-container {
       width: 600px;
       background: $bg-secondary;
@@ -736,19 +666,19 @@ const closeAbout = () => {
       box-shadow: 0 0 20px rgba($primary-color, 0.2);
       position: relative;
       z-index: 101;
-      
+
       .save-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: $spacing-md;
         border-bottom: 1px solid rgba($primary-color, 0.3);
-        
+
         h2 {
           font-size: 1.5rem;
           margin: 0;
         }
-        
+
         .close-btn {
           background: none;
           border: none;
@@ -756,18 +686,18 @@ const closeAbout = () => {
           font-size: 1.5rem;
           cursor: pointer;
           padding: 0 $spacing-sm;
-          
+
           &:hover {
             color: lighten($primary-color, 20%);
           }
         }
       }
-      
+
       .saves-container {
         max-height: 400px;
         overflow-y: auto;
         padding: $spacing-md;
-        
+
         .save-item {
           display: flex;
           justify-content: space-between;
@@ -775,27 +705,27 @@ const closeAbout = () => {
           padding: $spacing-sm;
           border: 1px solid rgba($primary-color, 0.2);
           margin-bottom: $spacing-sm;
-          
+
           &:hover {
             background: rgba($primary-color, 0.1);
           }
-          
+
           .save-info {
             .save-name {
               display: block;
               font-size: 1.1rem;
             }
-            
+
             .save-date {
               font-size: 0.9rem;
               opacity: 0.7;
             }
           }
-          
+
           .save-actions {
             display: flex;
             gap: $spacing-sm;
-            
+
             .action-btn {
               padding: $spacing-xs $spacing-sm;
               background: transparent;
@@ -803,16 +733,16 @@ const closeAbout = () => {
               color: $primary-color;
               cursor: pointer;
               transition: all 0.3s ease;
-              
+
               &:hover {
                 background: $primary-color;
                 color: $bg-primary;
               }
-              
+
               &.delete {
                 border-color: #ff4444;
                 color: #ff4444;
-                
+
                 &:hover {
                   background: #ff4444;
                   color: $bg-primary;
@@ -924,19 +854,19 @@ const closeAbout = () => {
     height: 1px;
     background-color: rgba($primary-color, 0.5);
     box-shadow: 0 0 10px rgba($primary-color, 0.8);
-    
+
     &:nth-child(1) {
       top: 30%;
       animation: glitch1 4s infinite linear;
       opacity: 0.3;
     }
-    
+
     &:nth-child(2) {
       top: 50%;
       animation: glitch2 3s infinite linear;
       opacity: 0.4;
     }
-    
+
     &:nth-child(3) {
       top: 70%;
       animation: glitch3 2.5s infinite linear;
@@ -960,7 +890,7 @@ const closeAbout = () => {
 .title-wrapper h1 {
   position: relative;
   animation: textGlitch 3s infinite;
-  
+
   &::before,
   &::after {
     content: 'THE LAST CRACK';
@@ -971,12 +901,12 @@ const closeAbout = () => {
     height: 100%;
     clip: rect(0, 900px, 0, 0);
   }
-  
+
   &::before {
     text-shadow: -2px 0 $primary-color;
     animation: glitchText 3s infinite linear alternate-reverse;
   }
-  
+
   &::after {
     text-shadow: 2px 0 $primary-color;
     animation: glitchText 2s infinite linear alternate;
@@ -1011,11 +941,21 @@ const closeAbout = () => {
 }
 
 @keyframes textGlitch {
-  0%, 100% { transform: none; }
-  92% { transform: skew(2deg); }
-  94% { transform: skew(-2deg); }
-  96% { transform: skew(1deg); }
-  98% { transform: skew(-1deg); }
+  0%, 100% {
+    transform: none;
+  }
+  92% {
+    transform: skew(2deg);
+  }
+  94% {
+    transform: skew(-2deg);
+  }
+  96% {
+    transform: skew(1deg);
+  }
+  98% {
+    transform: skew(-1deg);
+  }
 }
 
 @keyframes glitchText {
@@ -1111,5 +1051,9 @@ const closeAbout = () => {
   100% {
     transform: translate(0);
   }
+}
+
+.language-switch {
+  display: none;
 }
 </style> 
