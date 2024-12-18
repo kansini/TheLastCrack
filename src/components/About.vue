@@ -1,52 +1,49 @@
 <template>
   <div class="about-modal" v-if="visible">
     <div class="modal-content">
-      <h2>关于游戏</h2>
-      <div class="about-content">
-        <section>
-          <h3>游戏简介</h3>
-          <p>《The Last Crack》是一款模拟黑客体验的文字冒险游戏。在游戏中，玩家将扮演一名黑客，通过终端命令与游戏世界互动，解开谜题，揭示隐藏的故事。</p>
+      <div class="modal-header">
+        <h2>{{ t('aboutTitle') }}</h2>
+        <button @click="$emit('close')" class="close-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="description">{{ t('aboutDesc') }}</p>
+
+        <section class="about-section">
+          <h3>{{ t('features') }}</h3>
+          <ul class="features-list">
+            <li>{{ t('feature1') }}</li>
+            <li>{{ t('feature2') }}</li>
+            <li>{{ t('feature3') }}</li>
+            <li>{{ t('feature4') }}</li>
+          </ul>
         </section>
 
-        <section>
-          <h3>技术栈</h3>
-          <div class="tech-list">
-            <span class="tech-item">Vue 3</span>
-            <span class="tech-item">TypeScript</span>
-            <span class="tech-item">Vite</span>
-            <span class="tech-item">Pinia</span>
+        <section class="about-section">
+          <h3>{{ t('version') }}</h3>
+          <div class="version-info">
+            <div class="info-item">
+              <span class="label">{{ t('currentVersion') }}</span>
+              <span class="value">1.0.0</span>
+            </div>
+            <div class="info-item">
+              <span class="label">{{ t('developer') }}</span>
+              <span class="value">ssflood</span>
+            </div>
           </div>
         </section>
-
-        <section>
-          <h3>版本信息</h3>
-          <p>当前版本：1.0.1</p>
-          <p>最后更新：2024-12-18</p>
-        </section>
-
-        <section>
-          <h3>开发者信息</h3>
-          <p>开发者：Flood</p>
-          <p>联系方式：你猜</p>
-        </section>
       </div>
-      <button class="close-btn" @click="close">关闭</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLanguageStore } from '@/stores/language';
+
 defineProps<{
   visible: boolean;
 }>();
 
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>();
-
-const close = () => {
-  emit('close');
-};
+const { t } = useLanguageStore();
 </script>
 
 <style lang="scss" scoped>
@@ -56,93 +53,104 @@ const close = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba($bg-primary, 0.95);
+  background: rgba($bg-primary, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(5px);
   z-index: 1000;
-  
+  font-family: 'Share Tech Mono', monospace;
+
   .modal-content {
-    width: 90%;
-    max-width: 800px;
+    width: 800px;
+    max-width: 90%;
     max-height: 90vh;
-    background-color: $bg-secondary;
-    border: 2px solid $primary-color;
-    border-radius: $border-radius;
-    padding: $spacing-lg;
+    background: $bg-secondary;
+    border: 1px solid rgba($primary-color, 0.3);
+    box-shadow: 0 0 20px rgba($primary-color, 0.2);
     overflow-y: auto;
-    
-    h2 {
-      color: $primary-color;
-      font-size: 2rem;
-      margin-bottom: $spacing-lg;
-      text-align: center;
+    position: relative;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-md;
+      border-bottom: 1px solid rgba($primary-color, 0.3);
+
+      h2 {
+        margin: 0;
+        color: $primary-color;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: $primary-color;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+
+        &:hover {
+          color: lighten($primary-color, 20%);
+        }
+      }
     }
-    
-    .about-content {
-      section {
+
+    .modal-body {
+      padding: $spacing-md;
+
+      .description {
         margin-bottom: $spacing-lg;
-        
+        line-height: 1.6;
+      }
+
+      .about-section {
+        margin-bottom: $spacing-lg;
+
         h3 {
           color: $primary-color;
-          font-size: 1.5rem;
           margin-bottom: $spacing-md;
           border-bottom: 1px solid rgba($primary-color, 0.3);
           padding-bottom: $spacing-xs;
         }
-        
-        p {
-          margin-bottom: $spacing-sm;
-          line-height: 1.6;
-        }
-        
-        ul {
+
+        .features-list {
           list-style: none;
-          padding-left: $spacing-md;
-          
+          padding: 0;
+          margin: 0;
+
           li {
             margin-bottom: $spacing-sm;
+            padding-left: $spacing-md;
             position: relative;
-            
+
             &::before {
-              content: ">";
-              color: $primary-color;
+              content: '>';
               position: absolute;
-              left: -$spacing-md;
+              left: 0;
+              color: $primary-color;
             }
           }
         }
-        
-        .tech-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: $spacing-sm;
-          
-          .tech-item {
-            padding: $spacing-xs $spacing-sm;
-            background-color: rgba($primary-color, 0.1);
-            border: 1px solid rgba($primary-color, 0.3);
-            border-radius: $border-radius;
-            color: $primary-color;
+
+        .version-info {
+          .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: $spacing-sm;
+
+            .label {
+              min-width: 120px;
+              color: rgba($primary-color, 0.8);
+            }
+
+            .value {
+              color: lighten($primary-color, 10%);
+              margin-left: $spacing-md;
+            }
           }
         }
-      }
-    }
-    
-    .close-btn {
-      display: block;
-      margin: $spacing-lg auto 0;
-      padding: $spacing-sm $spacing-lg;
-      font-size: 1.1rem;
-      background-color: transparent;
-      border: 2px solid $primary-color;
-      color: $primary-color;
-      cursor: pointer;
-      transition: all $transition-duration;
-      
-      &:hover {
-        background-color: $primary-color;
-        color: $bg-primary;
       }
     }
   }

@@ -1,81 +1,83 @@
 <template>
   <div class="tutorial-modal" v-if="visible">
     <div class="modal-content">
-      <h2>游戏教程</h2>
-      <div class="tutorial-content">
-        <section>
-          <h3>基本操作</h3>
+      <div class="modal-header">
+        <h2>{{ t('tutorialTitle') }}</h2>
+        <button @click="$emit('close')" class="close-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="description">{{ t('tutorialDesc') }}</p>
+
+        <section class="tutorial-section">
+          <h3>{{ t('basicCommands') }}</h3>
           <div class="command-list">
             <div class="command-item">
-              <code>help</code> - 显示所有可用命令
+              <code>help</code>
+              <span>{{ t('commandHelp') }}</span>
             </div>
             <div class="command-item">
-              <code>ls</code> - 列出当前目录文件
+              <code>ls</code>
+              <span>{{ t('commandLs') }}</span>
             </div>
             <div class="command-item">
-              <code>cd &lt;目录&gt;</code> - 切换目录
+              <code>cd &lt;{{ t('directory') }}&gt;</code>
+              <span>{{ t('commandCd') }}</span>
             </div>
             <div class="command-item">
-              <code>cat &lt;文件&gt;</code> - 查看文件内容
+              <code>cat &lt;{{ t('file') }}&gt;</code>
+              <span>{{ t('commandCat') }}</span>
             </div>
             <div class="command-item">
-              <code>clear</code> - 清除终端屏幕
+              <code>clear</code>
+              <span>{{ t('commandClear') }}</span>
+            </div>
+            <div class="command-item">
+              <code>unlock &lt;{{ t('password') }}&gt;</code>
+              <span>{{ t('commandUnlock') }}</span>
             </div>
           </div>
         </section>
 
-        <section>
-          <h3>游戏存档</h3>
+        <section class="tutorial-section">
+          <h3>{{ t('gameProgress') }}</h3>
           <div class="command-list">
             <div class="command-item">
-              <code>save &lt;名称&gt;</code> - 保存游戏进度
+              <code>save &lt;{{ t('saveName') }}&gt;</code>
+              <span>{{ t('commandSave') }}</span>
             </div>
             <div class="command-item">
-              <code>load [ID]</code> - 查看或加载存档
+              <code>load [ID]</code>
+              <span>{{ t('commandLoad') }}</span>
             </div>
             <div class="command-item">
-              <code>deletesave &lt;ID&gt;</code> - 删除存档
+              <code>deletesave &lt;ID&gt;</code>
+              <span>{{ t('commandDelete') }}</span>
             </div>
           </div>
         </section>
 
-        <section>
-          <h3>游戏玩法</h3>
-          <p>1. 每个关卡都有特定的目标和任务</p>
-          <p>2. 使用终端命令探索环境，寻找线索</p>
-          <p>3. 解开谜题，找到密码，进入下一关</p>
-          <p>4. 遇到困难时可以使用 <code>hint</code> 命令获取提示</p>
-          <p>5. 找到密码后使用 <code>unlock &lt;密码&gt;</code> 解锁下一关</p>
-        </section>
-
-        <section>
-          <h3>小技巧</h3>
-          <ul>
-            <li>使用方向键 ↑↓ 可以快速调出历史命令</li>
-            <li>使用 <code>ls -a</code> 可以查看隐藏文件</li>
-            <li>注意查看每个文件的内容，可能包含重要线索</li>
-            <li>遇到新命令时可以尝试不带参数运行，会显示使用说明</li>
-            <li>随时可以使用 <code>exit</code> 命令返回主菜单</li>
+        <section class="tutorial-section">
+          <h3>{{ t('tips') }}</h3>
+          <ul class="tips-list">
+            <li>{{ t('tip1') }}</li>
+            <li>{{ t('tip2') }}</li>
+            <li>{{ t('tip3') }}</li>
+            <li>{{ t('tip4') }}</li>
           </ul>
         </section>
       </div>
-      <button class="close-btn" @click="close">关闭</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLanguageStore } from '@/stores/language';
+
 defineProps<{
   visible: boolean;
 }>();
 
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>();
-
-const close = () => {
-  emit('close');
-};
+const { t } = useLanguageStore();
 </script>
 
 <style lang="scss" scoped>
@@ -85,112 +87,109 @@ const close = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba($bg-primary, 0.95);
+  background: rgba($bg-primary, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(5px);
   z-index: 1000;
-  
+  font-family: 'Share Tech Mono', monospace;
+
   .modal-content {
-    width: 90%;
-    max-width: 800px;
+    width: 800px;
+    max-width: 90%;
     max-height: 90vh;
-    background-color: $bg-secondary;
-    border: 2px solid $primary-color;
-    border-radius: $border-radius;
-    padding: $spacing-lg;
+    background: $bg-secondary;
+    border: 1px solid rgba($primary-color, 0.3);
+    box-shadow: 0 0 20px rgba($primary-color, 0.2);
     overflow-y: auto;
-    
-    h2 {
-      color: $primary-color;
-      font-size: 2rem;
-      margin-bottom: $spacing-lg;
-      text-align: center;
+    position: relative;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-md;
+      border-bottom: 1px solid rgba($primary-color, 0.3);
+
+      h2 {
+        margin: 0;
+        color: $primary-color;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: $primary-color;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+
+        &:hover {
+          color: lighten($primary-color, 20%);
+        }
+      }
     }
-    
-    .tutorial-content {
-      section {
+
+    .modal-body {
+      padding: $spacing-md;
+
+      .description {
         margin-bottom: $spacing-lg;
-        
+        line-height: 1.6;
+      }
+
+      .tutorial-section {
+        margin-bottom: $spacing-lg;
+
         h3 {
           color: $primary-color;
-          font-size: 1.5rem;
           margin-bottom: $spacing-md;
           border-bottom: 1px solid rgba($primary-color, 0.3);
           padding-bottom: $spacing-xs;
         }
-        
+
         .command-list {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
           gap: $spacing-sm;
-          
+
           .command-item {
-            padding: $spacing-sm;
-            border: 1px solid rgba($primary-color, 0.2);
-            border-radius: $border-radius;
-            
+            display: flex;
+            align-items: center;
+            gap: $spacing-md;
+
             code {
-              color: $primary-color;
-              background-color: rgba($primary-color, 0.1);
-              padding: 2px 6px;
-              border-radius: 3px;
+              background: rgba($primary-color, 0.1);
+              padding: $spacing-xs $spacing-sm;
+              border-radius: 4px;
+              color: lighten($primary-color, 10%);
+              min-width: 120px;
+            }
+
+            span {
+              color: rgba($primary-color, 0.8);
             }
           }
         }
-        
-        p {
-          margin-bottom: $spacing-sm;
-          line-height: 1.6;
-          
-          code {
-            color: $primary-color;
-            background-color: rgba($primary-color, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-          }
-        }
-        
-        ul {
+
+        .tips-list {
           list-style: none;
-          padding-left: $spacing-md;
-          
+          padding: 0;
+          margin: 0;
+
           li {
             margin-bottom: $spacing-sm;
+            padding-left: $spacing-md;
             position: relative;
-            
+
             &::before {
-              content: ">";
-              color: $primary-color;
+              content: '>';
               position: absolute;
-              left: -$spacing-md;
-            }
-            
-            code {
+              left: 0;
               color: $primary-color;
-              background-color: rgba($primary-color, 0.1);
-              padding: 2px 6px;
-              border-radius: 3px;
             }
           }
         }
-      }
-    }
-    
-    .close-btn {
-      display: block;
-      margin: $spacing-lg auto 0;
-      padding: $spacing-sm $spacing-lg;
-      font-size: 1.1rem;
-      background-color: transparent;
-      border: 2px solid $primary-color;
-      color: $primary-color;
-      cursor: pointer;
-      transition: all $transition-duration;
-      
-      &:hover {
-        background-color: $primary-color;
-        color: $bg-primary;
       }
     }
   }
