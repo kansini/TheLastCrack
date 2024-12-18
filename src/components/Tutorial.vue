@@ -59,7 +59,7 @@
           </ul>
         </section>
       </div>
-      <button class="close-btn" @click="close">返回</button>
+      <button class="close-btn" @click="close">关闭</button>
     </div>
   </div>
 </template>

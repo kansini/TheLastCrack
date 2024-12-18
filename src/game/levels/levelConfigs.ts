@@ -20,7 +20,7 @@ export const levelConfigs: Record<number, LevelData> = {
     fileContents: {
       'welcome.txt': '欢迎来到终端世界！\n你的第一个任务是找到隐藏在某处的秘密文件。\n提示：并不是所有文件都会直接显示...',
       '.secret': '恭喜你找到了隐藏文件！\n这是你的第一步，接下来的挑战会更加有趣。\n密码提示：MOON_LIGHT',
-      'intro.md': '# 终端使用指南\n\n在这个世界中，�����命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
+      'intro.md': '# 终端使用指南\n\n在这个世界中，使用命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
       'guide.txt': '记住，在终端中，以 . 开头的文件通常是隐藏文件。\n使用 ls -a 可以查看所有文件，包括隐藏文件。',
       'day1.txt': '今天是我的第一天，还在适应这个系统。\n导师说要特别注意隐藏文件...',
       'reminder.txt': '备忘：\n1. 检查所有可能的位置\n2. 留意文件中的特殊提示\n3. 记录找到的密码',
@@ -86,7 +86,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // system 目录文件
       'permissions.md': '文件权限说明：\n- r: 读取权限\n- w: 写入权限\n- x: 执行权限\n\n重要提示：\n1. 密钥的第一部分是一个常见的黑客术语\n2. 使用 ls -a 命令可以查看隐藏文件',
       'access_log.txt': '访问记录：\n[警告] 未授权访问尝试\n[提示] 密钥格式：XXXX-XXXX\n[提示] 第二部分是一个4位数字，看起来像日期格式\n[记录] 系统安装日期：04/01',
-      'protected_data.enc': '此件已密。\n要完整钥才���访问。\n提示：密钥的两个部分分别代��：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
+      'protected_data.enc': '此件已密。\n要完整钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
       
       // personal 目录文件
       'diary.txt': '今天学习了权限系统...\n管理员说密钥的第一部分是"HACK"\n这个词真形象，就是黑客的行为。\n第二部分好像是某个日期...',
@@ -109,7 +109,7 @@ export const levelConfigs: Record<number, LevelData> = {
     title: '数据恢复',
     description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被，但运的存在备。',
     objectives: [
-      '损坏���数据文件',
+      '损坏的数据文件',
       '找到并使用正确的备份文件',
       '使用修复工具恢复数据',
       '获取修复后的密码'
@@ -193,7 +193,7 @@ export const levelConfigs: Record<number, LevelData> = {
     objectives: [
       '查看系统程',
       '分析可疑进程',
-      '�����止恶意进程',
+      '终止恶意进程',
       '恢复系统状态'
     ],
     requiredTasks: ['analyze_process', 'kill_malware', 'system_restore'],
@@ -295,7 +295,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // network 目录文件
       'interfaces.conf': '网卡配置：\neth0: 192.168.1.100\neth1: 10.0.0.100\n\n可疑流量主要现在 eth1',
       'traffic.log': '流量记录：\n[警告] 检测到大量对外连接\n[警告] 端口 31337 有异常流量\n[提示] 使用 tcpdump port 31337 捕获可疑数据包',
-      'connections.list': '当前连接：\n192.168.1.100:80 -> 192.168.1.1:80 (HTTP)\n10.0.0.100:31337 -> 10.0.0.1:31337 (未���协议)',
+      'connections.list': '当前连接：\n192.168.1.100:80 -> 192.168.1.1:80 (HTTP)\n10.0.0.100:31337 -> 10.0.0.1:31337 (未授权协议)',
       
       // capture 目录文件
       'packets.pcap': '[二进制数据包文件]\n需要使用 wireshark 分析',
@@ -345,7 +345,7 @@ export const levelConfigs: Record<number, LevelData> = {
       'alice.mbox': `发件人: bob@local
 收件人: alice@local
 主题: 关于新项目
-内容: Alice，我���需要更安全的方式交流。
+内容: Alice，我们需要更安全的方式交流。
 记得用我们约定的方式加密重要信息。
 所有密码都要加上年份后缀 _2024。
 另外，新来的 Charlie 似乎在草稿箱里记录了什么...
@@ -387,9 +387,9 @@ export const levelConfigs: Record<number, LevelData> = {
 内容: 这不是你该关心的事情。
 我看到你保存了一些草稿。
 建议你删除那些内容。
-专注于你本职工���。`,
+专注于你本职工作。`,
 
-      // draft 目录（需要��特殊方式访问）
+      // draft 目录（需要用特殊方式访问）
       '.charlie_draft': `未发送邮件：
 主题：记录发现
 内容：我终于理解了！

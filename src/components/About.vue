@@ -9,31 +9,19 @@
         </section>
 
         <section>
-          <h3>游戏特色</h3>
-          <ul>
-            <li>真实的终端操作体验</li>
-            <li>引人入胜的故事情节</li>
-            <li>富有挑战性的解密谜题</li>
-            <li>循序渐进的难度设计</li>
-            <li>完整的存档功能</li>
-          </ul>
-        </section>
-
-        <section>
           <h3>技术栈</h3>
           <div class="tech-list">
             <span class="tech-item">Vue 3</span>
             <span class="tech-item">TypeScript</span>
             <span class="tech-item">Vite</span>
             <span class="tech-item">Pinia</span>
-            <span class="tech-item">SCSS</span>
           </div>
         </section>
 
         <section>
           <h3>版本信息</h3>
-          <p>当前版本：1.0.0</p>
-          <p>最后更新：2024-01-01</p>
+          <p>当前版本：1.0.1</p>
+          <p>最后更新：2024-12-18</p>
         </section>
 
         <section>
@@ -42,7 +30,7 @@
           <p>联系方式：你猜</p>
         </section>
       </div>
-      <button class="close-btn" @click="close">返回</button>
+      <button class="close-btn" @click="close">关闭</button>
     </div>
   </div>
 </template>
