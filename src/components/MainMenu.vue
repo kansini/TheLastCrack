@@ -117,18 +117,18 @@ const hasSaves = computed(() => saves.value.length > 0);
 const currentLanguage = computed(() => languageStore.currentLanguage);
 const t = computed(() => languageStore.t);
 
-const uptime = computed(() => {
-  const hours = Math.floor(uptimeSeconds.value / 3600);
-  const minutes = Math.floor((uptimeSeconds.value % 3600) / 60);
-  const seconds = uptimeSeconds.value % 60;
-  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-});
-
-const lastSaveTime = computed(() => {
-  if (saves.value.length === 0) return "N/A";
-  const lastSave = saves.value[saves.value.length - 1];
-  return new Date(lastSave.save.timestamp).toLocaleString();
-});
+// const uptime = computed(() => {
+//   const hours = Math.floor(uptimeSeconds.value / 3600);
+//   const minutes = Math.floor((uptimeSeconds.value % 3600) / 60);
+//   const seconds = uptimeSeconds.value % 60;
+//   return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+// });
+//
+// const lastSaveTime = computed(() => {
+//   if (saves.value.length === 0) return "N/A";
+//   const lastSave = saves.value[saves.value.length - 1];
+//   return new Date(lastSave.save.timestamp).toLocaleString();
+// });
 
 let uptimeInterval: number;
 
