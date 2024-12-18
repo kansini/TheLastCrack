@@ -6,6 +6,7 @@ interface SaveData {
   name: string;
   save: {
     timestamp: number;
+    gameStarted: boolean;
     currentLevel: number;
     completedTasks: string[];
     currentDirectory: string;
@@ -27,6 +28,7 @@ export const useSaveStore = defineStore('save', {
         name,
         save: {
           timestamp: Date.now(),
+          gameStarted: true,
           currentLevel: gameStore.currentLevel,
           completedTasks: [...gameStore.completedTasks],
           currentDirectory: gameStore.currentDirectory,
