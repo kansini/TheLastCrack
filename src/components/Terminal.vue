@@ -60,7 +60,13 @@ import {
   chmodCommand,
   tcpdumpCommand,
   wiresharkCommand,
-  iptablesCommand
+  iptablesCommand,
+  mailCommand,
+  searchCommand,
+  draftCommand,
+  chatCommand,
+  privateCommand,
+  historyCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -92,6 +98,12 @@ gameEngine.registerCommand(chmodCommand);
 gameEngine.registerCommand(tcpdumpCommand);
 gameEngine.registerCommand(wiresharkCommand);
 gameEngine.registerCommand(iptablesCommand);
+gameEngine.registerCommand(mailCommand);
+gameEngine.registerCommand(searchCommand);
+gameEngine.registerCommand(draftCommand);
+gameEngine.registerCommand(chatCommand);
+gameEngine.registerCommand(privateCommand);
+gameEngine.registerCommand(historyCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');

@@ -74,5 +74,8 @@ export const useGameStore = defineStore('game', {
         state.completedTasks.includes(task)
       );
     },
+    currentLevelData: (state) => {
+      return getCurrentLevelData(state.currentLevel);
+    },
   },
 }); 

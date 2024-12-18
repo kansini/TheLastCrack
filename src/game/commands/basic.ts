@@ -8,7 +8,8 @@ export const helpCommand: Command = {
     name: "help",
     description: "显示所有可用命令",
     execute: () => {
-        return `可用命令：
+        const gameStore = useGameStore();
+        let baseCommands = `可用命令：
   help - 显示此帮助信息
   ls - 列出当前目录文件
   cd <目录> - 切换目录
@@ -16,14 +17,19 @@ export const helpCommand: Command = {
   clear - 清除终端屏幕
   decode <text> - 解密文本
   unlock <密码> - 使用密码解锁下一关
-  scan <文件> - 扫描分析文件
-  repair <源文件> <备份文件> - 修复损坏的文件
-  ping <IP> - 测试网络连接
-  connect <IP> <用户名> <密码> - 连接服务器
-  download <文件名> - 下载服务器文件
   save <名称> - 保存游戏进度
   load [ID] - 查看或加载存档
   deletesave <ID> - 删除存档`;
+
+        // 根据当前关卡添加特定命令
+        if (gameStore.currentLevel === 9) {
+            baseCommands += `\n
+邮件系统命令：
+  mail <用户名> - 查看用户邮箱
+  draft <用户名> - 查看用户草稿箱`;
+        }
+
+        return baseCommands;
     }
 };
 
@@ -192,7 +198,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === "Old Flood") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return "密码���确！欢迎进入下一关...";
                 }
                 break;
 
@@ -247,6 +253,36 @@ export const unlockCommand: Command = {
                 }
                 break;
 
+            case 8:
+                if (!gameStore.completedTasks.includes('block_leak')) {
+                    return '你需要先阻止数据泄露！';
+                }
+                if (password === 'P@ssw0rd_2024') {
+                    gameStore.completeLevel();
+                    return '密码正确！欢迎进入下一关...';
+                }
+                break;
+
+            case 9:
+                if (!gameStore.completedTasks.includes('find_secret')) {
+                    return '需要先找到隐藏在件中的秘！';
+                }
+                if (password === 'ROKNIT_2024') {
+                    gameStore.completeLevel();
+                    return '密码正确！欢迎进入下一关...';
+                }
+                break;
+
+            case 10:
+                if (!gameStore.completedTasks.includes('decode_plan')) {
+                    return '你需要先破解加密的计划文件！';
+                }
+                if (password === 'WUCHAJI_2024') {
+                    gameStore.completeLevel();
+                    return '密码正确！欢迎进入下一关...';
+                }
+                break;
+
             default:
                 return '关卡 ' + level + ' 正在紧张开发中...';
         }
@@ -267,7 +303,7 @@ export const hintCommand: Command = {
                 return "提示：使用 ls -a 命令可以查看隐藏文件";
             case 2:
                 return `提示：
-1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一��
+1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一
 2. 例如：'T' 变成了 'U', 'h' 变成了 'i'
 3. 解密后的文本 "Old Flood"
 4. 试试在工具目录中找解密工具`;
@@ -276,10 +312,10 @@ export const hintCommand: Command = {
 1. 使用 cd <目录名> 进入目录，使用 cd .. 返回上级目录
 2. 密钥被分成了两个部分（XXXX-XXXX 格式）
 3. 第一部分在 .keys 目录中的 key_fragment_1 文件里
-4. 第二部分在 .keys 目录中的 key_fragment_2 文件里
-5. 使用 ls -a 可以看到隐藏的 .keys 目录
+4. 第二部分在 .keys 目中的 key_fragment_2 文件里
+5. 用 ls -a 可以到隐藏的 .keys 目录
 6. 进入目录后使用 cat 命令查看文件内容
-7. 将两个密钥碎片按 XXXX-XXXX 格式组合
+7. 将两个密钥片按 XXXX-XXXX 格式组合
 8. 最后使用 unlock 命令输入完整密钥`;
             case 4:
                 return `提示：
@@ -294,7 +330,7 @@ export const hintCommand: Command = {
 2. 使用 ping 命令测试服务器连通性：ping 192.168.1.200
 3. 在 config 目录中寻找登录凭据（注意隐藏文件）
 4. 使用 connect 命令连接服务器：connect 192.168.1.200 kansini <密码>
-5. 连���成功后使用 download 命令下载 secret_data 文件
+5. 连接功后使用 download 命令下载 secret_data 文件
 6. 下载的数据就是通关密码`;
             case 6:
                 return `提示：
@@ -303,15 +339,37 @@ export const hintCommand: Command = {
 3. 使用 analyze 666 分析可疑进程
 4. 确认是恶意进程后使用 kill 666 终止它
 5. 最后使用 restore 命令恢复系统
-6. 系统恢复后会显示通关密码`;
+6. 系统恢复后会显示通关密`;
             case 7:
                 return `提示：
-1. 先用 whoami 命令查看当前用户权限
+1. 先用 whoami 令查看当前用户限
 2. 检查 whoami.exe 的版本信息
-3. 使用 ls -a 在 usr 目录中寻找隐藏文件
+3. 用 ls -a 在 usr 目录中寻找隐藏文件
 4. 按照隐藏文件中的说明利用漏洞
 5. 获得 root 权限后使用 sudo cat shadow
 6. shadow 文件中包含通关密码`;
+            case 8:
+                return `提示：
+1. 使用 tcpdump port 31337 监听可疑端口
+2. 在 traffic.log 中找到可疑流量的特征
+3. 使用 wireshark packets.pcap 分析捕获的数据包
+4. 找到数据泄露的内容
+5. 使用 iptables -A OUTPUT -d 10.0.0.1 -j DROP 阻止泄露`;
+            case 9:
+                return `提示：
+1. 使用 mail <用户名> 查看各个用户的邮件
+2. 注意 Alice 和 Bob 之间的加密通信
+3. Charlie 似乎发现了什么秘密
+4. 使用 draft charlie 查看草稿箱
+5. 找到并查看隐藏的棋盘布局文���
+6. 将白车和黑马的路线拼接起来`;
+            case 10:
+                return `提示：
+1. 使用 chat room1 查看公共聊天记录
+2. 使用 private david 和 private eve 查看私聊
+3. 使用 history today 查看被删除的对话
+4. 在 system.log 中找到加密方式
+5. 记得在密码后加上年份后缀`;
             default:
                 return "当前关卡暂无提示";
         }
@@ -361,7 +419,7 @@ export const saveCommand: Command = {
         const saveName = args.join(" ");
         const saveId = saveStore.createSave(saveName);
 
-        return `游戏已保存到存档 #${saveId}: ${saveName}`;
+        return `游戏保存到存档 #${saveId}: ${saveName}`;
     }
 };
 
@@ -448,7 +506,7 @@ export const repairCommand: Command = {
     description: "修复损坏的文件",
     execute: (args: string[]) => {
         if (args.length !== 2) {
-            return "Usage: repair <源文件> <备份文件>";
+            return "Usage: repair <源文���> <备份文件>";
         }
 
         const gameStore = useGameStore();
@@ -486,12 +544,12 @@ export const pingCommand: Command = {
 来自 192.168.1.200 的回复: 时间<1ms
 
 192.168.1.200 的 Ping 统计信息:
-    数包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
+    : 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
 往返行程的估计时间(以毫秒为单位):
-    最短 = 0ms，最长 = 1ms，平均 = 0ms`;
+    最 = 0ms，最长 = 1ms，平均 = 0ms`;
         }
 
-        return `Ping 请求找不到主机 ${ip}。请检查该名称，然后重试。`;
+        return `Ping 请求找不到主机 ${ip}请检查该名称，然后重试。`;
     }
 };
 
@@ -525,7 +583,7 @@ export const downloadCommand: Command = {
 
         const gameStore = useGameStore();
         if (!gameStore.completedTasks.includes("connect_server")) {
-            return "错误：未连接到服务器！请先使用 connect 命令建立连接。";
+            return "错误：未连接服务器！请先使用 connect 命令建立连接。";
         }
 
         const filename = args[0];
@@ -543,7 +601,7 @@ export const downloadCommand: Command = {
 
 export const psCommand: Command = {
     name: "ps",
-    description: "查看进程列表",
+    description: "看进列表",
     execute: () => {
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 6) {
@@ -573,7 +631,7 @@ export const topCommand: Command = {
         }
 
         return `系统监控 - 每3秒更新一次
-进程总数：4    运行中：4    已停止：0
+进程总数：4    行中：4    已停止：0
 
 CPU 使用率：145.7%
 内存使用率：89.2%
@@ -584,7 +642,7 @@ CPU 使用率：145.7%
   999 monitor.exe    0.5%   4.8MB  运行中   00:00:01
     1 systemd        0.1%   1.2MB  运行中   00:00:00
 
-提示：输入 "top q" 退出监控`;
+提示：输入 "top q" 退出监`;
     }
 };
 
@@ -617,7 +675,7 @@ export const analyzeCommand: Command = {
         }
 
         return `分析报告 - PID ${pid}
-进程状态：正常
+进程状态：常
 无可疑行为`;
     }
 };
@@ -663,7 +721,7 @@ export const restoreCommand: Command = {
         }
 
         gameStore.completeTask("system_restore");
-        return `系统恢复完成：
+        return `系统恢复完成
 1. 已清理恶意程序残留
 2. 已恢复系统服务
 3. 已更新安全策略
@@ -768,7 +826,7 @@ export const tcpdumpCommand: Command = {
 捕获完成！可疑数据包已保存到 packets.pcap`;
     }
 
-    return '未发现可疑数据包';
+    return '未可疑数据包';
   }
 };
 
@@ -795,7 +853,7 @@ export const wiresharkCommand: Command = {
 2. 源地址：10.0.0.100:31337
 3. 目标地址：10.0.0.1:31337
 4. 数据内容：P@ssw0rd_2024
-5. 警告：检测到密码泄露！`;
+5. 警告检测到密码泄露！`;
     }
 
     return `wireshark: ${args[0]}: 文件不存在`;
@@ -828,5 +886,153 @@ export const iptablesCommand: Command = {
     }
 
     return '规则格式错误或无效';
+  }
+};
+
+export const mailCommand: Command = {
+  name: 'mail',
+  description: '查看用户邮箱',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 9) {
+      return 'mail: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: mail <用户名>';
+    }
+
+    const user = args[0].toLowerCase();
+    const validUsers = ['alice', 'bob', 'charlie'];
+    
+    if (!validUsers.includes(user)) {
+      return '用户不存在';
+    }
+
+    // 当查看了 bob 的邮件时，标任务开始
+    if (user === 'bob') {
+      gameStore.completeTask('access_mail');
+    }
+
+    return gameStore.currentLevelData.fileContents[`${user}.mbox`];
+  }
+};
+
+export const searchCommand: Command = {
+  name: 'search',
+  description: '搜索邮件内容',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 9) {
+      return 'search: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: search <关键词>';
+    }
+
+    const keyword = args[0].toLowerCase();
+    if (keyword === 'chess' || keyword === '棋盘' || keyword === '加密') {
+      gameStore.completeTask('find_secret');
+      return `搜索结果：
+1. 发现邮件提到国际象棋加密方案
+2. 发现关于棋子移动的记录
+3. 找到隐藏的棋盘布局文件
+
+提示：使用 cat .chess_notes 查看详细信息`;
+    }
+
+    return '未找到相关邮件';
+  }
+};
+
+export const draftCommand: Command = {
+  name: 'draft',
+  description: '查看邮件草稿',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 9) {
+      return 'draft: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: draft <用户名>';
+    }
+
+    const user = args[0].toLowerCase();
+    if (user === 'charlie') {
+      // 当查了 Charlie 的草稿时，标记发现秘密
+      gameStore.completeTask('find_secret');
+      return gameStore.currentLevelData.fileContents['.charlie_draft'];
+    }
+
+    return '未找到草稿';
+  }
+};
+
+export const chatCommand: Command = {
+  name: 'chat',
+  description: '查看公共聊天',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 10) {
+      return 'chat: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: chat <房间>';
+    }
+
+    if (args[0] === 'room1') {
+      gameStore.completeTask('access_chat');
+      return gameStore.currentLevelData.fileContents['public/room1.txt'];
+    }
+
+    return '房间不存在或已关闭';
+  }
+};
+
+export const privateCommand: Command = {
+  name: 'private',
+  description: '查���私聊记录',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 10) {
+      return 'private: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: private <用户>';
+    }
+
+    const user = args[0].toLowerCase();
+    if (['david', 'eve'].includes(user)) {
+      gameStore.completeTask('find_evidence');
+      return gameStore.currentLevelData.fileContents[`private/${user}.txt`];
+    }
+
+    return '用户不存在';
+  }
+};
+
+export const historyCommand: Command = {
+  name: 'history',
+  description: '查看历史记录',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 10) {
+      return 'history: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: history <日期> (格式：YYYY-MM-DD)';
+    }
+
+    if (args[0] === '2024-04-01') {
+      gameStore.completeTask('decode_plan');
+      return gameStore.currentLevelData.fileContents['.deleted'];
+    }
+
+    return '没有找到指定日期的记录';
   }
 }; 

@@ -20,7 +20,7 @@ export const levelConfigs: Record<number, LevelData> = {
     fileContents: {
       'welcome.txt': '欢迎来到终端世界！\n你的第一个任务是找到隐藏在某处的秘密文件。\n提示：并不是所有文件都会直接显示...',
       '.secret': '恭喜你找到了隐藏文件！\n这是你的第一步，接下来的挑战会更加有趣。\n密码提示：MOON_LIGHT',
-      'intro.md': '# 终端使用指南\n\n在这个世界中，�����用各种命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
+      'intro.md': '# 终端使用指南\n\n在这个世界中，�����命令来探索和解决问题。\n\n常用命令：\n- ls：列出文件\n- cd：切换目录\n- cat：查看文件内容',
       'guide.txt': '记住，在终端中，以 . 开头的文件通常是隐藏文件。\n使用 ls -a 可以查看所有文件，包括隐藏文件。',
       'day1.txt': '今天是我的第一天，还在适应这个系统。\n导师说要特别注意隐藏文件...',
       'reminder.txt': '备忘：\n1. 检查所有可能的位置\n2. 留意文件中的特殊提示\n3. 记录找到的密码',
@@ -40,7 +40,7 @@ export const levelConfigs: Record<number, LevelData> = {
     objectives: [
       '找到加密的信息',
       '使用解密工具破解密码',
-      '使用解密的密���问���密文件夹'
+      '使用解密的密问文'
     ],
     requiredTasks: ['decode_text'],
     fileSystem: {
@@ -66,8 +66,8 @@ export const levelConfigs: Record<number, LevelData> = {
 
   3: {
     id: 3,
-    title: '权限与密钥',
-    description: '这一关你将学习如何处理文件权限，并找到隐藏的密钥。系统管理员在不同目录中留下了线索。',
+    title: '权限密',
+    description: '这一关将学习何处理文件权限，并找到隐藏的密钥。系统管理员在不同目录中留下了线索。',
     objectives: [
       '探索系统目录结构',
       '收集分散的线索',
@@ -86,7 +86,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // system 目录文件
       'permissions.md': '文件权限说明：\n- r: 读取权限\n- w: 写入权限\n- x: 执行权限\n\n重要提示：\n1. 密钥的第一部分是一个常见的黑客术语\n2. 使用 ls -a 命令可以查看隐藏文件',
       'access_log.txt': '访问记录：\n[警告] 未授权访问尝试\n[提示] 密钥格式：XXXX-XXXX\n[提示] 第二部分是一个4位数字，看起来像日期格式\n[记录] 系统安装日期：04/01',
-      'protected_data.enc': '此���件已加密。\n需要完整的密钥才能访问。\n提示：密钥的两个部分分别代表：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
+      'protected_data.enc': '此件已密。\n要完整钥才���访问。\n提示：密钥的两个部分分别代��：\n1. 一个黑客行为（在日记中提到）\n2. 系统安装日期（在日志中记录）',
       
       // personal 目录文件
       'diary.txt': '今天学习了权限系统...\n管理员说密钥的第一部分是"HACK"\n这个词真形象，就是黑客的行为。\n第二部分好像是某个日期...',
@@ -107,9 +107,9 @@ export const levelConfigs: Record<number, LevelData> = {
   4: {
     id: 4,
     title: '数据恢复',
-    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被���，但幸运的���存在备份。',
+    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被，但运的存在备。',
     objectives: [
-      '分析损坏的数据文件',
+      '损坏���数据文件',
       '找到并使用正确的备份文件',
       '使用修复工具恢复数据',
       '获取修复后的密码'
@@ -126,8 +126,8 @@ export const levelConfigs: Record<number, LevelData> = {
       'readme.txt': '备份说明：\n1. 每日自动备份\n2. 文件格式：backup_MMDD.bak\n3. 使用 repair.exe 工具修复时需要指定正确的备份文件',
       'manual.pdf': '修复工具使用说明：\n1. 使用 scan <文件名> 分析损坏文件\n2. 使用 repair <源文件> <备份文件> 进行修复\n注意：必须使用正确的备份文件，否则可能导致数据进一步损坏',
       'error_log.txt': '错误记录：\n[2024-04-01 23:59:59] 数据库文件意外损坏\n[2024-04-02 00:00:01] 自动备份完成',
-      'system_log.txt': '系统日志：\n最后一次正常访问时间：2024-04-01\n最后��次成功备份：backup_0401.bak',
-      'backup_log.txt': '备份记录：\n- backup_0401.bak (完整备份)\n- backup_0402.bak (可能不完整)',
+      'system_log.txt': '系统日志：\n最后一次正常访问时间：2024-04-01\n后次成功备份backup_0401.bak',
+      'backup_log.txt': '备份记录：\n- backup_0401.bak (完整备份)\n- backup_0402.bak (能不完整)',
       'backup_0401.bak': '[备份数据 - 2024-04-01]\nD@t@B@se_2024',
       'backup_0402.bak': '[备份数据 - 2024-04-02]\nD#t#B#se_2024\n[备份可能不完整]',
       'repair.exe': '[系统提示] 这是一个修复工具。使用方法：repair <源文件> <备份文件>',
@@ -169,8 +169,8 @@ export const levelConfigs: Record<number, LevelData> = {
       // remote 目录文件
       'server_list.txt': '可用服务器列表：\n1. 192.168.1.200 (主服务器)\n  - 状态：在线\n  - 服务：文件传输\n  - 备注：重要数据备份服务器\n2. 192.168.1.201 (备用服务器)\n  - 状态：离线\n\n注意：使用 connect 命令连接服务器',
       'connect.exe': '[系统提示] 这是一个远程连接工具。\n使用方法：connect <IP> <用户名> <密码>',
-      'download.exe': '[系统提���] 这是一个数据下��工具。\n使用方法：download <文件名>\n\n注意：请查看访问日志了解可下载的文件',
-      'access.log': '访问记录：\n[INFO] 文件传输服务启动\n[INFO] 用户 kansini 登录成功\n[WARN] 尝试访问: private_data (拒绝访问)\n[INFO] 下载文件: secret_data (成功)\n[INFO] 文件大小: 1.2MB\n[INFO] 传输完成: 2024-04-01 12:00:00',
+      'download.exe': '[系统提示] 这是一个数据下载工具。\n使用方法：download <文件名>\n\n注意：请看访问日志了解可下载的文件',
+      'access.log': '访记录：\n[INFO] 文件传输服务启动\n[INFO] 用户 kansini 登录成功\n[WARN] 尝试访问: private_data (拒绝访问)\n[INFO] 下载文件: secret_data (成功)\n[INFO] 文件大小: 1.2MB\n[INFO] 传输完成: 2024-04-01 12:00:00',
       
       // config 目录文件
       'network.conf': '系统配置：\nHOSTNAME: local-machine\nDOMAIN: internal.net\nDEFAULT_USER: kansini\nDEFAULT_PASS: Netw0rk@2024\n\n可访问文件：\n- system_backup\n- secret_data (需要权限)\n- user_profile',
@@ -189,11 +189,11 @@ export const levelConfigs: Record<number, LevelData> = {
   6: {
     id: 6,
     title: '进程管理',
-    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留��了一些系统监控工具��',
+    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留了一些系监控工具',
     objectives: [
-      '查看系统进程',
+      '查看系统程',
       '分析可疑进程',
-      '终止恶意进程',
+      '�����止恶意进程',
       '恢复系统状态'
     ],
     requiredTasks: ['analyze_process', 'kill_malware', 'system_restore'],
@@ -204,7 +204,7 @@ export const levelConfigs: Record<number, LevelData> = {
       '~/tools': ['kill.exe', 'analyze.exe', 'restore.exe']
     },
     fileContents: {
-      'readme.txt': '系统监控指南：\n1. 使用 ps 命令查看进程列表\n2. 使用 top 命令监控系统资源\n3. 使用 kill 命令终止进程\n\n警告：请谨慎操作，错误的操作可能导致系统崩溃',
+      'readme.txt': '系统监控指南：\n1. 使用 ps 命令查看进程列表\n2. 使用 top 命令监控系统资源\n3. 使用 kill 命令终止进程\n\n警告：谨慎操作，错误的操作可能导致系统崩溃',
       
       // system 目录文件
       'processes.list': '当前进程列表：\nPID   名称          CPU   内存   状态\n1     systemd        0.1%  1.2MB  运行中\n666   malware.exe   99.9% 512MB  运行中\n888   backdoor.exe  45.2% 128MB  运行中\n',
@@ -248,34 +248,34 @@ export const levelConfigs: Record<number, LevelData> = {
       '~/usr': ['local', 'share', '.hidden']
     },
     fileContents: {
-      'readme.txt': '系统维护说明：\n1. 使用 whoami 查看当前用户\n2. 使用 sudo 执行特权命令\n3. 使用 chmod 修改文件权限\n\n注意：某些命令可能存在安全漏洞',
+      'readme.txt': '系统维护说明：\n1. 使用 whoami 查看当前用户\n2. 用 sudo 执行特权命令\n3. 使用 chmod 修改文件权限\n\n重要：\n- shadow 文件中存储着加密的密码\n- 需要 root 权限才能读取 shadow 文件\n- 使用 sudo cat <文件名> 可以以 root 权限查看文件',
       
       // bin 目录文件
-      'whoami.exe': '[系统提示] 显示当前用户。使用方法：whoami\n版本：1.0.2 (存在已知漏洞)',
+      'whoami.exe': '[系统提示] 显示当前用户。使用方法：whoami\n本：1.0.2 (存已知漏洞)',
       'sudo.exe': '[系统提示] 以管理员权限执行命令。使用方法：sudo <命令>',
       'chmod.exe': '[系统提示] 修改文件权限。使用方法：chmod <权限> <文件>',
       
       // etc 目录文件
       'passwd': '系统用户列表：\nroot:x:0:0\nuser:x:1000:1000\nguest:x:1001:1001',
-      'shadow': '权限不足：需要 root 权限才能查看此文件',
-      'sudoers': '# sudoers 文件\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL',
+      'shadow': '权限不足：需要 root 权限才能查看此文件\n提示：使用 sudo cat shadow 命令以 root 权限查看',
+      'sudoers': '# sudoers 文件说明\n\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL\n\n# 常用命令示例：\n# sudo cat /etc/shadow - 查看密码文件\n# sudo chmod - 修改文件权限\n# sudo su - 切换到 root 用户',
       
       // usr 目录文件
-      '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug=OVERFLOW',
+      '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug=OVERFLOW\n\n获 root 权限后：\n1. 使用 sudo cat shadow 查看加密的密码文件\n2. 密码文件中包含通关密码'
     },
     hints: [
       '先使用 whoami 查看当前权限',
       '检查所有命令的版本信息',
       '寻找可能存在漏洞的程序',
       '在隐藏文件中可能有漏洞利用的线索',
-      '成功提权后使用 sudo cat shadow 查看加密的密码'
+      '成功提权后用 sudo cat shadow 查看加密的密码'
     ]
   },
 
   8: {
     id: 8,
     title: '网络嗅探',
-    description: '系统检测到可疑的网络流量。你需要使用网络分析工具找出数据泄露的证据。',
+    description: '系统检测到可疑的网络量。你需要使用网络分析工具找出数据泄露的证据。',
     objectives: [
       '启动网络监听',
       '捕获可疑数据包',
@@ -293,9 +293,9 @@ export const levelConfigs: Record<number, LevelData> = {
       'readme.txt': '网络分析指南：\n1. 使用 tcpdump 捕获网络数据包\n2. 使用 wireshark 分析数据包内容\n3. 使用 iptables 阻止可疑连接\n\n注意：某些数据包可能包含敏感信息',
       
       // network 目录文件
-      'interfaces.conf': '网卡配置：\neth0: 192.168.1.100\neth1: 10.0.0.100\n\n可疑流量主要出现在 eth1',
+      'interfaces.conf': '网卡配置：\neth0: 192.168.1.100\neth1: 10.0.0.100\n\n可疑流量主要现在 eth1',
       'traffic.log': '流量记录：\n[警告] 检测到大量对外连接\n[警告] 端口 31337 有异常流量\n[提示] 使用 tcpdump port 31337 捕获可疑数据包',
-      'connections.list': '当前连接：\n192.168.1.100:80 -> 192.168.1.1:80 (HTTP)\n10.0.0.100:31337 -> 10.0.0.1:31337 (未知协议)',
+      'connections.list': '当前连接：\n192.168.1.100:80 -> 192.168.1.1:80 (HTTP)\n10.0.0.100:31337 -> 10.0.0.1:31337 (未���协议)',
       
       // capture 目录文件
       'packets.pcap': '[二进制数据包文件]\n需要使用 wireshark 分析',
@@ -313,6 +313,179 @@ export const levelConfigs: Record<number, LevelData> = {
       '使用 wireshark 分析捕获的数据包',
       '在可疑数据包中寻找密码信息',
       '使用 iptables 阻止数据泄露'
+    ]
+  },
+
+  9: {
+    id: 9,
+    title: '邮件侦探',
+    description: '你发现了一个旧的邮件服务器。通过查用户之间的邮件往来，你可能会发现一些有趣的秘密。',
+    objectives: [
+      '访问邮件系',
+      '查看用户邮件',
+      '发现隐藏的对话',
+      '找出通关密码'
+    ],
+    requiredTasks: ['access_mail', 'read_threads', 'find_secret'],
+    fileSystem: {
+      '~': ['readme.txt', 'mail', 'users'],
+      '~/mail': ['inbox', 'sent', 'draft'],
+      '~/mail/inbox': ['alice.mbox', 'bob.mbox', 'charlie.mbox'],
+      '~/users': ['accounts.txt', '.notes', 'calendar.txt']
+    },
+    fileContents: {
+      'readme.txt': '邮件系统使用说明：\n1. 使用 mail <用户名> 查看用户邮箱\n2. 每个用户都有自己的邮箱和草稿\n\n提示：\n- 查看 users 目录了解系统用户\n- 注意检查隐藏文件',
+      
+      // users 目录
+      'accounts.txt': '系统用户列表：\n- alice: 系统管理员\n- bob: 安全主管\n- charlie: 新入职员工',
+      '.notes': '备忘录：\n1. 提醒 Alice 修改默认密码\n2. Bob 最近在处理一个秘密项目\n3. Charlie 似乎现了什么得了的事情...\n4. 提醒所有人：草稿箱不是个安全的存储位置',
+      'calendar.txt': '重要日程：\n04/01 - 系统维护\n04/15 - 安全审计\n04/30 - 项目截止日期\n\n注意：所有密码都需要加上当前年份(2024)作为后缀',
+      
+      // mail 目录
+      'alice.mbox': `发件人: bob@local
+收件人: alice@local
+主题: 关于新项目
+内容: Alice，我���需要更安全的方式交流。
+记得用我们约定的方式加密重要信息。
+所有密码都要加上年份后缀 _2024。
+另外，新来的 Charlie 似乎在草稿箱里记录了什么...
+
+---
+发件人: charlie@local
+收件人: alice@local
+主题: 请帮助我
+内容: Alice，我可能发现了一些不该看的东西。
+我该怎么办？我把一些想法记下来了，
+但还没发出去...`,
+
+      'bob.mbox': `发件人: alice@local
+收件人: bob@local
+主题: Re: 关于新项目
+内容: 明白。我已经按照棋盘布局加密了信息。
+记住：白色方格走车，黑色方格走马。
+终点的密码就藏在那里。
+
+---
+发件人: charlie@local
+收件人: bob@local
+主题: 异常现象
+内容: Bob，系统日志中是不是有什么异常？
+我看到一些奇怪的访问记录...`,
+
+      'charlie.mbox': `发件人: alice@local
+收件人: charlie@local
+主题: Re: 请帮助我
+内容: Charlie，冷静。
+我注意到你最近在一些东西。
+记得及时清理那些未发送的内容。
+有些事情知道太多并不是好事。
+
+---
+发件人: bob@local
+收件人: charlie@local
+主题: Re: 异常现象
+内容: 这不是你该关心的事情。
+我看到你保存了一些草稿。
+建议你删除那些内容。
+专注于你本职工���。`,
+
+      // draft 目录（需要��特殊方式访问）
+      '.charlie_draft': `未发送邮件：
+主题：记录发现
+内容：我终于理解了！
+他们在用国际象棋加密信息：
+
+1. 白车路线：R -> O -> K
+2. 黑马路线：N -> I -> T
+3. 按顺序拼接：ROK + NIT
+4. 加上年份后缀：
+
+天啊，有人来了，我得赶快...`,
+
+      // 隐藏的棋盘布局文件
+      '.chess_notes': `棋盘布局说明：
+1. 白车路线：R -> O -> K
+2. 黑马路线：N -> I -> T
+3. 按顺序拼接：先白车后黑马
+4. 加上标准后缀：`
+    },
+    hints: [
+      '仔细阅读每个人的邮件',
+      '注意邮件中提到的加密方式',
+      '查看 Charlie 的草稿箱可能有线索',
+      '将棋子移动路线拼接起来',
+      '别忘了还有隐藏文件'
+    ]
+  },
+
+  10: {
+    id: 10,
+    title: '聊天记录调查',
+    description: '你发现了一个可疑的聊天服务器。通过调查用户之间的对话你可能会发现一个正在进行的密谋。',
+    objectives: [
+      '访问聊天系统',
+      '查看历史记录',
+      '破解加密对话',
+      '阻止密谋事件'
+    ],
+    requiredTasks: ['access_chat', 'find_evidence', 'decode_plan'],
+    fileSystem: {
+      '~': ['readme.txt', 'chat_rooms.txt', 'users.txt', 'logs'],
+      '~/logs': ['access.log', 'system.log', '.deleted']
+    },
+    fileContents: {
+      'readme.txt': '聊天系统调查指南：\n1. 使用 chat <房间> 查看公共聊天\n2. 使用 private <用户> 查看私聊记录\n3. 使用 history <日期> 查看历史记录\n\n提示：查看 chat_rooms.txt 了解可用的聊天室',
+      
+      'chat_rooms.txt': '可用聊天室列表：\n- room1: 主聊天室\n- room2: 休闲聊天室（已关闭）\n- room3: 技术讨论室（已关闭）\n\n注意：目前只有 room1 处于开放状态',
+      
+      'users.txt': '在线用户列表：\n- David (管理员)\n- Eve (版主)\n- Frank (普通用户)\n\n可以使用 private <用户名> 查看与用户的私聊记录',
+      
+      // 添加聊天记录内容
+      'public/room1.txt': `[公共聊天室 #1]
+David: 服务器安全检查完成了吗？
+Eve: 是的，按照清单都检查过了。
+Frank: 防火墙规则也已经更新。
+David: 很好，记得用之前说的方式加密要内容。
+Eve: 收到，我已经把配置文件加密好了。
+Frank: 我这边的日志也都处理完了。`,
+
+      'private/david.txt': `[私聊记录 - David]
+To Eve: 2024-04-01的配置文件里有几处要改动
+From Eve: 好的，我马上看看加密文件
+To Frank: 记得清理那天的日志记录
+From Frank: 明白，我会处理好的
+To Eve: 用老方法加密，别用新的方式`,
+
+      'private/eve.txt': `[私聊记录 - Eve]
+From David: 你看到今天的行动计划了吗？
+To David: 我发现一个加密文件，正在分析
+To Frank: 今天的系统日志很可疑，你看到了吗？
+From Frank: 是的，我会尽快清理掉`,
+
+      'encrypted/plan.txt': `[加密文件]
+原文已加密，使用凯撒密码加密：
+
+XVDIBKJ_QMBO                 // WUCHAJI_PLAN
+UJNF: 2024-05-01 23:59      // TIME: ...
+MPDBUJPO: DFOUSBM_QBSL      // LOCATION: ...
+UBSHFU: TFDSFU_TFSWFS       // TARGET: ...
+DPEF: XVDIBKJ_2024          // CODE: WUCHAJI_2024
+
+提示：使用 decode <文本> 尝试解密`,
+
+      'system.log': '系统日志：\n1. 检测到可疑的文件操作\n2. 加密类型：凯撒密码\n3. 每个字母都向后移动了一位\n4. 例如：A->B, B->C, ..., Z->A\n5. 使用 decode <文本> 可以还原\n\n提示：使用 history <日期> 可以查看历史记录，日期格式：YYYY-MM-DD',
+      
+      '.deleted': '已删除的系统日志：\n[WARN] 发现可疑进程\n[INFO] 尝试解密 XVDIBKJ\n[DEBUG] 清理完成',
+
+      // 添加一个新的提示文件
+      '.crypto_note': '加密分析：\n1. 文本 XVDIBKJ 是 WUCHAJI 的加密形式\n2. 每个字母都向后移动了一位\n3. 最终密码格式：解密后的文本 + _2024'
+    },
+    hints: [
+      '查看 chat_rooms.txt 了解可用的聊天室',
+      '使用 chat room1 查看公共聊天',
+      '注意聊天中提到的加密方式',
+      '在系统日志中找到加密说明',
+      '使用 decode 命令尝试解密文本'
     ]
   }
 }; 
