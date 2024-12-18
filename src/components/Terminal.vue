@@ -67,7 +67,14 @@ import {
   chatCommand,
   privateCommand,
   historyCommand,
-  exitCommand
+  exitCommand,
+  levelCommand,
+  memdumpCommand,
+  stringsCommand,
+  volatilityCommand,
+  loganalyzerCommand,
+  timelineCommand,
+  traceCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -106,6 +113,13 @@ gameEngine.registerCommand(chatCommand);
 gameEngine.registerCommand(privateCommand);
 gameEngine.registerCommand(historyCommand);
 gameEngine.registerCommand(exitCommand);
+gameEngine.registerCommand(levelCommand);
+gameEngine.registerCommand(memdumpCommand);
+gameEngine.registerCommand(stringsCommand);
+gameEngine.registerCommand(volatilityCommand);
+gameEngine.registerCommand(loganalyzerCommand);
+gameEngine.registerCommand(timelineCommand);
+gameEngine.registerCommand(traceCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');

@@ -70,6 +70,7 @@
             <div v-else v-for="save in saves" :key="save.id" class="save-item">
               <div class="save-info">
                 <span class="save-name">SAVE_#{{ save.id }}: {{ save.name }}</span>
+                <span class="save-level">第{{ save.save.currentLevel }}关 - {{ getCurrentLevelData(save.save.currentLevel).title }}</span>
                 <span class="save-date">{{ formatDate(save.save.timestamp) }}</span>
               </div>
               <div class="save-actions">
@@ -100,6 +101,7 @@ import {ref, computed, onMounted, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/game";
 import {useSaveStore} from "@/stores/save";
 import {useLanguageStore} from "@/stores/language";
+import {getCurrentLevelData} from "@/game/levels";
 import Tutorial from "./Tutorial.vue";
 import About from "./About.vue";
 
@@ -714,6 +716,11 @@ const toggleLanguage = () => {
             .save-name {
               display: block;
               font-size: 1.1rem;
+            }
+
+            .save-level {
+              font-size: 0.9rem;
+              opacity: 0.7;
             }
 
             .save-date {

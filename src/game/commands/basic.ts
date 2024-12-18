@@ -20,6 +20,7 @@ export const helpCommand: Command = {
   save <名称> - 保存游戏进度
   load [ID] - 查看或加载存档
   deletesave <ID> - 删除存档
+  level - 显示当前关卡信息
   exit - 返回主菜单`;
 
         // 根据当前关卡添加特定命令
@@ -195,7 +196,7 @@ export const unlockCommand: Command = {
 ${levelData.description}
 
 目标：
-${levelData.objectives.map(obj => '- ' + obj).join('\n')}
+${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
 输入 help 查看可用命令`;
         };
@@ -262,30 +263,30 @@ ${levelData.objectives.map(obj => '- ' + obj).join('\n')}
                 break;
 
             case 7:
-                if (!gameStore.completedTasks.includes('read_shadow')) {
-                    return '你需要先获取 shadow 文件中的密码！';
+                if (!gameStore.completedTasks.includes("read_shadow")) {
+                    return "你需要先获取 shadow 文件中的密码！";
                 }
-                if (password === 'Pr1v1l3ge_2024') {
+                if (password === "Pr1v1l3ge_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
                 break;
 
             case 8:
-                if (!gameStore.completedTasks.includes('block_leak')) {
-                    return '你需要先阻止数据泄露！';
+                if (!gameStore.completedTasks.includes("block_leak")) {
+                    return "你需要先阻止数据泄露！";
                 }
-                if (password === 'P@ssw0rd_2024') {
+                if (password === "P@ssw0rd_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
                 break;
 
             case 9:
-                if (!gameStore.completedTasks.includes('find_secret')) {
-                    return '需要先找到隐藏在件中的秘密';
+                if (!gameStore.completedTasks.includes("find_secret")) {
+                    return "需要先找到隐藏在件中的秘密";
                 }
-                if (password === 'ROKNIT_2024') {
+                if (password === "ROKNIT_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
@@ -293,36 +294,36 @@ ${levelData.objectives.map(obj => '- ' + obj).join('\n')}
 
             case 10:
                 if (!gameStore.completedTasks.includes('decode_plan')) {
-                    return '你需要先破解加密的计划文件！';
+                    return "你需要先破解加密的信息！";
                 }
-                if (password === 'WUCHAJI_2024') {
+                if (password === "WUCHAJI_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
                 break;
 
             case 11:
-                if (!gameStore.completedTasks.includes('extract_info')) {
-                    return '你需要先完成内存分析！';
+                if (!gameStore.completedTasks.includes("extract_info")) {
+                    return "你需要先完成内存分析！";
                 }
-                if (password === 'BACKDOOR_2024') {
+                if (password === "BACKDOOR_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
                 break;
 
             case 12:
-                if (!gameStore.completedTasks.includes('find_data')) {
-                    return '你需要先找到被窃取的数据！';
+                if (!gameStore.completedTasks.includes("find_data")) {
+                    return "你需要先找到被窃取的数据！";
                 }
-                if (password === 'L0G_H4CK_2024') {
+                if (password === "L0G_H4CK_2024") {
                     gameStore.completeLevel();
-                    return '恭喜你通关了！';
+                    return "恭喜你通关了！";
                 }
                 break;
 
             default:
-                return '关卡 ' + level + ' 正在紧张开发中...';
+                return "关卡 " + level + " 正在紧张开发中...";
         }
 
         return "密码错误，请继续寻找线索。";
@@ -375,8 +376,9 @@ export const hintCommand: Command = {
 1. 使用 ps 命令查看所有进程
 2. 注意进程的 CPU 和内存占用
 3. 分析 PID 为 666 的可疑进程
-4. 使用 kill 命令终止恶意进程
-5. 最后使用 restore 命令恢复系统`;
+4. 使用 analyze 分析进程
+5. 使用 kill 命令终止恶意进程
+6. 最后使用 restore 命令恢复系统`;
             case 7:
                 return `提示：
 1. 先用 whoami 令查看当前用户限
@@ -404,9 +406,8 @@ export const hintCommand: Command = {
                 return `提示：
 1. 使用 chat room1 查看公共聊天记录
 2. 使用 private david 和 private eve 查看私聊
-3. 使用 history today 查看被删除的对话
-4. 在 system.log 中找到加密方式
-5. 记得在密码后加上年份后缀`;
+3. 在 system.log 中找到加密方式
+4. 注意观察加密的文本格式`;
             case 11:
                 return `提示：
 1. 使用 memdump snapshot.raw 分析内存快照
@@ -452,7 +453,7 @@ export const decodeCommand: Command = {
         // 如果解密的是目标文本，标记任务完成
         if (text === "Pme!Gmppe!") {
             gameStore.completeTask("decode_text");
-            return `解密成功！解密结果：${decrypted}\n恭喜你发现了密码！`;
+            return `解密成功！解密结果：${decrypted}\n恭喜你发��了密码���`;
         }
 
         return `解密结果：${decrypted}`;
@@ -485,9 +486,10 @@ export const loadCommand: Command = {
             if (saves.length === 0) {
                 return "没有找到任何存档";
             }
-            return `可存档：\n${saves.map(s =>
-                `#${s.id}: ${s.name} (${new Date(s.save.timestamp).toLocaleString()})`
-            ).join("\n")}\n\n请用 load <存档ID> 来加载存档`;
+            return `可用存档：\n${saves.map(s => {
+                const levelData = getCurrentLevelData(s.save.currentLevel);
+                return `#${s.id}: ${s.name} (第${s.save.currentLevel}关 - ${levelData.title}) [${new Date(s.save.timestamp).toLocaleString()}]`;
+            }).join("\n")}\n\n请用 load <存档ID> 来加载存档`;
         }
 
         const saveId = parseInt(args[0]);
@@ -497,6 +499,11 @@ export const loadCommand: Command = {
 
         const saveStore = useSaveStore();
         if (saveStore.loadSave(saveId)) {
+            const saveData = saveStore.getSaveData(saveId);
+            if (saveData) {
+                const levelData = getCurrentLevelData(saveData.currentLevel);
+                return `存档读取成功！\n当前位于第${saveData.currentLevel}关 - ${levelData.title}`;
+            }
             return "存档读取成功！";
         } else {
             return `未找到存档 #${saveId}`;
@@ -784,91 +791,91 @@ export const restoreCommand: Command = {
 };
 
 export const whoamiCommand: Command = {
-  name: 'whoami',
-  description: '显示当前用户',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 7) {
-      return 'whoami: 命令不可用';
-    }
+    name: "whoami",
+    description: "显示当前用户",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 7) {
+            return "whoami: 命令不可用";
+        }
 
-    // 简化的漏洞检测逻辑
-    if (args[0] === '--debug=OVERFLOW') {
-      gameStore.completeTask('get_root');
-      return `[漏洞触发成功]
+        // 简化的漏洞检测逻辑
+        if (args[0] === "--debug=OVERFLOW") {
+            gameStore.completeTask("get_root");
+            return `[漏洞触发成功]
 权限提升：user -> root
 当前用户：root
 用户组：root wheel admin`;
-    }
+        }
 
-    return 'user';  // 默认显示普通用户
-  }
+        return "user";  // 默认显示普通用户
+    }
 };
 
 export const sudoCommand: Command = {
-  name: 'sudo',
-  description: '以管理员权限执行命令',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 7) {
-      return 'sudo: 命令不可用';
-    }
+    name: "sudo",
+    description: "以管理员权限执行命令",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 7) {
+            return "sudo: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: sudo <command>';
-    }
+        if (!args.length) {
+            return "Usage: sudo <command>";
+        }
 
-    if (!gameStore.completedTasks.includes('get_root')) {
-      return '错误：用户不在 sudoers 文件中。此事将被报告。';
-    }
+        if (!gameStore.completedTasks.includes("get_root")) {
+            return "错误：用户不在 sudoers 文件中。此事将被报告。";
+        }
 
-    const command = args.join(' ');
-    if (command === 'cat shadow') {
-      gameStore.completeTask('read_shadow');
-      return `root:$6$xyz$hash:19000:0:99999:7:::
+        const command = args.join(" ");
+        if (command === "cat shadow") {
+            gameStore.completeTask("read_shadow");
+            return `root:$6$xyz$hash:19000:0:99999:7:::
 user:$6$abc$hash:19000:0:99999:7:::
 guest:$6$def$hash:19000:0:99999:7:::
 
 解密后的 root 密码：Pr1v1l3ge_2024`;
-    }
+        }
 
-    return `sudo: ${args[0]}: 命令未找到`;
-  }
+        return `sudo: ${args[0]}: 命令未找到`;
+    }
 };
 
 export const chmodCommand: Command = {
-  name: 'chmod',
-  description: '修改文件权限',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 7) {
-      return 'chmod: 命令不可用';
-    }
+    name: "chmod",
+    description: "修改文件权限",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 7) {
+            return "chmod: 命令不可用";
+        }
 
-    if (args.length !== 2) {
-      return 'Usage: chmod <权限> <文件>';
-    }
+        if (args.length !== 2) {
+            return "Usage: chmod <权限> <文件>";
+        }
 
-    return '权限不足：需 root 权限';
-  }
+        return "权限不足：需 root 权限";
+    }
 };
 
 export const tcpdumpCommand: Command = {
-  name: 'tcpdump',
-  description: '捕获网络数据包',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 8) {
-      return 'tcpdump: 命令不可用';
-    }
+    name: "tcpdump",
+    description: "捕获网络数据包",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 8) {
+            return "tcpdump: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: tcpdump <过滤器>';
-    }
+        if (!args.length) {
+            return "Usage: tcpdump <过滤器>";
+        }
 
-    if (args.includes('port') && args.includes('31337')) {
-      gameStore.completeTask('start_capture');
-      return `开始捕获数据包...
+        if (args.includes("port") && args.includes("31337")) {
+            gameStore.completeTask("start_capture");
+            return `开始捕获数据包...
 
 [21:00:01] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP
 [21:00:02] IP 10.0.0.1.31337 > 10.0.0.100.31337: TCP
@@ -876,261 +883,261 @@ export const tcpdumpCommand: Command = {
 数据: "P@ssw0rd_2024"
 
 捕获完成！可疑数据包已保存到 packets.pcap`;
-    }
+        }
 
-    return '未可疑数据包';
-  }
+        return "未可疑数据包";
+    }
 };
 
 export const wiresharkCommand: Command = {
-  name: 'wireshark',
-  description: '分析数据包内容',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 8) {
-      return 'wireshark: 命令不可用';
-    }
+    name: "wireshark",
+    description: "分析数据包内容",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 8) {
+            return "wireshark: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: wireshark <文件名>';
-    }
+        if (!args.length) {
+            return "Usage: wireshark <文件名>";
+        }
 
-    if (args[0] === 'packets.pcap') {
-      if (!gameStore.completedTasks.includes('start_capture')) {
-        return '错误：文件为空，请先使用 tcpdump 捕获数据包';
-      }
-      gameStore.completeTask('analyze_packet');
-      return `分析结果：
+        if (args[0] === "packets.pcap") {
+            if (!gameStore.completedTasks.includes("start_capture")) {
+                return "错误：文件为空，请先使用 tcpdump 捕获数据包";
+            }
+            gameStore.completeTask("analyze_packet");
+            return `分析结果：
 1. 协议：TCP
 2. 源地址：10.0.0.100:31337
 3. 目标地址：10.0.0.1:31337
 4. 数据内容：P@ssw0rd_2024
 5. 警告检测到密码泄露！`;
-    }
+        }
 
-    return `wireshark: ${args[0]}: 文件不存在`;
-  }
+        return `wireshark: ${args[0]}: 文件不存在`;
+    }
 };
 
 export const iptablesCommand: Command = {
-  name: 'iptables',
-  description: '配置防火墙规则',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 8) {
-      return 'iptables: 命令不可用';
-    }
+    name: "iptables",
+    description: "配置防火墙规则",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 8) {
+            return "iptables: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: iptables <规则>';
-    }
+        if (!args.length) {
+            return "Usage: iptables <规则>";
+        }
 
-    // 检查是否是正确的阻止规则
-    const command = args.join(' ');
-    if (command === '-A OUTPUT -d 10.0.0.1 -j DROP') {
-      gameStore.completeTask('block_leak');
-      return `防火墙规则已添加：
+        // 检查是否是正确的阻止规则
+        const command = args.join(" ");
+        if (command === "-A OUTPUT -d 10.0.0.1 -j DROP") {
+            gameStore.completeTask("block_leak");
+            return `防火墙规则已添加：
 1. 阻止所有到 10.0.0.1 的连接
 2. 数据泄露已被阻止
 3. 系统安全状态：已恢复
 
 发现通关密码：P@ssw0rd_2024`;
-    }
+        }
 
-    return '规则格式错误或无效';
-  }
+        return "规则格式错误或无效";
+    }
 };
 
 export const mailCommand: Command = {
-  name: 'mail',
-  description: '查看用户邮箱',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 9) {
-      return 'mail: 命令不可用';
-    }
+    name: "mail",
+    description: "查看用户邮箱",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 9) {
+            return "mail: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: mail <用户名>';
-    }
+        if (!args.length) {
+            return "Usage: mail <用户名>";
+        }
 
-    const user = args[0].toLowerCase();
-    const validUsers = ['alice', 'bob', 'charlie'];
-    
-    if (!validUsers.includes(user)) {
-      return '用户不存在';
-    }
+        const user = args[0].toLowerCase();
+        const validUsers = ["alice", "bob", "charlie"];
 
-    // 当查看了 bob 的邮件时，标任务开始
-    if (user === 'bob') {
-      gameStore.completeTask('access_mail');
-    }
+        if (!validUsers.includes(user)) {
+            return "用户不存在";
+        }
 
-    return gameStore.currentLevelData.fileContents[`${user}.mbox`];
-  }
+        // 当查看了 bob 的邮件时，标任务开始
+        if (user === "bob") {
+            gameStore.completeTask("access_mail");
+        }
+
+        return gameStore.currentLevelData.fileContents[`${user}.mbox`];
+    }
 };
 
 export const searchCommand: Command = {
-  name: 'search',
-  description: '搜索邮件内容',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 9) {
-      return 'search: 命令不可用';
-    }
+    name: "search",
+    description: "搜索邮件内容",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 9) {
+            return "search: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: search <关键词>';
-    }
+        if (!args.length) {
+            return "Usage: search <关键词>";
+        }
 
-    const keyword = args[0].toLowerCase();
-    if (keyword === 'chess' || keyword === '棋盘' || keyword === '加密') {
-      gameStore.completeTask('find_secret');
-      return `搜索结果：
+        const keyword = args[0].toLowerCase();
+        if (keyword === "chess" || keyword === "棋盘" || keyword === "加密") {
+            gameStore.completeTask("find_secret");
+            return `搜索结果：
 1. 发现邮件提到国际象棋加密案
-2. 发现关于棋子移动的记录
+2. 发现关于棋移动的记录
 3. 找到隐藏的棋盘布局文件
 
 提示：使用 cat .chess_notes 查看详细信息`;
-    }
+        }
 
-    return '未找到相关邮件';
-  }
+        return "未找到相关邮件";
+    }
 };
 
 export const draftCommand: Command = {
-  name: 'draft',
-  description: '查看邮件草稿',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 9) {
-      return 'draft: 命令不可用';
-    }
+    name: "draft",
+    description: "查看邮件草稿",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 9) {
+            return "draft: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: draft <用户名>';
-    }
+        if (!args.length) {
+            return "Usage: draft <用户名>";
+        }
 
-    const user = args[0].toLowerCase();
-    if (user === 'charlie') {
-      // 当查了 Charlie 的草稿时，标记发现秘密
-      gameStore.completeTask('find_secret');
-      return gameStore.currentLevelData.fileContents['.charlie_draft'];
-    }
+        const user = args[0].toLowerCase();
+        if (user === "charlie") {
+            // 当查了 Charlie 的草稿时，标记发现秘密
+            gameStore.completeTask("find_secret");
+            return gameStore.currentLevelData.fileContents[".charlie_draft"];
+        }
 
-    return '未找到草稿';
-  }
+        return "未找到草稿";
+    }
 };
 
 export const chatCommand: Command = {
-  name: 'chat',
-  description: '查看公共聊天',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 10) {
-      return 'chat: 命令不可用';
-    }
+    name: "chat",
+    description: "查看公共聊天",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 10) {
+            return "chat: 命令不可";
+        }
 
-    if (!args.length) {
-      return 'Usage: chat <房间>';
-    }
+        if (!args.length) {
+            return "Usage: chat <房间>";
+        }
 
-    if (args[0] === 'room1') {
-      gameStore.completeTask('access_chat');
-      return gameStore.currentLevelData.fileContents['public/room1.txt'];
-    }
+        if (args[0] === "room1") {
+            gameStore.completeTask("access_chat");
+            return gameStore.currentLevelData.fileContents["public/room1.txt"];
+        }
 
-    return '房间不存在或已关闭';
-  }
+        return "房间不存在或已关闭";
+    }
 };
 
 export const privateCommand: Command = {
-  name: 'private',
-  description: '查看私聊记录',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 10) {
-      return 'private: 命令不可用';
-    }
+    name: "private",
+    description: "查看私聊记录",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 10) {
+            return "private: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: private <用户>';
-    }
+        if (!args.length) {
+            return "Usage: private <用户>";
+        }
 
-    const user = args[0].toLowerCase();
-    if (['david', 'eve'].includes(user)) {
-      gameStore.completeTask('find_evidence');
-      return gameStore.currentLevelData.fileContents[`private/${user}.txt`];
-    }
+        const user = args[0].toLowerCase();
+        if (["david", "eve"].includes(user)) {
+            gameStore.completeTask("find_evidence");
+            return gameStore.currentLevelData.fileContents[`private/${user}.txt`];
+        }
 
-    return '用户不存在';
-  }
+        return "用户不存在";
+    }
 };
 
 export const historyCommand: Command = {
-  name: 'history',
-  description: '查看历史记录',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 10) {
-      return 'history: 命令不可用';
-    }
+    name: "history",
+    description: "查看历史记录",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 10) {
+            return "history: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: history <日期> (格式：YYYY-MM-DD)';
-    }
+        if (!args.length) {
+            return "Usage: history <日期> (格式：YYYY-MM-DD)";
+        }
 
-    if (args[0] === '2024-04-01') {
-      gameStore.completeTask('decode_plan');
-      return gameStore.currentLevelData.fileContents['.deleted'];
-    }
+        if (args[0] === "2024-04-01") {
+            gameStore.completeTask("decode_plan");
+            return gameStore.currentLevelData.fileContents[".deleted"];
+        }
 
-    return '没有找到指定日期的记录';
-  }
+        return "没有找到指定日期的记录";
+    }
 };
 
 export const exitCommand: Command = {
-  name: 'exit',
-  description: '返回主菜单',
-  execute: () => {
-    const gameStore = useGameStore();
-    const terminalStore = useTerminalStore();
-    
-    // 清空终端历史
-    terminalStore.clearHistory();
-    // 重置当前目录
-    terminalStore.setCurrentDirectory('~');
-    // 退出游戏状态
-    gameStore.exitGame();
-    
-    return '';  // 返回空字符串，不显示任何提示
-  }
+    name: "exit",
+    description: "返回主菜单",
+    execute: () => {
+        const gameStore = useGameStore();
+        const terminalStore = useTerminalStore();
+
+        // 清空终端历史
+        terminalStore.clearHistory();
+        // 重置当前目录
+        terminalStore.setCurrentDirectory("~");
+        // 退出游戏状态
+        gameStore.exitGame();
+
+        return "";  // 返回空字符串，不显示任何提示
+    }
 };
 
 export const loganalyzerCommand: Command = {
-  name: 'loganalyzer',
-  description: '分析日志文件中的异常模式',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 12) {
-      return 'loganalyzer: 命令不可用';
-    }
+    name: "loganalyzer",
+    description: "分析日志文件中的异常模式",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 12) {
+            return "loganalyzer: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: loganalyzer <日志文件>';
-    }
+        if (!args.length) {
+            return "Usage: loganalyzer <日志文件>";
+        }
 
-    const logFile = args[0];
-    const validLogs = ['auth.log', 'system.log', 'access.log', 'error.log'];
-    
-    if (!validLogs.includes(logFile)) {
-      return `loganalyzer: ${logFile}: 不是有效的日志文件`;
-    }
+        const logFile = args[0];
+        const validLogs = ["auth.log", "system.log", "access.log", "error.log"];
 
-    gameStore.completeTask('analyze_logs');
+        if (!validLogs.includes(logFile)) {
+            return `loganalyzer: ${logFile}: 不是有效的日志文件`;
+        }
 
-    if (logFile === 'auth.log') {
-      return `分析结果：
+        gameStore.completeTask("analyze_logs");
+
+        if (logFile === "auth.log") {
+            return `分析结果：
 1. 检测到暴力破解尝试
    - 目标账户: admin, root, administrator
    - 来源IP: 192.168.1.100
@@ -1144,10 +1151,10 @@ export const loganalyzerCommand: Command = {
 4. 可疑行为
    - 尝试访问 /root 目录
    - 权限被拒绝`;
-    }
+        }
 
-    if (logFile === 'system.log') {
-      return `分析结果：
+        if (logFile === "system.log") {
+            return `分析结果：
 1. 系统异常
    - CPU 使用率异常（02:15:00）
    - 多次访问敏感目录（02:15:30）
@@ -1157,11 +1164,13 @@ export const loganalyzerCommand: Command = {
    - 结束时间: 02:16:10
 3. 连接信息
    - IP: 192.168.1.100
-   - 持续时间: 约2分35秒`;
-    }
+   - 持续时间: 约2分35秒
 
-    if (logFile === 'access.log') {
-      return `分析结果：
+[提示] 发现多个可疑事件，建议使用 timeline 命令生成完整的攻击过程时间线`;
+        }
+
+        if (logFile === "access.log") {
+            return `分析结果：
 1. 攻击模式
    - 初始探测: login.php
    - 提权尝试: admin/config.php
@@ -1175,11 +1184,16 @@ export const loganalyzerCommand: Command = {
 4. 攻击特征
    - 目录遍历
    - 权限绕过
-   - 敏感信息泄露`;
-    }
+   - 敏感信息泄露
 
-    if (logFile === 'error.log') {
-      return `分析结果：
+[提示] 发现两种不同类型的攻击事件：
+- 系统层面的入侵尝试
+- Web应用层面的攻击行为
+建议使用 timeline system 或 timeline web 分别分析这两种攻击`;
+        }
+
+        if (logFile === "error.log") {
+            return `分析结果：
 1. 安全警告
    - 未授权访问管理区域
    - 目录遍历攻击
@@ -1191,24 +1205,49 @@ export const loganalyzerCommand: Command = {
    - Web应用漏洞利用
    - 参数篡改
    - 访问控制绕过`;
-    }
+        }
 
-    return '分析完成。';
-  }
+        return "分析完成。";
+    }
 };
 
 export const timelineCommand: Command = {
-  name: 'timeline',
-  description: '创建事件时间线',
-  execute: () => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 12) {
-      return 'timeline: 命令不可用';
-    }
+    name: "timeline",
+    description: "创建事件时间线",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 12) {
+            return "timeline: 命令不可用";
+        }
 
-    gameStore.completeTask('track_intruder');
+        if (!args.length) {
+            return "Usage: timeline <目标>\n请先分析日志文件以获取可用的目标类型。";
+        }
 
-    return `事件时间线：
+        gameStore.completeTask("track_intruder");
+
+        if (args[0] === "web") {
+            return `Web访问时间线：
+02:13:45 - 访问 login.php (失败尝试)
+02:14:10 - 访问 admin/login.php (失败尝试)
+02:14:30 - 访问 login.php (成功登录)
+02:15:15 - 访问 admin/config.php (权限不足)
+02:15:30 - 访问 backup/db.sql (访问被拒绝)
+02:15:45 - 下载 data/users.csv (成功)
+02:16:00 - 尝试访问 ../../../etc/passwd (失败)
+
+分析结论：
+1. 攻击持续时间：约2分15秒
+2. 攻击模式：目录遍历、权限绕过
+3. 成功获取：users.csv 文件
+4. 攻击特征：Web漏洞利用
+
+[提示] 发现可疑IP地址：192.168.1.100
+建议使用 trace 命令追踪`;
+        }
+
+        if (args[0] === "system") {
+            return `系统事件时间线：
 02:13:40 - 检测到来自 192.168.1.100 的新连接
 02:13:45 - 开始暴力破解尝试 (admin)
 02:13:50 - 继续暴力破解 (root)
@@ -1226,27 +1265,33 @@ export const timelineCommand: Command = {
 1. 攻击持续时间：约2分35秒
 2. 主要目标：用户数据 (users.csv)
 3. 攻击手法：暴力破解、权限提升、目录遍历
-4. 攻击结果：部分成功（获取了用户数据）`;
-  }
+4. 攻击结果：部分成功（获取了用户数据）
+
+[提示] 发现可疑IP地址：192.168.1.100
+建议使用 trace 命令追踪`;
+        }
+
+        return "无效的目标类型。请先分析日志文件以获取可用的目标类型。";
+    }
 };
 
 export const traceCommand: Command = {
-  name: 'trace',
-  description: '追踪IP地址活动',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 12) {
-      return 'trace: 命令不可用';
-    }
+    name: "trace",
+    description: "追踪IP地址活动",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 12) {
+            return "trace: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: trace <IP地址>';
-    }
+        if (!args.length) {
+            return "Usage: trace <IP地址>";
+        }
 
-    const ip = args[0];
-    if (ip === '192.168.1.100') {
-      gameStore.completeTask('find_data');
-      return `IP追踪结果：
+        const ip = args[0];
+        if (ip === "192.168.1.100") {
+            gameStore.completeTask("find_data");
+            return `IP追踪结果：
 来源: 192.168.1.100
 活动摘要：
 1. 连接信息
@@ -1274,28 +1319,28 @@ export const traceCommand: Command = {
    - 更新访问控制策略
 
 解锁密码：L0G_H4CK_2024`;
-    }
+        }
 
-    return `trace: ${ip}: 未找到相关活动记录`;
-  }
+        return `trace: ${ip}: 未找到相关活动记录`;
+    }
 };
 
 export const memdumpCommand: Command = {
-  name: 'memdump',
-  description: '分析内存快照',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 11) {
-      return 'memdump: 命令不可用';
-    }
+    name: "memdump",
+    description: "分析内存快照",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 11) {
+            return "memdump: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: memdump <文件名>';
-    }
+        if (!args.length) {
+            return "Usage: memdump <文件名>";
+        }
 
-    if (args[0] === 'snapshot.raw') {
-      gameStore.completeTask('analyze_memory');
-      return `内存分析报告：
+        if (args[0] === "snapshot.raw") {
+            gameStore.completeTask("analyze_memory");
+            return `内存分析报告：
 1. 可疑进程
    - PID: 666 (svchost.exe)
      异常：系统进程占用内存过高
@@ -1310,28 +1355,28 @@ export const memdumpCommand: Command = {
 4. 建议
    - 进一步分析进程 666 和 888
    - 解码加密的命令字符串`;
-    }
+        }
 
-    return `memdump: ${args[0]}: 文件不存在`;
-  }
+        return `memdump: ${args[0]}: 文件不存在`;
+    }
 };
 
 export const stringsCommand: Command = {
-  name: 'strings',
-  description: '提取内存中的可读字符串',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 11) {
-      return 'strings: 命令不可用';
-    }
+    name: "strings",
+    description: "提取内存中的可读字符串",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 11) {
+            return "strings: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: strings <文件名>';
-    }
+        if (!args.length) {
+            return "Usage: strings <文件名>";
+        }
 
-    if (args[0] === 'snapshot.raw') {
-      gameStore.completeTask('find_malware');
-      return `字符串提取结果：
+        if (args[0] === "snapshot.raw") {
+            gameStore.completeTask("find_malware");
+            return `字符串提取结果：
 1. 系统路径
    C:\\Windows\\System32
    C:\\Users\\Admin\\AppData\\Local\\Temp
@@ -1349,28 +1394,28 @@ export const stringsCommand: Command = {
    backdoor.exe
    svchost.exe
    explorer.exe`;
-    }
+        }
 
-    return `strings: ${args[0]}: 文件不存在`;
-  }
+        return `strings: ${args[0]}: 文件不存在`;
+    }
 };
 
 export const volatilityCommand: Command = {
-  name: 'volatility',
-  description: '高级内存取证分析',
-  execute: (args: string[]) => {
-    const gameStore = useGameStore();
-    if (gameStore.currentLevel !== 11) {
-      return 'volatility: 命令不可用';
-    }
+    name: "volatility",
+    description: "高级内存取证分析",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 11) {
+            return "volatility: 命令不可用";
+        }
 
-    if (!args.length) {
-      return 'Usage: volatility <文件名>';
-    }
+        if (!args.length) {
+            return "Usage: volatility <文件名>";
+        }
 
-    if (args[0] === 'snapshot.raw') {
-      gameStore.completeTask('extract_info');
-      return `深度分析结果：
+        if (args[0] === "snapshot.raw") {
+            gameStore.completeTask("extract_info");
+            return `深度分析结果：
 1. 进程分析
    - PID 666 (svchost.exe)
      注入了可疑代码
@@ -1389,8 +1434,25 @@ export const volatilityCommand: Command = {
    - 解码结果：BACKDOOR_2024
    
 这就是通关密码！`;
-    }
+        }
 
-    return `volatility: ${args[0]}: 文件不存在`;
-  }
+        return `volatility: ${args[0]}: 文件不存在`;
+    }
+};
+
+export const levelCommand: Command = {
+    name: "level",
+    description: "显示当前关卡信息",
+    execute: () => {
+        const gameStore = useGameStore();
+        const levelData = getCurrentLevelData(gameStore.currentLevel);
+        
+        return `【第${gameStore.currentLevel}关】${levelData.title}
+${levelData.description}
+
+目标：
+${levelData.objectives.map(obj => "- " + obj).join("\n")}
+
+输入 help 查看可用命令`;
+    }
 }; 

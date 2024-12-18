@@ -32,6 +32,10 @@
               <span>{{ t('commandClear') }}</span>
             </div>
             <div class="command-item">
+              <code>level</code>
+              <span>{{ t('commandLevel') }}</span>
+            </div>
+            <div class="command-item">
               <code>unlock &lt;{{ t('password') }}&gt;</code>
               <span>{{ t('commandUnlock') }}</span>
             </div>

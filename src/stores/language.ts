@@ -76,6 +76,10 @@ const translations: Translation = {
     zh: '清除终端屏幕',
     en: 'Clear terminal screen'
   },
+  commandLevel: {
+    zh: '显示当前关卡信息',
+    en: 'Display current level information'
+  },
   commandUnlock: {
     zh: '使用密码解锁下一关',
     en: 'Use password to unlock next level'
