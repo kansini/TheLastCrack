@@ -26,17 +26,28 @@ export const useGameStore = defineStore('game', {
       terminalStore.setCurrentDirectory(path);
     },
 
-    startGame() {
+    startNewGame() {
       this.gameStarted = true;
       this.currentLevel = 1;
+      this.completedTasks = [];
+      this.currentDirectory = '~';
+      this.inventory = [];
       this.loadLevel(1);
+    },
+
+    loadSavedGame(saveData: GameState) {
+      this.gameStarted = true;
+      this.currentLevel = saveData.currentLevel;
+      this.completedTasks = saveData.completedTasks;
+      this.currentDirectory = saveData.currentDirectory;
+      this.inventory = saveData.inventory;
+      this.loadLevel(saveData.currentLevel);
     },
     
     loadLevel(level: number) {
-      getCurrentLevelData(level)
+      getCurrentLevelData(level);
       this.currentLevel = level;
       this.currentDirectory = '~';
-      this.completedTasks = [];
     },
     
     completeTask(taskId: string) {
@@ -64,6 +75,14 @@ export const useGameStore = defineStore('game', {
       if (!this.completedTasks.includes('find_secret')) {
         this.completedTasks.push('find_secret');
       }
+    },
+    
+    exitGame() {
+      this.gameStarted = false;
+      this.currentLevel = 1;
+      this.completedTasks = [];
+      this.currentDirectory = '~';
+      this.inventory = [];
     },
   },
   

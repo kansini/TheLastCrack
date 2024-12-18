@@ -19,7 +19,8 @@ export const helpCommand: Command = {
   unlock <密码> - 使用密码解锁下一关
   save <名称> - 保存游戏进度
   load [ID] - 查看或加载存档
-  deletesave <ID> - 删除存档`;
+  deletesave <ID> - 删除存档
+  exit - 返回主菜单`;
 
         // 根据当前关卡添加特定命令
         if (gameStore.currentLevel === 9) {
@@ -198,7 +199,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === "Old Flood") {
                     gameStore.completeLevel();
-                    return "密码���确！欢迎进入下一关...";
+                    return "密码正确！欢迎进入下一关...";
                 }
                 break;
 
@@ -265,7 +266,7 @@ export const unlockCommand: Command = {
 
             case 9:
                 if (!gameStore.completedTasks.includes('find_secret')) {
-                    return '需要先找到隐藏在件中的秘！';
+                    return '需要先找到隐藏在件中的秘��';
                 }
                 if (password === 'ROKNIT_2024') {
                     gameStore.completeLevel();
@@ -331,7 +332,7 @@ export const hintCommand: Command = {
 3. 在 config 目录中寻找登录凭据（注意隐藏文件）
 4. 使用 connect 命令连接服务器：connect 192.168.1.200 kansini <密码>
 5. 连接功后使用 download 命令下载 secret_data 文件
-6. 下载的数据就是通关密码`;
+6. 下���的数据就是通关密码`;
             case 6:
                 return `提示：
 1. 使用 ps 或 top 命令查看进程列表
@@ -361,10 +362,10 @@ export const hintCommand: Command = {
 2. 注意 Alice 和 Bob 之间的加密通信
 3. Charlie 似乎发现了什么秘密
 4. 使用 draft charlie 查看草稿箱
-5. 找到并查看隐藏的棋盘布局文���
+5. 找到并查看隐藏的棋盘布局文
 6. 将白车和黑马的路线拼接起来`;
             case 10:
-                return `提示：
+                return `提��：
 1. 使用 chat room1 查看公共聊天记录
 2. 使用 private david 和 private eve 查看私聊
 3. 使用 history today 查看被删除的对话
@@ -506,7 +507,7 @@ export const repairCommand: Command = {
     description: "修复损坏的文件",
     execute: (args: string[]) => {
         if (args.length !== 2) {
-            return "Usage: repair <源文���> <备份文件>";
+            return "Usage: repair <源文件> <备份文件>";
         }
 
         const gameStore = useGameStore();
@@ -575,7 +576,7 @@ export const connectCommand: Command = {
 
 export const downloadCommand: Command = {
     name: "download",
-    description: "下载服务器数据",
+    description: "��载服务器数据",
     execute: (args: string[]) => {
         if (!args.length) {
             return "Usage: download <filename>";
@@ -664,7 +665,7 @@ export const analyzeCommand: Command = {
             gameStore.completeTask("analyze_process");
             return `分析报告 - PID 666 (malware.exe)
 危等级：高
-特征：
+特���：
 1. CPU 使用率异常
 2. 可疑的网络连接
 3. 未知的文件操作
@@ -935,7 +936,7 @@ export const searchCommand: Command = {
     if (keyword === 'chess' || keyword === '棋盘' || keyword === '加密') {
       gameStore.completeTask('find_secret');
       return `搜索结果：
-1. 发现邮件提到国际象棋加密方案
+1. 发现邮件提到国际象棋加密案
 2. 发现关于棋子移动的记录
 3. 找到隐藏的棋盘布局文件
 
@@ -994,7 +995,7 @@ export const chatCommand: Command = {
 
 export const privateCommand: Command = {
   name: 'private',
-  description: '查���私聊记录',
+  description: '查看私聊记录',
   execute: (args: string[]) => {
     const gameStore = useGameStore();
     if (gameStore.currentLevel !== 10) {
@@ -1034,5 +1035,23 @@ export const historyCommand: Command = {
     }
 
     return '没有找到指定日期的记录';
+  }
+};
+
+export const exitCommand: Command = {
+  name: 'exit',
+  description: '返回主菜单',
+  execute: () => {
+    const gameStore = useGameStore();
+    const terminalStore = useTerminalStore();
+    
+    // 清空终端���史
+    terminalStore.clearHistory();
+    // 重置当前目录
+    terminalStore.setCurrentDirectory('~');
+    // 退出游戏状态
+    gameStore.exitGame();
+    
+    return '';  // 返回空字符串，不显示任何提示
   }
 }; 

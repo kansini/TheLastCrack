@@ -1,111 +1,54 @@
 import { defineStore } from 'pinia';
-import type { GameSave, SaveSlot } from '@/types/save';
 import { useGameStore } from './game';
-import { useTerminalStore } from './terminal';
 
-const SAVE_KEY = 'hacker_game_saves';
-const MAX_SAVES = 5;
-
-interface SaveState {
-  saves: SaveSlot[];
-  nextId: number;
+interface SaveData {
+  id: number;
+  name: string;
+  save: {
+    timestamp: number;
+    currentLevel: number;
+    completedTasks: string[];
+    currentDirectory: string;
+    inventory: string[];
+  };
 }
 
 export const useSaveStore = defineStore('save', {
-  state: (): SaveState => ({
-    saves: [],
+  state: () => ({
+    saves: [] as SaveData[],
     nextId: 1
   }),
 
   actions: {
-    loadSavesFromStorage() {
-      try {
-        const savedData = localStorage.getItem(SAVE_KEY);
-        if (savedData) {
-          const data = JSON.parse(savedData);
-          // 验证数据格式
-          if (data && typeof data === 'object') {
-            this.saves = Array.isArray(data.saves) ? data.saves : [];
-            this.nextId = typeof data.nextId === 'number' ? data.nextId : 1;
-          } else {
-            // 如果数据格式不正确，重置状态
-            this.saves = [];
-            this.nextId = 1;
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load saves:', error);
-        // 出错时重置状态
-        this.saves = [];
-        this.nextId = 1;
-      }
-    },
-
-    savesToStorage() {
-      try {
-        localStorage.setItem(SAVE_KEY, JSON.stringify({
-          saves: this.saves,
-          nextId: this.nextId
-        }));
-      } catch (error) {
-        console.error('Failed to save:', error);
-      }
-    },
-
-    createSave(name: string): number {
+    createSave(name: string) {
       const gameStore = useGameStore();
-      const terminalStore = useTerminalStore();
-
-      const save: GameSave = {
-        timestamp: Date.now(),
-        currentLevel: gameStore.currentLevel,
-        currentDirectory: gameStore.currentDirectory,
-        inventory: [...gameStore.inventory],
-        completedTasks: [...gameStore.completedTasks],
-        commandHistory: terminalStore.commandHistory
+      const save: SaveData = {
+        id: this.nextId++,
+        name,
+        save: {
+          timestamp: Date.now(),
+          currentLevel: gameStore.currentLevel,
+          completedTasks: [...gameStore.completedTasks],
+          currentDirectory: gameStore.currentDirectory,
+          inventory: [...gameStore.inventory]
+        }
       };
 
-      const id = this.nextId++;
-      this.saves.push({ id, name, save });
-      
-      // 保持最大存档数量
-      if (this.saves.length > MAX_SAVES) {
-        this.saves.shift();
-      }
-
+      this.saves.push(save);
       this.savesToStorage();
-      return id;
+      return save.id;
     },
 
-    loadSave(id: number): boolean {
-      const saveData = this.saves.find(s => s.id === id);
-      if (!saveData) return false;
+    loadSave(id: number) {
+      const save = this.saves.find(s => s.id === id);
+      if (!save) return false;
+      return true;
+    },
 
-      const gameStore = useGameStore();
-      const terminalStore = useTerminalStore();
-
-      try {
-        // 恢复游戏状态
-        gameStore.currentLevel = saveData.save.currentLevel;
-        gameStore.currentDirectory = saveData.save.currentDirectory;
-        gameStore.inventory = Array.isArray(saveData.save.inventory) ? [...saveData.save.inventory] : [];
-        gameStore.completedTasks = Array.isArray(saveData.save.completedTasks) ? [...saveData.save.completedTasks] : [];
-        
-        // 确保 commandHistory 存在且是数组
-        if (Array.isArray(saveData.save.commandHistory)) {
-          terminalStore.setCommandHistory([...saveData.save.commandHistory]);
-        } else {
-          terminalStore.setCommandHistory([]);
-        }
-
-        // 清除当前终端历史
-        terminalStore.clearHistory();
-        
-        return true;
-      } catch (error) {
-        console.error('Failed to load save:', error);
-        return false;
-      }
+    getSaveData(id: number) {
+      const save = this.saves.find(s => s.id === id);
+      if (!save) return null;
+      return save.save;
     },
 
     deleteSave(id: number) {
@@ -116,20 +59,31 @@ export const useSaveStore = defineStore('save', {
       }
     },
 
-    getSaves(): SaveSlot[] {
+    getSaves() {
+      return this.saves;
+    },
+
+    savesToStorage() {
       try {
-        // 确保 saves 是数组
-        const validSaves = Array.isArray(this.saves) ? this.saves : [];
-        // 按 ID 降序排序，使最新的存档显示在前面
-        return [...validSaves]
-          .sort((a, b) => b.id - a.id)
-          .map(save => ({
-            ...save,
-            name: `${save.name} (Level ${save.save.currentLevel})`
-          }));
+        localStorage.setItem('hacker_game_saves', JSON.stringify({
+          saves: this.saves,
+          nextId: this.nextId
+        }));
       } catch (error) {
-        console.error('Failed to get saves:', error);
-        return [];
+        console.error('Failed to save to storage:', error);
+      }
+    },
+
+    loadSavesFromStorage() {
+      try {
+        const data = localStorage.getItem('hacker_game_saves');
+        if (data) {
+          const parsed = JSON.parse(data);
+          this.saves = parsed.saves;
+          this.nextId = parsed.nextId;
+        }
+      } catch (error) {
+        console.error('Failed to load saves:', error);
       }
     }
   }

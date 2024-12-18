@@ -66,7 +66,8 @@ import {
   draftCommand,
   chatCommand,
   privateCommand,
-  historyCommand
+  historyCommand,
+  exitCommand
 } from '@/game/commands/basic';
 import { gameEngine } from '@/game/engine/GameEngine';
 
@@ -104,6 +105,7 @@ gameEngine.registerCommand(draftCommand);
 gameEngine.registerCommand(chatCommand);
 gameEngine.registerCommand(privateCommand);
 gameEngine.registerCommand(historyCommand);
+gameEngine.registerCommand(exitCommand);
 
 const store = useTerminalStore();
 const inputContent = ref('');
@@ -211,11 +213,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .terminal {
+  height: 100%;
+  width: 100%;
   background-color: $bg-primary;
   color: $text-primary;
   font-family: $font-family-mono;
-  height: 100vh;
   overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
   
   .terminal-content {
     height: 100%;
