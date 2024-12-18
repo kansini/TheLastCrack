@@ -28,6 +28,12 @@ export const helpCommand: Command = {
 邮件系统命令：
   mail <用户名> - 查看用户邮箱
   draft <用户名> - 查看用户草稿箱`;
+        } else if (gameStore.currentLevel === 11) {
+            baseCommands += `\n
+内存分析命令：
+  memdump <文件名> - 分析内存快照
+  strings <文件名> - 提取可读字符串
+  volatility <文件名> - 高级内存分析`;
         }
 
         return baseCommands;
@@ -180,37 +186,48 @@ export const unlockCommand: Command = {
         const level = gameStore.currentLevel;
         const password = args.join(" ");
 
+        const showLevelInfo = () => {
+            const nextLevel = level + 1;
+            const levelData = getCurrentLevelData(nextLevel);
+            return `密码正确！欢迎进入下一关...
+
+【第${nextLevel}关】${levelData.title}
+${levelData.description}
+
+目标：
+${levelData.objectives.map(obj => '- ' + obj).join('\n')}
+
+输入 help 查看可用命令`;
+        };
+
         switch (level) {
             case 1:
-                // 第一关的逻辑
                 if (!gameStore.completedTasks.includes("find_secret")) {
                     return "你还没有找到必要的线索！";
                 }
                 if (password.toUpperCase() === "MOON_LIGHT") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
             case 2:
-                // 第二关的逻辑
                 if (!gameStore.completedTasks.includes("decode_text")) {
                     return "你需要先使用 decode 命令解密文本！";
                 }
                 if (password === "Old Flood") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
             case 3:
-                // 第三关的逻辑
                 if (!gameStore.completedTasks.includes("find_key")) {
                     return "你需要先查看相关文件获取密码线索！";
                 }
                 if (password === "HACK-0401") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
@@ -220,7 +237,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === "D@t@B@se_2024") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
@@ -230,7 +247,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === "C0nnected@2024") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
@@ -240,7 +257,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === "OlDHong_2077") {
                     gameStore.completeLevel();
-                    return "密码正确！欢迎进入下一关...";
+                    return showLevelInfo();
                 }
                 break;
 
@@ -250,7 +267,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === 'Pr1v1l3ge_2024') {
                     gameStore.completeLevel();
-                    return '密码正确！欢迎进入下一关...';
+                    return showLevelInfo();
                 }
                 break;
 
@@ -260,7 +277,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === 'P@ssw0rd_2024') {
                     gameStore.completeLevel();
-                    return '密码正确！欢迎进入下一关...';
+                    return showLevelInfo();
                 }
                 break;
 
@@ -270,7 +287,7 @@ export const unlockCommand: Command = {
                 }
                 if (password === 'ROKNIT_2024') {
                     gameStore.completeLevel();
-                    return '密码正确！欢迎进入下一关...';
+                    return showLevelInfo();
                 }
                 break;
 
@@ -280,7 +297,27 @@ export const unlockCommand: Command = {
                 }
                 if (password === 'WUCHAJI_2024') {
                     gameStore.completeLevel();
-                    return '密码正确！欢迎进入下一关...';
+                    return showLevelInfo();
+                }
+                break;
+
+            case 11:
+                if (!gameStore.completedTasks.includes('extract_info')) {
+                    return '你需要先完成内存分析！';
+                }
+                if (password === 'BACKDOOR_2024') {
+                    gameStore.completeLevel();
+                    return showLevelInfo();
+                }
+                break;
+
+            case 12:
+                if (!gameStore.completedTasks.includes('find_data')) {
+                    return '你需要先找到被窃取的数据！';
+                }
+                if (password === 'L0G_H4CK_2024') {
+                    gameStore.completeLevel();
+                    return '恭喜你通关了！';
                 }
                 break;
 
@@ -335,12 +372,11 @@ export const hintCommand: Command = {
 6. 以下的数据就是通关密码`;
             case 6:
                 return `提示：
-1. 使用 ps 或 top 命令查看进程列表
-2. 找出 CPU 和内存占用异常的进程
-3. 使用 analyze 666 分析可疑进程
-4. 确认是恶意进程后使用 kill 666 终止它
-5. 最后使用 restore 命令恢复系统
-6. 系统恢复后会显示通关密`;
+1. 使用 ps 命令查看所有进程
+2. 注意进程的 CPU 和内存占用
+3. 分析 PID 为 666 的可疑进程
+4. 使用 kill 命令终止恶意进程
+5. 最后使用 restore 命令恢复系统`;
             case 7:
                 return `提示：
 1. 先用 whoami 令查看当前用户限
@@ -371,6 +407,21 @@ export const hintCommand: Command = {
 3. 使用 history today 查看被删除的对话
 4. 在 system.log 中找到加密方式
 5. 记得在密码后加上年份后缀`;
+            case 11:
+                return `提示：
+1. 使用 memdump snapshot.raw 分析内存快照
+2. 注意观察异常的进程（CPU和内存占用）
+3. 使用 strings snapshot.raw 提取可读字符串
+4. 发现可疑的Base64编码字符串
+5. 使用 volatility snapshot.raw 进行深入分析
+6. 解码发现的Base64字符串获得密码`;
+            case 12:
+                return `提示：
+1. 使用 loganalyzer 分析各种日志文件
+2. 使用 timeline 生成完整的事件时间线
+3. 使用 trace 追踪可疑IP的活动
+4. 注意比对不同日志中的时间戳
+5. 查找被窃取的数据文件`;
             default:
                 return "当前关卡暂无提示";
         }
@@ -434,7 +485,7 @@ export const loadCommand: Command = {
             if (saves.length === 0) {
                 return "没有找到任何存档";
             }
-            return `可用存档：\n${saves.map(s =>
+            return `可存档：\n${saves.map(s =>
                 `#${s.id}: ${s.name} (${new Date(s.save.timestamp).toLocaleString()})`
             ).join("\n")}\n\n请用 load <存档ID> 来加载存档`;
         }
@@ -446,7 +497,7 @@ export const loadCommand: Command = {
 
         const saveStore = useSaveStore();
         if (saveStore.loadSave(saveId)) {
-            return "存档取成功！";
+            return "存档读取成功！";
         } else {
             return `未找到存档 #${saveId}`;
         }
@@ -1053,5 +1104,293 @@ export const exitCommand: Command = {
     gameStore.exitGame();
     
     return '';  // 返回空字符串，不显示任何提示
+  }
+};
+
+export const loganalyzerCommand: Command = {
+  name: 'loganalyzer',
+  description: '分析日志文件中的异常模式',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 12) {
+      return 'loganalyzer: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: loganalyzer <日志文件>';
+    }
+
+    const logFile = args[0];
+    const validLogs = ['auth.log', 'system.log', 'access.log', 'error.log'];
+    
+    if (!validLogs.includes(logFile)) {
+      return `loganalyzer: ${logFile}: 不是有效的日志文件`;
+    }
+
+    gameStore.completeTask('analyze_logs');
+
+    if (logFile === 'auth.log') {
+      return `分析结果：
+1. 检测到暴力破解尝试
+   - 目标账户: admin, root, administrator
+   - 来源IP: 192.168.1.100
+   - 时间范围: 02:13:45 - 02:14:01
+2. 成功登录
+   - 用户: guest
+   - 时间: 02:14:30
+3. 权限提升尝试
+   - 命令: sudo su
+   - 结果: 失败
+4. 可疑行为
+   - 尝试访问 /root 目录
+   - 权限被拒绝`;
+    }
+
+    if (logFile === 'system.log') {
+      return `分析结果：
+1. 系统异常
+   - CPU 使用率异常（02:15:00）
+   - 多次访问敏感目录（02:15:30）
+   - 网络流量异常（02:16:00）
+2. 会话信息
+   - 开始时间: 02:14:30
+   - 结束时间: 02:16:10
+3. 连接信息
+   - IP: 192.168.1.100
+   - 持续时间: 约2分35秒`;
+    }
+
+    if (logFile === 'access.log') {
+      return `分析结果：
+1. 攻击模式
+   - 初始探测: login.php
+   - 提权尝试: admin/config.php
+   - 数据窃取: backup/db.sql, data/users.csv
+   - 路径穿越: ../../../etc/passwd
+2. 成功获取
+   - users.csv (15360 bytes)
+3. 攻击时间线
+   - 开始: 02:13:45
+   - 结束: 02:16:00
+4. 攻击特征
+   - 目录遍历
+   - 权限绕过
+   - 敏感信息泄露`;
+    }
+
+    if (logFile === 'error.log') {
+      return `分析结果：
+1. 安全警告
+   - 未授权访问管理区域
+   - 目录遍历攻击
+   - 路径穿越尝试
+2. 数据泄露
+   - 文件: users.csv
+   - 大小: 较大
+3. 攻击手法
+   - Web应用漏洞利用
+   - 参数篡改
+   - 访问控制绕过`;
+    }
+
+    return '分析完成。';
+  }
+};
+
+export const timelineCommand: Command = {
+  name: 'timeline',
+  description: '创建事件时间线',
+  execute: () => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 12) {
+      return 'timeline: 命令不可用';
+    }
+
+    gameStore.completeTask('track_intruder');
+
+    return `事件时间线：
+02:13:40 - 检测到来自 192.168.1.100 的新连接
+02:13:45 - 开始暴力破解尝试 (admin)
+02:13:50 - 继续暴力破解 (root)
+02:14:01 - 继续暴力破解 (administrator)
+02:14:30 - 成功以 guest 用户身份登录
+02:15:00 - 检测到异常的CPU使用率
+02:15:12 - 尝试提升权限 (sudo su)
+02:15:15 - 尝试访问管理区域
+02:15:30 - 尝试访问数据库备份
+02:15:45 - 成功下载 users.csv
+02:16:00 - 尝试路径穿越攻击
+02:16:10 - 用户断开连接
+
+分析结论：
+1. 攻击持续时间：约2分35秒
+2. 主要目标：用户数据 (users.csv)
+3. 攻击手法：暴力破解、权限提升、目录遍历
+4. 攻击结果：部分成功（获取了用户数据）`;
+  }
+};
+
+export const traceCommand: Command = {
+  name: 'trace',
+  description: '追踪IP地址活动',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 12) {
+      return 'trace: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: trace <IP地址>';
+    }
+
+    const ip = args[0];
+    if (ip === '192.168.1.100') {
+      gameStore.completeTask('find_data');
+      return `IP追踪结果：
+来源: 192.168.1.100
+活动摘要：
+1. 连接信息
+   - 首次连接：02:13:40
+   - 最后活动：02:16:15
+   - 总连接时间：2分35秒
+
+2. 行为特征
+   - 多次失败的登录尝试
+   - 成功获取普通用户权限
+   - 尝试提升权限
+   - 访问敏感目录和文件
+   - 成功窃取数据：users.csv
+
+3. 攻击特征
+   - 使用自动化工具
+   - 目标明确
+   - 熟悉系统结构
+   - 专业的渗透测试手法
+
+4. 威胁等级：高
+   - 成功窃取敏感数据
+   - 可能会再次尝试入侵
+   - 建议立即修改所有密码
+   - 更新访问控制策略
+
+解锁密码：L0G_H4CK_2024`;
+    }
+
+    return `trace: ${ip}: 未找到相关活动记录`;
+  }
+};
+
+export const memdumpCommand: Command = {
+  name: 'memdump',
+  description: '分析内存快照',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 11) {
+      return 'memdump: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: memdump <文件名>';
+    }
+
+    if (args[0] === 'snapshot.raw') {
+      gameStore.completeTask('analyze_memory');
+      return `内存分析报告：
+1. 可疑进程
+   - PID: 666 (svchost.exe)
+     异常：系统进程占用内存过高
+   - PID: 888 (backdoor.exe)
+     异常：可疑的文件位置和命名
+2. 网络连接
+   - 发现可疑的外连通信
+   - 目标：malicious.server
+3. 加密通信
+   - 发现Base64编码的命令
+   - ENCRYPTED_COMMAND=QkFDS0RPT1JfMjAyNA==
+4. 建议
+   - 进一步分析进程 666 和 888
+   - 解码加密的命令字符串`;
+    }
+
+    return `memdump: ${args[0]}: 文件不存在`;
+  }
+};
+
+export const stringsCommand: Command = {
+  name: 'strings',
+  description: '提取内存中的可读字符串',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 11) {
+      return 'strings: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: strings <文件名>';
+    }
+
+    if (args[0] === 'snapshot.raw') {
+      gameStore.completeTask('find_malware');
+      return `字符串提取结果：
+1. 系统路径
+   C:\\Windows\\System32
+   C:\\Users\\Admin\\AppData\\Local\\Temp
+
+2. 网络通信
+   http://malicious.server/beacon
+   POST /data HTTP/1.1
+   User-Agent: Mozilla/5.0
+
+3. 加密数据
+   ENCRYPTED_COMMAND=QkFDS0RPT1JfMjAyNA==
+   [提示：这是Base64编码，解码后可能是密码]
+
+4. 其他
+   backdoor.exe
+   svchost.exe
+   explorer.exe`;
+    }
+
+    return `strings: ${args[0]}: 文件不存在`;
+  }
+};
+
+export const volatilityCommand: Command = {
+  name: 'volatility',
+  description: '高级内存取证分析',
+  execute: (args: string[]) => {
+    const gameStore = useGameStore();
+    if (gameStore.currentLevel !== 11) {
+      return 'volatility: 命令不可用';
+    }
+
+    if (!args.length) {
+      return 'Usage: volatility <文件名>';
+    }
+
+    if (args[0] === 'snapshot.raw') {
+      gameStore.completeTask('extract_info');
+      return `深度分析结果：
+1. 进程分析
+   - PID 666 (svchost.exe)
+     注入了可疑代码
+     正在进行网络通信
+   - PID 888 (backdoor.exe)
+     来自临时目录
+     具有持久化机制
+
+2. 网络连接
+   - 外连 IP: 185.192.69.69
+   - 使用加密通信
+   - 数据外泄迹象
+
+3. 内存字符串
+   - 发现Base64编码：QkFDS0RPT1JfMjAyNA==
+   - 解码结果：BACKDOOR_2024
+   
+这就是通关密码！`;
+    }
+
+    return `volatility: ${args[0]}: 文件不存在`;
   }
 }; 

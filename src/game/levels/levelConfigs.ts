@@ -4,7 +4,7 @@ export const levelConfigs: Record<number, LevelData> = {
   1: {
     id: 1,
     title: '初识终端',
-    description: '欢迎来到黑客模拟器。在这一关，你将学习基本的终端命令操作。',
+    description: '【第1关】欢迎来到黑客模拟器。在这一关，你将学习基本的终端命令操作。',
     objectives: [
       '使用 ls 命令查看当前目录下的文件',
       '使用 cat 命令读取 welcome.txt 的内容',
@@ -36,7 +36,7 @@ export const levelConfigs: Record<number, LevelData> = {
   2: {
     id: 2,
     title: '密码破解',
-    description: '在这一关，你需要学会破解简单的加密信息。',
+    description: '【第2关】在这一关，你需要学会破解简单的加密信息。',
     objectives: [
       '找到加密的信息',
       '使用解密工具破解密码',
@@ -67,7 +67,7 @@ export const levelConfigs: Record<number, LevelData> = {
   3: {
     id: 3,
     title: '权限密',
-    description: '这一关将学习何处理文件权限，并找到隐藏的密钥。系统管理员在不同目录中留下了线索。',
+    description: '【第3关】这一关将学习何处理文件权限，并找到隐藏的密钥。系统管理员在不同目录中留下了线索。',
     objectives: [
       '探索系统目录结构',
       '收集分散的线索',
@@ -107,7 +107,7 @@ export const levelConfigs: Record<number, LevelData> = {
   4: {
     id: 4,
     title: '数据恢复',
-    description: '这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被，但运的存在备。',
+    description: '【第4关】这一关你需要恢复被损坏的重要数据。系统显示有一个据库文被，但运的存在备。',
     objectives: [
       '损坏的数据文件',
       '找到并使用正确的备份文件',
@@ -144,7 +144,7 @@ export const levelConfigs: Record<number, LevelData> = {
   5: {
     id: 5,
     title: '网络连接',
-    description: '这一关你需要建立网络连接并从远程服务器获取重要数据。系统管理员留下了一些网络配置文件。',
+    description: '【第5关】这一关你需要建立网络连接并从远程服务器获取重要数据。系统管理员留下了一些网络配置文件。',
     objectives: [
       '配置网络连接',
       '连接远程服务器',
@@ -189,7 +189,7 @@ export const levelConfigs: Record<number, LevelData> = {
   6: {
     id: 6,
     title: '进程管理',
-    description: '系统出现异常，你需要分析进程并找出可疑进程。管理员留了一些系监控工具',
+    description: '【第6关】系统出现异常，你需要分析进程并找出可疑进程。管理员留了一些系监控工具',
     objectives: [
       '查看系统程',
       '分析可疑进程',
@@ -233,7 +233,7 @@ export const levelConfigs: Record<number, LevelData> = {
   7: {
     id: 7,
     title: '权限提升',
-    description: '你需要获取更高的系统权限来访问受保护的文件。系统中存在一个可利用的漏洞。',
+    description: '【第7关】你需要获取更高的系统权限来访问受保护的文件。系统中存在一个可利用的漏洞。',
     objectives: [
       '分析系统权限',
       '寻找提权漏洞',
@@ -258,7 +258,7 @@ export const levelConfigs: Record<number, LevelData> = {
       // etc 目录文件
       'passwd': '系统用户列表：\nroot:x:0:0\nuser:x:1000:1000\nguest:x:1001:1001',
       'shadow': '权限不足：需要 root 权限才能查看此文件\n提示：使用 sudo cat shadow 命令以 root 权限查看',
-      'sudoers': '# sudoers 文件说明\n\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL\n\n# 常用命令示例：\n# sudo cat /etc/shadow - 查看密码文件\n# sudo chmod - 修改文件权限\n# sudo su - 切换到 root 用户',
+      'sudoers': '# sudoers 文件说明\n\n# 允许 wheel 组的用户使用 sudo\n%wheel ALL=(ALL) ALL\n\n# 常用命令示例：\n# sudo cat /etc/shadow - 查看码文件\n# sudo chmod - 修改文件权限\n# sudo su - 切换到 root 用户',
       
       // usr 目录文件
       '.hidden': '漏洞利用说明：\n1. whoami 命令版本 1.0.2 存在缓冲区溢出\n2. 使用特殊参数可以触发漏洞\n3. 格式：whoami --debug=OVERFLOW\n\n获 root 权限后：\n1. 使用 sudo cat shadow 查看加密的密码文件\n2. 密码文件中包含通关密码'
@@ -275,7 +275,7 @@ export const levelConfigs: Record<number, LevelData> = {
   8: {
     id: 8,
     title: '网络嗅探',
-    description: '系统检测到可疑的网络量。你需要使用网络分析工具找出数据泄露的证据。',
+    description: '【第8关】系统检测到可疑的网络量。你需要使用网络分析工具找出数据泄露的证据。',
     objectives: [
       '启动网络监听',
       '捕获可疑数据包',
@@ -319,7 +319,7 @@ export const levelConfigs: Record<number, LevelData> = {
   9: {
     id: 9,
     title: '邮件侦探',
-    description: '你发现了一个旧的邮件服务器。通过查用户之间的邮件往来，你可能会发现一些有趣的秘密。',
+    description: '【第9关】你发现了一个旧的邮件服务器。通过查用户之间的邮件往来，你可能会发现一些有趣的秘密。',
     objectives: [
       '访问邮件系',
       '查看用户邮件',
@@ -421,7 +421,7 @@ export const levelConfigs: Record<number, LevelData> = {
   10: {
     id: 10,
     title: '聊天记录调查',
-    description: '你发现了一个可疑的聊天服务器。通过调查用户之间的对话你可能会发现一个正在进行的密谋。',
+    description: '【第10关】你发现了一个可疑的聊天服务器。通过调查用户之间的对话你可能会发现一个正在进行的密谋。',
     objectives: [
       '访问聊天系统',
       '查看历史记录',
@@ -486,6 +486,158 @@ DPEF: XVDIBKJ_2024          // CODE: WUCHAJI_2024
       '注意聊天中提到的加密方式',
       '在系统日志中找到加密说明',
       '使用 decode 命令尝试解密文本'
+    ]
+  },
+
+  11: {
+    id: 11,
+    title: '内存取证',
+    description: '【第11关】系统可能被植入了后门程序。你需要分析内存快照，找出恶意程序的痕迹。',
+    objectives: [
+      '分析内存快照文件',
+      '识别可疑进程',
+      '提取关键信息',
+      '确定攻击来源'
+    ],
+    requiredTasks: ['analyze_memory', 'find_malware', 'extract_info'],
+    fileSystem: {
+      '~': ['readme.txt', 'memory', 'tools', 'evidence'],
+      '~/memory': ['snapshot.raw', 'processes.txt', 'strings.txt'],
+      '~/tools': ['memdump.exe', 'strings.exe', 'volatility.exe'],
+      '~/evidence': ['report.txt', 'timeline.txt', 'artifacts.txt']
+    },
+    fileContents: {
+      'readme.txt': `内存取证分析指南：
+1. 使用 memdump 命令分析内存快照
+2. 使用 strings 命令提取可读字符串
+3. 使用 volatility 进行深入分析
+
+注意：
+- 内存中可能包含加密的通信内容
+- 某些进程可能试图隐藏自己
+- 注意进程之间的关联`,
+
+      'memory/snapshot.raw': '[二进制数据，需要专业工具分析]',
+      
+      'memory/processes.txt': `PROCESS LIST:
+PID    NAME           CPU    MEM     CMD
+1      systemd        0.1%   1.2MB   /sbin/init
+666    svchost.exe    35.2%  256MB   C:\\Windows\\System32\\svchost.exe
+777    explorer.exe   0.5%   128MB   C:\\Windows\\explorer.exe
+888    backdoor.exe   0.1%   64MB    C:\\Users\\Admin\\AppData\\Local\\Temp\\bd.exe
+999    chrome.exe     5.2%   512MB   C:\\Program Files\\Google\\Chrome\\chrome.exe`,
+
+      'memory/strings.txt': `内存字符串提取结果：
+C:\\Windows\\System32
+http://malicious.server/beacon
+ENCRYPTED_COMMAND=QkFDS0RPT1JfMjAyNA==
+USER-AGENT: Mozilla/5.0
+POST /data HTTP/1.1
+Authorization: Bearer`,
+
+      'tools/memdump.exe': '[系统工具] 用于分析内存快照文件',
+      'tools/strings.exe': '[系统工具] 用于提取内存中的可读字符串',
+      'tools/volatility.exe': '[系统工具] 高级内存取证分析工具',
+
+      'evidence/report.txt': '使用 memdump 命令生成分析报告',
+      'evidence/timeline.txt': '使用 timeline 命令生成事件时间线',
+      'evidence/artifacts.txt': '使用 volatility 命令提取关键证据'
+    },
+    hints: [
+      '注意分析可疑进程的内存占用',
+      '检查进程的命令行参数',
+      '留意加密的网络通信',
+      '解码 Base64 编码的字符串'
+    ]
+  },
+
+  12: {
+    id: 12,
+    title: '日志分析',
+    description: '【第12关】系统检测到可疑的入侵行为。你需要分析系统日志，找出入侵者的踪迹，并确定他们的目标。',
+    objectives: [
+      '分析系统日志文件',
+      '追踪入侵者的活动',
+      '找出被窃取的数据',
+      '确定入侵时间点'
+    ],
+    requiredTasks: ['analyze_logs', 'track_intruder', 'find_data'],
+    fileSystem: {
+      '~': ['readme.txt', 'logs', 'tools', 'reports'],
+      '~/logs': ['auth.log', 'system.log', 'access.log', 'error.log', '.archived'],
+      '~/logs/.archived': ['auth.log.1', 'system.log.1', 'access.log.1'],
+      '~/tools': ['loganalyzer.exe', 'timeline.exe', 'trace.exe'],
+      '~/reports': ['analysis.txt', 'timeline.txt', 'summary.txt']
+    },
+    fileContents: {
+      'readme.txt': `安全事件报告：
+我们的入侵检测系统在过去24小时内检测到异常活动。
+需要进行详细的日志分析以确定：
+1. 入侵者的来源IP
+2. 攻击发生的具体时间
+3. 被访问或窃取的数据
+4. 使用的攻击方法
+
+请使用提供的工具进行分析：
+- loganalyzer：分析日志文件中的异常模式
+- timeline：创建事件时间线
+- trace：追踪IP地址活动
+
+注意：部分重要日志可能被归档到 .archived 目录`,
+
+      'auth.log': `[2024-04-02 02:13:45] Failed login attempt from 192.168.1.100 - user: admin
+[2024-04-02 02:13:50] Failed login attempt from 192.168.1.100 - user: root
+[2024-04-02 02:14:01] Failed login attempt from 192.168.1.100 - user: administrator
+[2024-04-02 02:14:30] Successful login from 192.168.1.100 - user: guest
+[2024-04-02 02:15:12] User guest executed: sudo su
+[2024-04-02 02:15:12] Failed sudo authentication
+[2024-04-02 02:15:45] User guest executed: ls -la /root
+[2024-04-02 02:15:45] Permission denied
+[2024-04-02 02:16:10] User guest disconnected`,
+
+      'system.log': `[2024-04-02 02:13:40] System: New connection from 192.168.1.100
+[2024-04-02 02:14:30] System: User session created: guest
+[2024-04-02 02:15:00] System: Unusual CPU spike detected
+[2024-04-02 02:15:30] System: Multiple file access attempts in /root
+[2024-04-02 02:16:00] System: Network anomaly detected - high outbound traffic
+[2024-04-02 02:16:10] System: User session terminated: guest
+[2024-04-02 02:16:15] System: Connection closed: 192.168.1.100`,
+
+      'access.log': `192.168.1.100 - - [02/Apr/2024:02:13:45] "GET /login.php HTTP/1.1" 200 2048
+192.168.1.100 - - [02/Apr/2024:02:14:30] "POST /login.php HTTP/1.1" 302 0
+192.168.1.100 - - [02/Apr/2024:02:15:15] "GET /admin/config.php HTTP/1.1" 403 1234
+192.168.1.100 - - [02/Apr/2024:02:15:30] "GET /backup/db.sql HTTP/1.1" 403 1234
+192.168.1.100 - - [02/Apr/2024:02:15:45] "GET /data/users.csv HTTP/1.1" 200 15360
+192.168.1.100 - - [02/Apr/2024:02:16:00] "GET /download.php?file=../../../etc/passwd HTTP/1.1" 403 1234`,
+
+      'error.log': `[2024-04-02 02:15:15] PHP Warning: Failed attempt to access admin area without proper authentication
+[2024-04-02 02:15:30] PHP Warning: Directory traversal attempt detected in GET parameter
+[2024-04-02 02:15:45] PHP Notice: Large file download initiated: users.csv
+[2024-04-02 02:16:00] PHP Warning: Path traversal attempt detected in file parameter`,
+
+      '.archived/auth.log.1': `[2024-04-02 02:10:00] System startup
+[2024-04-02 02:11:00] Security service started
+[2024-04-02 02:12:00] Firewall rules updated
+[2024-04-02 02:13:00] Intrusion detection system activated`,
+
+      '.archived/system.log.1': `[2024-04-02 02:10:00] System: Boot sequence completed
+[2024-04-02 02:11:00] System: Services initialization completed
+[2024-04-02 02:12:00] System: Security updates applied
+[2024-04-02 02:13:00] System: Normal operation mode`,
+
+      '.archived/access.log.1': `127.0.0.1 - - [02/Apr/2024:02:10:00] "GET /status HTTP/1.1" 200 1024
+127.0.0.1 - - [02/Apr/2024:02:11:00] "GET /security/status HTTP/1.1" 200 1024
+127.0.0.1 - - [02/Apr/2024:02:12:00] "GET /firewall/status HTTP/1.1" 200 1024`,
+
+      'analysis.txt': '使用 loganalyzer 命令分析日志文件，结果将显示在这里。',
+      'timeline.txt': '使用 timeline 命令生成事件时间线，结果将显示在这里。',
+      'summary.txt': '完成分析后，这里将显示事件总结。'
+    },
+    hints: [
+      '使用 ls -a 查看是否有隐藏的日志目录',
+      '注意比对不同日志文件中的时间戳',
+      '分析访问日志中的URL模式',
+      '查看错误日志中的警告信息'
     ]
   }
 }; 
