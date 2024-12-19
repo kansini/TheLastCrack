@@ -4,7 +4,7 @@ import {getCurrentLevelData} from "@/game/levels";
 import {useTerminalStore} from "@/stores/terminal";
 import {useSaveStore} from "@/stores/save";
 
-export const helpCommand: Command = {
+const helpCommand: Command = {
     name: "help",
     description: "显示所有可用命令",
     execute: () => {
@@ -24,24 +24,19 @@ export const helpCommand: Command = {
   exit - 返回主菜单`;
 
         // 根据当前关卡添加特定命令
-        if (gameStore.currentLevel === 9) {
+        if (gameStore.currentLevel === 6) {
             baseCommands += `\n
-邮件系统命令：
-  mail <用户名> - 查看用户邮箱
-  draft <用户名> - 查看用户草稿箱`;
-        } else if (gameStore.currentLevel === 11) {
-            baseCommands += `\n
-内存分析命令：
-  memdump <文件名> - 分析内存快照
-  strings <文件名> - 提取可读字符串
-  volatility <文件名> - 高级内存分析`;
+网络分析命令：
+  tcpdump <过滤器> - 捕获网络数据包
+  analyze <文件名> - 分析数据包内容`;
         }
+        // ... 其他关卡的命令 ...
 
         return baseCommands;
     }
 };
 
-export const lsCommand: Command = {
+const lsCommand: Command = {
     name: "ls",
     description: "列出当前目录文件",
     execute: (args: string[]) => {
@@ -72,7 +67,7 @@ export const lsCommand: Command = {
     }
 };
 
-export const cdCommand: Command = {
+const cdCommand: Command = {
     name: "cd",
     description: "切换目录",
     execute: (args: string[]) => {
@@ -133,7 +128,7 @@ export const cdCommand: Command = {
     }
 };
 
-export const catCommand: Command = {
+const catCommand: Command = {
     name: "cat",
     description: "查看文件内容",
     execute: (args: string[]) => {
@@ -165,7 +160,7 @@ export const catCommand: Command = {
     }
 };
 
-export const clearCommand: Command = {
+const clearCommand: Command = {
     name: "clear",
     description: "清除终端屏幕",
     execute: () => {
@@ -175,7 +170,7 @@ export const clearCommand: Command = {
     }
 };
 
-export const unlockCommand: Command = {
+const unlockCommand: Command = {
     name: "unlock",
     description: "使用密码解锁下一关",
     execute: (args: string[]) => {
@@ -233,8 +228,8 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 break;
 
             case 4:
-                if (!gameStore.completedTasks.includes("repair_data")) {
-                    return "你需要先修复损坏的数据文件！";
+                if (!gameStore.completedTasks.includes("kill_malware")) {
+                    return "你需要先终止恶意程！";
                 }
                 if (password === "D@t@B@se_2024") {
                     gameStore.completeLevel();
@@ -318,11 +313,19 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 }
                 if (password === "L0G_H4CK_2024") {
                     gameStore.completeLevel();
-                    return "恭喜你通关了！";
+                    return `恭喜你通关了！
+
+你已经完成了所有关卡，成为了一名真正的黑客！
+感谢你的游玩，未来还会有更多关卡加入...
+
+输入 exit 返回主菜单`;
                 }
                 break;
 
             default:
+                if (level >= 12) {
+                    return "恭喜你已经通关了所有关卡！";
+                }
                 return "关卡 " + level + " 正在紧张开发中...";
         }
 
@@ -330,106 +333,20 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
     }
 };
 
-export const hintCommand: Command = {
+const hintCommand: Command = {
     name: "hint",
     description: "获取当前关卡的提示（隐藏命令）",
     execute: () => {
         const gameStore = useGameStore();
         const level = gameStore.currentLevel;
+        const levelData = getCurrentLevelData(level);
 
-        switch (level) {
-            case 1:
-                return "提示：使用 ls -a 命令可以查看隐藏文件";
-            case 2:
-                return `提示：
-1. 加密文本 "Pme!Gmppe!" 中的每个字母都被向后移动了一
-2. 例如：'T' 变成了 'U', 'h' 变成了 'i'
-3. 解密后的文本 "Old Flood"
-4. 试试在工具目录中找解密工具`;
-            case 3:
-                return `提示：
-1. 使用 cd <目录名> 进入目录，使用 cd .. 返回上级目录
-2. 密钥被分成了两个部分（XXXX-XXXX 格式）
-3. 第一部分在 .keys 目录中的 key_fragment_1 文件里
-4. 第二部分在 .keys 目中的 key_fragment_2 文件里
-5. 用 ls -a 可以到隐藏的 .keys 目录
-6. 进入目录后使用 cat 命令查看文件内容
-7. 将两个密钥片按 XXXX-XXXX 格式组合
-8. 最后使用 unlock 命令输入完整密钥`;
-            case 4:
-                return `提示：
-1. 使用 scan corrupted_data.db 分析损坏的文件
-2. 检查 logs 目录下的日志文件，找出数据库损坏的具体时间
-3. 在 backup 目录中找到损坏时间之前的最后一个备份
-4. 使用 repair 命令修复文件：repair corrupted_data.db backup_0401.bak
-5. 修复后的数据就是解锁密码`;
-            case 5:
-                return `提示：
-1. 先检查 network 目录下的网络配置文件
-2. 使用 ping 命令测试服务器连通性：ping 192.168.1.200
-3. 在 config 目录中寻找登录凭据（注意隐藏文件）
-4. 使用 connect 命令连接服务器：connect 192.168.1.200 kansini <密码>
-5. 连接功后使用 download 命令下载 secret_data 文件
-6. 以下的数据就是通关密码`;
-            case 6:
-                return `提示：
-1. 使用 ps 命令查看所有进程
-2. 注意进程的 CPU 和内存占用
-3. 分析 PID 为 666 的可疑进程
-4. 使用 analyze 分析进程
-5. 使用 kill 命令终止恶意进程
-6. 最后使用 restore 命令恢复系统`;
-            case 7:
-                return `提示：
-1. 先用 whoami 令查看当前用户限
-2. 检查 whoami.exe 的版本信息
-3. 用 ls -a 在 usr 目录中寻找隐藏文件
-4. 按照隐藏文件中的说明利用漏洞
-5. 获得 root 权限后使用 sudo cat shadow
-6. shadow 文件中包含通关密码`;
-            case 8:
-                return `提示：
-1. 使用 tcpdump port 31337 监听可疑端口
-2. 在 traffic.log 中找到可疑流量的特征
-3. 使用 wireshark packets.pcap 分析捕获的数据包
-4. 找到数据泄露的内容
-5. 使用 iptables -A OUTPUT -d 10.0.0.1 -j DROP 阻止泄露`;
-            case 9:
-                return `提示：
-1. 使用 mail <用户名> 查看各个用户的邮件
-2. 注意 Alice 和 Bob 之间的加密通信
-3. Charlie 似乎发现了什么秘密
-4. 使用 draft charlie 查看草稿箱
-5. 找到并查看隐藏的棋盘布局文
-6. 将白车和黑马的路线拼接起来`;
-            case 10:
-                return `提示：
-1. 使用 chat room1 查看公共聊天记录
-2. 使用 private david 和 private eve 查看私聊
-3. 在 system.log 中找到加密方式
-4. 注意观察加密的文本格式`;
-            case 11:
-                return `提示：
-1. 使用 memdump snapshot.raw 分析内存快照
-2. 注意观察异常的进程（CPU和内存占用）
-3. 使用 strings snapshot.raw 提取可读字符串
-4. 发现可疑的Base64编码字符串
-5. 使用 volatility snapshot.raw 进行深入分析
-6. 解码发现的Base64字符串获得密码`;
-            case 12:
-                return `提示：
-1. 使用 loganalyzer 分析各种日志文件
-2. 使用 timeline 生成完整的事件时间线
-3. 使用 trace 追踪可疑IP的活动
-4. 注意比对不同日志中的时间戳
-5. 查找被窃取的数据文件`;
-            default:
-                return "当前关卡暂无提示";
-        }
+        // 直接返回当前关卡的提示信息
+        return `提示：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join('\n')}`;
     }
 };
 
-export const decodeCommand: Command = {
+const decodeCommand: Command = {
     name: "decode",
     description: "解密文本",
     execute: (args: string[]) => {
@@ -440,7 +357,7 @@ export const decodeCommand: Command = {
         const gameStore = useGameStore();
         const text = args.join(" ");
 
-        // 简单的解密逻辑：每个字母向前移动一位
+        // 简单的解密逻辑：每个字向前移动一位
         const decrypted = text.split("").map(char => {
             if (/[A-Za-z]/.test(char)) {
                 const code = char.charCodeAt(0);
@@ -453,14 +370,14 @@ export const decodeCommand: Command = {
         // 如果解密的是目标文本，标记任务完成
         if (text === "Pme!Gmppe!") {
             gameStore.completeTask("decode_text");
-            return `解密成功！解密结果：${decrypted}\n恭喜你发��了密码���`;
+            return `解密成功！解密结果：${decrypted}\n恭喜你发了密码`;
         }
 
         return `解密结果：${decrypted}`;
     }
 };
 
-export const saveCommand: Command = {
+const saveCommand: Command = {
     name: "save",
     description: "保存游戏进度",
     execute: (args: string[]) => {
@@ -476,7 +393,7 @@ export const saveCommand: Command = {
     }
 };
 
-export const loadCommand: Command = {
+const loadCommand: Command = {
     name: "load",
     description: "加载游戏存档",
     execute: (args: string[]) => {
@@ -511,7 +428,7 @@ export const loadCommand: Command = {
     }
 };
 
-export const deleteSaveCommand: Command = {
+const deleteSaveCommand: Command = {
     name: "deletesave",
     description: "删除游戏存档",
     execute: (args: string[]) => {
@@ -530,7 +447,7 @@ export const deleteSaveCommand: Command = {
     }
 };
 
-export const scanCommand: Command = {
+const scanCommand: Command = {
     name: "scan",
     description: "扫描分析文件",
     execute: (args: string[]) => {
@@ -543,7 +460,7 @@ export const scanCommand: Command = {
         const filename = args[0];
 
         if (!levelData.fileContents[filename]) {
-            return `scan: ${filename}: 文件不存在`;
+            return `scan: ${filename}: 件不存在`;
         }
 
         if (filename === "corrupted_data.db") {
@@ -553,14 +470,14 @@ export const scanCommand: Command = {
 2. 损坏时间：2024-04-01 23:59:59
 3. 损坏部分：字符替换
 4. 建议操作：使用正确的备份文件修复
-5. 备份时间：在损坏发生之前`;
+5. 备份时间：在损坏���生之前`;
         }
 
         return `扫描结果：文件完整，无需修复`;
     }
 };
 
-export const repairCommand: Command = {
+const repairCommand: Command = {
     name: "repair",
     description: "修复损坏的文件",
     execute: (args: string[]) => {
@@ -587,7 +504,7 @@ export const repairCommand: Command = {
     }
 };
 
-export const pingCommand: Command = {
+const pingCommand: Command = {
     name: "ping",
     description: "测试网络连接",
     execute: (args: string[]) => {
@@ -603,16 +520,18 @@ export const pingCommand: Command = {
 来自 192.168.1.200 的回复: 时间<1ms
 
 192.168.1.200 的 Ping 统计信息:
-    : 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
+    数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
 往返行程的估计时间(以毫秒为单位):
-    最 = 0ms，最长 = 1ms，平均 = 0ms`;
+    最短 = 0ms，最长 = 1ms，平均 = 0ms
+
+[提示] 服务器在线，可以尝试使用 connect 命令连接`;
         }
 
-        return `Ping 请求找不到主机 ${ip}请检查该名称，然后重试。`;
+        return `Ping 请求找不到主机 ${ip}。请检查该名称，然后重试。`;
     }
 };
 
-export const connectCommand: Command = {
+const connectCommand: Command = {
     name: "connect",
     description: "连接远程服务器",
     execute: (args: string[]) => {
@@ -625,14 +544,16 @@ export const connectCommand: Command = {
 
         if (ip === "192.168.1.200" && username === "kansini" && password === "Netw0rk@2024") {
             gameStore.completeTask("connect_server");
-            return "连接成功！服务器已就绪。\n可以使用 download 命令下载数据。";
+            return `连接成功！
+服务器已就绪。
+[提示] 使用 download 命令下载数据`;
         }
 
         return "连接失败：认证错误。请检查 IP、用户名和密码。";
     }
 };
 
-export const downloadCommand: Command = {
+const downloadCommand: Command = {
     name: "download",
     description: "下载服务器数据",
     execute: (args: string[]) => {
@@ -642,7 +563,7 @@ export const downloadCommand: Command = {
 
         const gameStore = useGameStore();
         if (!gameStore.completedTasks.includes("connect_server")) {
-            return "错误：未连接服务器！请先使用 connect 命令建立连接。";
+            return "错误：未连接到服务器！请先使用 connect 命令建立连接。";
         }
 
         const filename = args[0];
@@ -650,37 +571,37 @@ export const downloadCommand: Command = {
             gameStore.completeTask("get_data");
             return `正在下载 ${filename}...
 下载完成！
-文件内容：C0nnected@2024
-这是通关密码！`;
+
+[发现] 文件中包含密码：C0nnected@2024
+这就是通关密码！`;
         }
 
         return `错误：文件 '${filename}' 不存在或无法访问。`;
     }
 };
 
-export const psCommand: Command = {
+const psCommand: Command = {
     name: "ps",
-    description: "看进列表",
+    description: "查看进程列表",
     execute: () => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 6) {
+        if (gameStore.currentLevel !== 4) {
             return "ps: 命令不可用";
         }
 
-        return `PID   名称          CPU    内存   状态
-1     systemd        0.1%   1.2MB  运行中
-666   malware.exe   99.9%  512MB  运行中
-888   backdoor.exe  45.2%  128MB  运行中
-999   monitor.exe    0.5%   4.8MB  运行中`;
+        return `PID    名称          CPU    内存   状态
+1234   sysservice   85%   45%    运行中
+2345   normal.exe   2%    5%     运行中
+3456   update.exe   1%    3%     运行中`;
     }
 };
 
-export const topCommand: Command = {
+const topCommand: Command = {
     name: "top",
     description: "实时监控系统资源",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 6) {
+        if (gameStore.currentLevel !== 4) {
             return "top: 命令不可用";
         }
 
@@ -690,56 +611,53 @@ export const topCommand: Command = {
         }
 
         return `系统监控 - 每3秒更新一次
-进程总数：4    行中：4    已停止：0
+进程总数：3    运行中：3    已停止：0
 
-CPU 使用率：145.7%
-内存使用率：89.2%
+CPU 使用率：88%
+内存使用率：53%
 
   PID 名称          CPU    内存   状态     启动时间
-  666 malware.exe   99.9%  512MB  运行中   23:59:59
-  888 backdoor.exe  45.2%  128MB  运行中   23:59:58
-  999 monitor.exe    0.5%   4.8MB  运行中   00:00:01
-    1 systemd        0.1%   1.2MB  运行中   00:00:00
+ 1234 sysservice   85%    45%    运行中   23:59:59
+ 2345 normal.exe    2%     5%    运行中   00:00:01
+ 3456 update.exe    1%     3%    运行中   00:00:02
 
-提示：输入 "top q" 退出监`;
+提示：输入 "top q" 退出监控`;
     }
 };
 
-export const analyzeCommand: Command = {
+const analyzeCommand: Command = {
     name: "analyze",
-    description: "分析进程",
+    description: "分析数据包内容",
     execute: (args: string[]) => {
-        if (!args.length) {
-            return "Usage: analyze <PID>";
-        }
-
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 6) {
             return "analyze: 命令不可用";
         }
 
-        const pid = args[0];
-        if (pid === "666") {
-            gameStore.completeTask("analyze_process");
-            return `分析报告 - PID 666 (malware.exe)
-危等级：高
-特别注意：
-1. CPU 使用率异常
-2. 可疑的网络连接
-3. 未知的文件操作
-4. 自动启动项修改
-
-建议：
-立即终止此进程（使用 kill 666）`;
+        if (!args.length) {
+            return "Usage: analyze <文件名>";
         }
 
-        return `分析报告 - PID ${pid}
-进程状态：常
-无可疑行为`;
+        if (args[0] === "network.pcap") {
+            if (!gameStore.completedTasks.includes("analyze_traffic")) {
+                return "提示：请先使用 tcpdump SYN 命令捕获可疑的扫描包";
+            }
+            gameStore.completeTask("find_vulnerability");
+            return `分析报告：
+1. 攻击类型：SYN Flood 扫描
+2. 攻击源：192.168.1.100
+3. 目标端口：80, 443, 22
+4. 漏洞位置：防火墙规则配置
+5. 建议操作：更新防火墙规则
+
+[提示] 系统需要恢复，请使用命令进行系统恢复`;
+        }
+
+        return `analyze: ${args[0]}: 文件不存在`;
     }
 };
 
-export const killCommand: Command = {
+const killCommand: Command = {
     name: "kill",
     description: "终止进程",
     execute: (args: string[]) => {
@@ -748,14 +666,17 @@ export const killCommand: Command = {
         }
 
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 6) {
+        if (gameStore.currentLevel !== 4) {
             return "kill: 命令不可用";
         }
 
         const pid = args[0];
-        if (pid === "666") {
+        if (pid === "1234") {
             gameStore.completeTask("kill_malware");
-            return "进程已终止。\n系统状态开始恢复正常...";
+            return `进程已终止。
+系统状态开始恢复正常...
+
+发现通关密码：D@t@B@se_2024`;
         }
 
         if (pid === "1") {
@@ -766,7 +687,7 @@ export const killCommand: Command = {
     }
 };
 
-export const restoreCommand: Command = {
+const restoreCommand: Command = {
     name: "restore",
     description: "恢复系统状态",
     execute: () => {
@@ -790,7 +711,7 @@ export const restoreCommand: Command = {
     }
 };
 
-export const whoamiCommand: Command = {
+const whoamiCommand: Command = {
     name: "whoami",
     description: "显示当前用户",
     execute: (args: string[]) => {
@@ -812,7 +733,7 @@ export const whoamiCommand: Command = {
     }
 };
 
-export const sudoCommand: Command = {
+const sudoCommand: Command = {
     name: "sudo",
     description: "以管理员权限执行命令",
     execute: (args: string[]) => {
@@ -843,7 +764,7 @@ guest:$6$def$hash:19000:0:99999:7:::
     }
 };
 
-export const chmodCommand: Command = {
+const chmodCommand: Command = {
     name: "chmod",
     description: "修改文件权限",
     execute: (args: string[]) => {
@@ -860,12 +781,12 @@ export const chmodCommand: Command = {
     }
 };
 
-export const tcpdumpCommand: Command = {
+const tcpdumpCommand: Command = {
     name: "tcpdump",
     description: "捕获网络数据包",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 8) {
+        if (gameStore.currentLevel !== 6 && gameStore.currentLevel !== 8) {
             return "tcpdump: 命令不可用";
         }
 
@@ -873,10 +794,29 @@ export const tcpdumpCommand: Command = {
             return "Usage: tcpdump <过滤器>";
         }
 
+        if (gameStore.currentLevel === 6) {
+            if (args.includes("SYN")) {
+                gameStore.completeTask("analyze_traffic");
+                return `开始捕获数据包...
+
+[21:00:01] TCP 192.168.1.100:12345 > 10.0.0.1:80 SYN
+[21:00:02] TCP 192.168.1.100:12346 > 10.0.0.1:443 SYN
+[21:00:03] TCP 192.168.1.100:12347 > 10.0.0.1:22 SYN
+
+[分析] 发现可疑的扫描行为：
+1. 源IP: 192.168.1.100
+2. 目标端口: 80, 443, 22
+3. 攻击类型: SYN扫描
+
+[提示] 使用 analyze network.pcap 分析完整的攻击数据`;
+            }
+            return "提示：使用 SYN 作为过滤器来捕获可疑的扫描包";
+        }
+
+        // 第八关的逻辑保持不变
         if (args.includes("port") && args.includes("31337")) {
             gameStore.completeTask("start_capture");
             return `开始捕获数据包...
-
 [21:00:01] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP
 [21:00:02] IP 10.0.0.1.31337 > 10.0.0.100.31337: TCP
 [21:00:03] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP PSH
@@ -885,11 +825,11 @@ export const tcpdumpCommand: Command = {
 捕获完成！可疑数据包已保存到 packets.pcap`;
         }
 
-        return "未可疑数据包";
+        return "未发现可疑数据包";
     }
 };
 
-export const wiresharkCommand: Command = {
+const wiresharkCommand: Command = {
     name: "wireshark",
     description: "分析数据包内容",
     execute: (args: string[]) => {
@@ -919,7 +859,7 @@ export const wiresharkCommand: Command = {
     }
 };
 
-export const iptablesCommand: Command = {
+const iptablesCommand: Command = {
     name: "iptables",
     description: "配置防火墙规则",
     execute: (args: string[]) => {
@@ -948,7 +888,7 @@ export const iptablesCommand: Command = {
     }
 };
 
-export const mailCommand: Command = {
+const mailCommand: Command = {
     name: "mail",
     description: "查看用户邮箱",
     execute: (args: string[]) => {
@@ -977,7 +917,7 @@ export const mailCommand: Command = {
     }
 };
 
-export const searchCommand: Command = {
+const searchCommand: Command = {
     name: "search",
     description: "搜索邮件内容",
     execute: (args: string[]) => {
@@ -998,14 +938,15 @@ export const searchCommand: Command = {
 2. 发现关于棋移动的记录
 3. 找到隐藏的棋盘布局文件
 
-提示：使用 cat .chess_notes 查看详细信息`;
+[重要] 发现一个隐藏文件：.chess_notes
+建议使用 cat .chess_notes 查看详细信息`;
         }
 
         return "未找到相关邮件";
     }
 };
 
-export const draftCommand: Command = {
+const draftCommand: Command = {
     name: "draft",
     description: "查看邮件草稿",
     execute: (args: string[]) => {
@@ -1029,7 +970,7 @@ export const draftCommand: Command = {
     }
 };
 
-export const chatCommand: Command = {
+const chatCommand: Command = {
     name: "chat",
     description: "查看公共聊天",
     execute: (args: string[]) => {
@@ -1051,7 +992,7 @@ export const chatCommand: Command = {
     }
 };
 
-export const privateCommand: Command = {
+const privateCommand: Command = {
     name: "private",
     description: "查看私聊记录",
     execute: (args: string[]) => {
@@ -1067,14 +1008,17 @@ export const privateCommand: Command = {
         const user = args[0].toLowerCase();
         if (["david", "eve"].includes(user)) {
             gameStore.completeTask("find_evidence");
-            return gameStore.currentLevelData.fileContents[`private/${user}.txt`];
+            return `${gameStore.currentLevelData.fileContents[`private/${user}.txt`]}
+
+[提示] 发现可疑的历史记录
+建议使用 history 2024-04-01 查看详细信息`;
         }
 
         return "用户不存在";
     }
 };
 
-export const historyCommand: Command = {
+const historyCommand: Command = {
     name: "history",
     description: "查看历史记录",
     execute: (args: string[]) => {
@@ -1096,7 +1040,7 @@ export const historyCommand: Command = {
     }
 };
 
-export const exitCommand: Command = {
+const exitCommand: Command = {
     name: "exit",
     description: "返回主菜单",
     execute: () => {
@@ -1114,7 +1058,7 @@ export const exitCommand: Command = {
     }
 };
 
-export const loganalyzerCommand: Command = {
+const loganalyzerCommand: Command = {
     name: "loganalyzer",
     description: "分析日志文件中的异常模式",
     execute: (args: string[]) => {
@@ -1187,9 +1131,8 @@ export const loganalyzerCommand: Command = {
    - 敏感信息泄露
 
 [提示] 发现两种不同类型的攻击事件：
-- 系统层面的入侵尝试
-- Web应用层面的攻击行为
-建议使用 timeline system 或 timeline web 分别分析这两种攻击`;
+- 系统层面的入侵尝试(system)
+- Web应用层面的攻击行为(web)`;
         }
 
         if (logFile === "error.log") {
@@ -1202,7 +1145,7 @@ export const loganalyzerCommand: Command = {
    - 文件: users.csv
    - 大小: 较大
 3. 攻击手法
-   - Web应用漏洞利用
+   - Web应用漏洞利
    - 参数篡改
    - 访问控制绕过`;
         }
@@ -1211,7 +1154,7 @@ export const loganalyzerCommand: Command = {
     }
 };
 
-export const timelineCommand: Command = {
+const timelineCommand: Command = {
     name: "timeline",
     description: "创建事件时间线",
     execute: (args: string[]) => {
@@ -1242,8 +1185,9 @@ export const timelineCommand: Command = {
 3. 成功获取：users.csv 文件
 4. 攻击特征：Web漏洞利用
 
-[提示] 发现可疑IP地址：192.168.1.100
-建议使用 trace 命令追踪`;
+[提示] 检测到IP伪装
+- 表面IP: 192.168.1.100
+- 使用 netstat 命令可以查看真实的连接信息`;
         }
 
         if (args[0] === "system") {
@@ -1275,7 +1219,7 @@ export const timelineCommand: Command = {
     }
 };
 
-export const traceCommand: Command = {
+const traceCommand: Command = {
     name: "trace",
     description: "追踪IP地址活动",
     execute: (args: string[]) => {
@@ -1290,9 +1234,15 @@ export const traceCommand: Command = {
 
         const ip = args[0];
         if (ip === "192.168.1.100") {
-            gameStore.completeTask("find_data");
             return `IP追踪结果：
 来源: 192.168.1.100
+提示：这是一个伪装的内网IP地址无法进行追踪`;
+        }
+
+        if (ip === "185.192.69.69") {
+            gameStore.completeTask("find_data");
+            return `IP追踪结果：
+来源: 185.192.69.69 (真实攻击源)
 活动摘要：
 1. 连接信息
    - 首次连接：02:13:40
@@ -1300,6 +1250,7 @@ export const traceCommand: Command = {
    - 总连接时间：2分35秒
 
 2. 行为特征
+   - 使用IP伪装技术
    - 多次失败的登录尝试
    - 成功获取普通用户权限
    - 尝试提升权限
@@ -1325,7 +1276,7 @@ export const traceCommand: Command = {
     }
 };
 
-export const memdumpCommand: Command = {
+const memdumpCommand: Command = {
     name: "memdump",
     description: "分析内存快照",
     execute: (args: string[]) => {
@@ -1361,7 +1312,7 @@ export const memdumpCommand: Command = {
     }
 };
 
-export const stringsCommand: Command = {
+const stringsCommand: Command = {
     name: "strings",
     description: "提取内存中的可读字符串",
     execute: (args: string[]) => {
@@ -1400,7 +1351,7 @@ export const stringsCommand: Command = {
     }
 };
 
-export const volatilityCommand: Command = {
+const volatilityCommand: Command = {
     name: "volatility",
     description: "高级内存取证分析",
     execute: (args: string[]) => {
@@ -1440,7 +1391,7 @@ export const volatilityCommand: Command = {
     }
 };
 
-export const levelCommand: Command = {
+const levelCommand: Command = {
     name: "level",
     description: "显示当前关卡信息",
     execute: () => {
@@ -1455,4 +1406,72 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
 输入 help 查看可用命令`;
     }
+};
+
+const netstatCommand: Command = {
+    name: "netstat",
+    description: "显示网络连接信息",
+    execute: () => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 12) {
+            return "netstat: 命令不可用";
+        }
+
+        return `活动的网络连接：
+协议   本地地址            远程地址              状态
+TCP    0.0.0.0:80         192.168.1.100:52981   已建立
+TCP    0.0.0.0:80         185.192.69.69:52982   已建立
+TCP    0.0.0.0:443        192.168.1.100:52983   已建立
+TCP    0.0.0.0:443        185.192.69.69:52984   已建立
+
+[分析] 发现可疑连接：
+- 伪装IP (192.168.1.100) 使用了常见端口
+- 真实IP (185.192.69.69) 同时建立了多个连接
+建议使用 trace 185.192.69.69 追踪真实攻击源`;
+    }
+};
+
+export {
+    helpCommand,
+    lsCommand,
+    cdCommand,
+    catCommand,
+    clearCommand,
+    unlockCommand,
+    decodeCommand,
+    saveCommand,
+    loadCommand,
+    deleteSaveCommand,
+    scanCommand,
+    repairCommand,
+    pingCommand,
+    connectCommand,
+    downloadCommand,
+    psCommand,
+    topCommand,
+    analyzeCommand,
+    killCommand,
+    restoreCommand,
+    whoamiCommand,
+    sudoCommand,
+    chmodCommand,
+    tcpdumpCommand,
+    wiresharkCommand,
+    iptablesCommand,
+    mailCommand,
+    searchCommand,
+    draftCommand,
+    chatCommand,
+    privateCommand,
+    historyCommand,
+    exitCommand,
+    loganalyzerCommand,
+    timelineCommand,
+    traceCommand,
+    memdumpCommand,
+    stringsCommand,
+    volatilityCommand,
+    levelCommand,
+    netstatCommand,
+    hintCommand
 }; 

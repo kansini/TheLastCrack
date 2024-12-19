@@ -28,7 +28,6 @@ export const level12: LevelData = {
 可用工具：
 - loganalyzer <日志文件> - 分析日志文件
 - timeline <事件> - 生成完整的事件时间线
-- trace <IP> - 追踪可疑IP的活动
 
 提示：在 logs 目录中有多个需要分析的日志文件`,
 

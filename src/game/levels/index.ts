@@ -28,13 +28,27 @@ const levelConfigs: Record<number, LevelData> = {
   12: level12
 };
 
-export const getCurrentLevelData = (level: number): LevelData => {
-  const levelData = levelConfigs[level];
-  if (!levelData) {
-    throw new Error(`关卡 ${level} 正在紧张开发中...`);
-  }
-  return levelData;
-};
+export function getCurrentLevelData(level: number): LevelData {
+    if (level > 12) {
+        // 返回一个通关后的虚拟关卡数据
+        return {
+            id: level,
+            title: '游戏通关',
+            description: '恭喜你已经完成了所有关卡！',
+            objectives: ['享受胜利的喜悦'],
+            requiredTasks: [],
+            fileSystem: {'~': []},
+            fileContents: {},
+            hints: ['你已经是一名真正的黑客了！']
+        };
+    }
+
+    const levelData = levelConfigs[level];
+    if (!levelData) {
+        throw new Error(`关卡 ${level} 正在紧张开发中...`);
+    }
+    return levelData;
+}
 
 // 获取最大关卡数
 export const getMaxLevel = (): number => {

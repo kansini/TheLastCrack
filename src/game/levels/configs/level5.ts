@@ -2,38 +2,32 @@ import type { LevelData } from '@/types/game';
 
 export const level5: LevelData = {
   id: 5,
-  title: '数据恢复',
-  description: '【第5关】一些重要文件被删除了，你需要使用数据恢复技术找回它们。',
+  title: '远程连接',
+  description: '【第5关】我们发现了一个可疑的远程服务器，需要你尝试连接并获取其中的数据。',
   objectives: [
-    '扫描删除的文件',
-    '分析文件特征',
-    '恢复重要数据',
-    '验证文件完整性'
+    '测试服务器连接',
+    '建立远程连接',
+    '下载服务器数据',
+    '获取通关密码'
   ],
-  requiredTasks: ['scan_deleted', 'recover_files'],
+  requiredTasks: ['connect_server', 'get_data'],
   fileSystem: {
-    '~': ['readme.txt', 'scan_results.txt', '.trash'],
-    '~/backup': ['backup_log.txt', 'fragments.dat'],
-    '~/tools': ['recovery.exe', 'scanner.log']
+    '~': ['readme.txt', 'network_config.txt', 'connection.log', 'notes.txt']
   },
   fileContents: {
-    'readme.txt': '数据恢复指南：\n1. 使用 scan 命令扫描删除的文件\n2. 使用 recover <文件名> 恢复文件\n3. 使用 verify <文件名> 验证完整性',
+    'readme.txt': '远程服务器信息：\nIP: 192.168.1.200\n用户名: kansini\n\n请尝试连接这台服务器并获取其中的数据。\n\n[注意] 服务器上有一个名为 secret_data 的重要文件。',
     
-    'scan_results.txt': '扫描结果：\n发现以下删除的文件：\n1. important.doc (大小: 1.2MB)\n2. password.txt (大小: 1KB)\n3. config.sys (大小: 4KB)\n\n文件特征：\n- 删除时间：2024-01-15\n- 文件系统：ext4\n- 簇大小：4KB',
+    'network_config.txt': '网络配置：\n1. 默认网关：192.168.1.1\n2. 子网掩码：255.255.255.0\n3. 目标服务器：192.168.1.200\n\n[提示] 这是一个网络安全测试服务器，使用 ping 命令。',
     
-    'backup_log.txt': '备份日志：\n[INFO] 上次备份时间：2024-01-14\n[INFO] 备份文件列表：\n- important.doc\n- password.txt\n[ERROR] 备份中断',
+    'connection.log': '最近的连接记录：\n[失败] 密码格式：8位以上，包含大小写字母和特殊字符\n [提示] 密码以 \'@2024\' 结尾\n[提示] 密码与 Network 相关，但使用了一些常见的密码变形技巧',
     
-    'fragments.dat': '文件碎片信息：\n1. important.doc (已找到90%)\n2. password.txt (已找到100%)\n3. config.sys (已找到75%)\n\n恢复优先级：\n1. password.txt (关键文件)\n2. important.doc (用户文件)\n3. config.sys (系统文件)',
-    
-    'recovery.exe': '[系统提示] 这是一个数据恢复工具\n使用方法：\n1. recover <文件名>\n2. verify <文件名>',
-    
-    'scanner.log': '扫描日志：\n[扫描开始]\n发现多个文件碎片\n位置：0x1000-0x2000\n特征：文档文件头\n状态：可恢复\n[扫描结束]'
+    'notes.txt': '安全备忘：\n1. 服务器上的 secret_data 文件包含重要信息\n2. 密码提示：\n   - 与 Network 有关\n   - 把字母 \'o\' 替换成数字 \'0\'\n   - 首字母大写'
   },
   hints: [
-    '使用 scan 命令扫描被删除的文件',
-    '查看 backup_log.txt 了解备份情况',
-    '分析 fragments.dat 中的文件碎片信息',
-    '优先恢复 password.txt',
-    '使用 verify 命令确保文件完整性'
+    '使用 ping 命令测试服务器连接状态',
+    '服务器IP地址是 192.168.1.200',
+    '尝试使用默认用户名 kansini',
+    '密码是 Network 的变形版本，把字母 o 换成数字 0',
+    '连接成功后使用 download secret_data 获取数据'
   ]
 }; 
