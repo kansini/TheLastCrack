@@ -20,7 +20,7 @@ export const level6: LevelData = {
     
     'network.pcap': '[二进制数据] 使用 analyze 命令查看内容',
     
-    'alerts.log': '安全警报：\n[警告] 检测到大量 SYN 包\n[警告] 可疑的端口扫描\n[严重] 未授权的访问尝试\n\n建议：\n1. 使用 tcpdump 命令监控流量\n2. 使用 analyze network.pcap 分析数据包\n3. 更新防火墙规则阻止攻击',
+    'alerts.log': '安全警报：\n[警告] 检测到大量 SYN 包\n[警告] 可疑的端口扫描\n[严重] 未授权的访问尝试\n\n建议：\n1. 使用 tcpdump 命令监控流量\n2. 使用 analyze 分析数据包\n3. 更新防火墙规则阻止攻击',
 
     'restore.exe': '[系统工具] 这是一个系统恢复工具。使用方法：restore'
   },
