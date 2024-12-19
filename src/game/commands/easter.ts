@@ -187,7 +187,61 @@ export const starwarsCommand: Command = {
     description: "??????????",
     execute: () => {
         const store = useTerminalStore();
-        const message = `
+        store.clearHistory();
+
+        // 添加 CSS 样式
+        const style = document.createElement('style');
+        style.id = 'starwars-style';
+        style.innerHTML = `
+            .starwars-container {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                height: 100vh;
+                background: #000;
+                overflow: hidden;
+                perspective: 400px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 9999;
+            }
+            .starwars-text {
+                color: #ffd700;
+                font-family: monospace;
+                font-size: 24px;
+                text-align: center;
+                letter-spacing: 2px;
+                line-height: 1.8;
+                transform-origin: 50% 100%;
+                animation: crawl 45s linear;
+                position: relative;
+                width: 90%;
+                padding: 20px;
+                margin-top: 50vh;
+            }
+            @keyframes crawl {
+                0% {
+                    transform: rotateX(45deg) translateZ(0) translateY(0);
+                }
+                100% {
+                    transform: rotateX(45deg) translateZ(-1500px) translateY(-2000px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 创建容器
+        const container = document.createElement('div');
+        container.className = 'starwars-container';
+        document.body.appendChild(container);
+
+        // 创建文本元素
+        const textElement = document.createElement('div');
+        textElement.className = 'starwars-text';
+        textElement.innerHTML = `
 Episode IV: A New Terminal
 
 It is a period of cyber war.
@@ -211,8 +265,18 @@ starship, custodian of the
 stolen plans that can save her
 people and restore
 freedom to the galaxy....`;
-        
-        store.addLine("output", message, "starwars");
+
+        container.appendChild(textElement);
+
+        // 45秒后清理
+        setTimeout(() => {
+            const style = document.getElementById('starwars-style');
+            if (style) {
+                style.remove();
+            }
+            container.remove();
+        }, 20000);
+
         return "";
     }
 };
