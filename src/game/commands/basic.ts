@@ -35,7 +35,8 @@ const helpCommand: Command = {
             baseCommands += `\n
 内存分析命令：
   volatility <文件名> - 分析内存镜像
-  strings <文件名> - 提取内存字符串`;
+  strings <文件名> - 提取内存字符串
+  timeline <事件ID> - 分析事件时间线`;
         }
 
         return baseCommands;
@@ -290,7 +291,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 if (!gameStore.completedTasks.includes("find_secret")) {
                     return "需要先找到隐藏在件中的秘密";
                 }
-                if (password === "ROKNIT_2024") {
+                if (password === "PjECR0QOS1IeLi@xM@==@2024-12-19") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
@@ -509,7 +510,7 @@ const repairCommand: Command = {
 这就是你需要的密码！`;
         }
 
-        return "修复失败：备份文件不匹配或已损坏";
+        return "修复失败：备份文件不匹配或已损���";
     }
 };
 
@@ -530,7 +531,7 @@ const pingCommand: Command = {
 
 192.168.1.200 的 Ping 统计信息:
     数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
-往返行程的估计时间(以毫秒���单位):
+往返行程的估计时间(以毫秒为单位):
     最短 = 0ms，最长 = 1ms，平均 = 0ms
 
 [提示] 服务器在线，可以尝试使用 connect 命令连接`;
@@ -893,7 +894,7 @@ const iptablesCommand: Command = {
 发现通关密码：5CHaJ1_2024`;
         }
 
-        return "规则格式错误或无效";
+        return "规则格式错误或目标IP无效";
     }
 };
 
@@ -1119,7 +1120,7 @@ const loganalyzerCommand: Command = {
    - IP: 192.168.1.100
    - 持续时间: 约2分35秒
 
-[提示] 发现多个可疑事件，建议使用 timeline 命令生成完整的攻击过��时间线`;
+[提示] 发现多个可疑事件，建议使用 timeline 命令生成完整的攻击过程时间线`;
         }
 
         if (logFile === "access.log") {
@@ -1165,66 +1166,52 @@ const loganalyzerCommand: Command = {
 
 const timelineCommand: Command = {
     name: "timeline",
-    description: "创建事件时间线",
+    description: "分析事件时间线",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 12) {
+        if (gameStore.currentLevel !== 9) {
             return "timeline: 命令不可用";
         }
 
         if (!args.length) {
-            return "Usage: timeline <目标>\n请先分析日志文件以获取可用的目标类型。";
+            return "Usage: timeline <事件ID>";
         }
 
-        gameStore.completeTask("track_intruder");
+        const eventId = args[0];
+        if (eventId === "666") {
+            gameStore.completeTask("analyze_timeline");
+            return `进程创建事件分析：
+时间：02:15:00
+进程：svchost.exe (PID 666)
+详情：
+1. 异常特征
+   - 系统进程被替换
+   - 内存占用异常（45MB）
+   - CPU使用率过高（85%）
+2. 行为分析
+   - 尝试建立网络连接
+   - 加载未知模块
+   - 创建加密通道
+3. 风险等级：高
 
-        if (args[0] === "web") {
-            return `Web访问时间线：
-02:13:45 - 访问 login.php (失败尝试)
-02:14:10 - 访问 admin/login.php (失败尝试)
-02:14:30 - 访问 login.php (成功登录)
-02:15:15 - 访问 admin/config.php (权限不足)
-02:15:30 - 访问 backup/db.sql (访问被拒绝)
-02:15:45 - 下载 data/users.csv (成功)
-02:16:00 - 尝试访问 ../../../etc/passwd (失败)
-
-分析结论：
-1. 攻击持续时间：约2分15秒
-2. 攻击模式：目录遍历、权限绕过
-3. 成功获取：users.csv 文件
-4. 攻击特征：Web漏洞利用
-
-[提示] 检测到IP伪装
-- 表面IP: 192.168.1.100
-- 使用 netstat 命令可以查看真实的连接信息`;
+[提示] 使用 timeline 888 分析相关的网络连接`;
         }
 
-        if (args[0] === "system") {
-            return `系统事件时间线：
-02:13:40 - 检测到来自 192.168.1.100 的新连接
-02:13:45 - 开始暴力破解尝试 (admin)
-02:13:50 - 继续暴力破解 (root)
-02:14:01 - 继续暴力破解 (administrator)
-02:14:30 - 成功以 guest 用户身份登录
-02:15:00 - 检测到异常的CPU使用率
-02:15:12 - 尝试提升权限 (sudo su)
-02:15:15 - 尝试访问管理区域
-02:15:30 - 尝试访问数据库备份
-02:15:45 - 成功下载 users.csv
-02:16:00 - 尝试路径穿越攻击
-02:16:10 - 用户断开连接
-
-分析结论：
-1. 攻击持续时间：约2分35秒
-2. 主要目标：用户数据 (users.csv)
-3. 攻击手法：暴力破解、权限提升、目录遍历
-4. 攻击结果：部分成功（获取了用户数据）
-
-[提示] 发现可疑IP地址：192.168.1.100
-建议使用 trace 命令追踪`;
+        if (eventId === "888") {
+            return `网络连接事件分析：
+时间：02:15:30
+连接详情：
+1. 本地端口：445
+2. 远程地址：185.192.69.69
+3. 连接状态：ESTABLISHED
+4. 关联进程：svchost.exe
+5. 数据传输：
+   - 发现加密数据：QkFDS0RPT1JfMjAyNA==
+   
+[提示] 这些数据需要解码 最终密码为：解码@YYYY-MM-DD`;
         }
 
-        return "无效的目标类型。请先分析日志文件以获取可用的目标类型。";
+        return "未找到指定的事件ID";
     }
 };
 
@@ -1390,10 +1377,9 @@ const volatilityCommand: Command = {
    - 数据外泄迹象
 
 3. 内存字符串
-   - 发现Base64编码：QkFDS0RPT1JfMjAyNA==
-   - 解码结果：BACKDOOR_2024
-   
-这就是通关密码！`;
+   - 发现多个加密字符串
+   - 使用 timeline 构建事件时间线
+ `;
         }
 
         return `volatility: ${args[0]}: 文件不存在`;
