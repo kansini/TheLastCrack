@@ -30,7 +30,13 @@ const helpCommand: Command = {
   tcpdump <过滤器> - 捕获网络数据包
   analyze <文件名> - 分析数据包内容`;
         }
-        // ... 其他关卡的命令 ...
+
+        if (gameStore.currentLevel === 9) {
+            baseCommands += `\n
+内存分析命令：
+  volatility <文件名> - 分析内存镜像
+  strings <文件名> - 提取内存字符串`;
+        }
 
         return baseCommands;
     }
@@ -179,12 +185,15 @@ const unlockCommand: Command = {
         }
 
         const gameStore = useGameStore();
+        const terminalStore = useTerminalStore();
         const level = gameStore.currentLevel;
         const password = args.join(" ");
 
         const showLevelInfo = () => {
             const nextLevel = level + 1;
             const levelData = getCurrentLevelData(nextLevel);
+            // 重置当前目录到根目录
+            terminalStore.setCurrentDirectory("~");
             return `密码正确！欢迎进入下一关...
 
 【第${nextLevel}关】${levelData.title}
@@ -229,7 +238,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 4:
                 if (!gameStore.completedTasks.includes("kill_malware")) {
-                    return "你需要先终止恶意程！";
+                    return "你需要先终止恶意进程！";
                 }
                 if (password === "D@t@B@se_2024") {
                     gameStore.completeLevel();
@@ -271,7 +280,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 if (!gameStore.completedTasks.includes("block_leak")) {
                     return "你需要先阻止数据泄露！";
                 }
-                if (password === "P@ssw0rd_2024") {
+                if (password === "5CHaJ1_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
@@ -470,7 +479,7 @@ const scanCommand: Command = {
 2. 损坏时间：2024-04-01 23:59:59
 3. 损坏部分：字符替换
 4. 建议操作：使用正确的备份文件修复
-5. 备份时间：在损坏���生之前`;
+5. 备份时间：在损坏发生之前`;
         }
 
         return `扫描结果：文件完整，无需修复`;
@@ -521,7 +530,7 @@ const pingCommand: Command = {
 
 192.168.1.200 的 Ping 统计信息:
     数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
-往返行程的估计时间(以毫秒为单位):
+往返行程的估计时间(以毫秒���单位):
     最短 = 0ms，最长 = 1ms，平均 = 0ms
 
 [提示] 服务器在线，可以尝试使用 connect 命令连接`;
@@ -751,7 +760,7 @@ const sudoCommand: Command = {
         }
 
         const command = args.join(" ");
-        if (command === "cat shadow") {
+        if (command === "cat etc/shadow" || command === "cat ~/etc/shadow"  || command === "cat shadow") {
             gameStore.completeTask("read_shadow");
             return `root:$6$xyz$hash:19000:0:99999:7:::
 user:$6$abc$hash:19000:0:99999:7:::
@@ -820,7 +829,7 @@ const tcpdumpCommand: Command = {
 [21:00:01] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP
 [21:00:02] IP 10.0.0.1.31337 > 10.0.0.100.31337: TCP
 [21:00:03] IP 10.0.0.100.31337 > 10.0.0.1.31337: TCP PSH
-数据: "P@ssw0rd_2024"
+
 
 捕获完成！可疑数据包已保存到 packets.pcap`;
         }
@@ -851,8 +860,8 @@ const wiresharkCommand: Command = {
 1. 协议：TCP
 2. 源地址：10.0.0.100:31337
 3. 目标地址：10.0.0.1:31337
-4. 数据内容：P@ssw0rd_2024
-5. 警告检测到密码泄露！`;
+4. 警告检测到密码泄露！
+5. 阻止方法: iptables -A OUTPUT -d <目标地址> -j DROP`;
         }
 
         return `wireshark: ${args[0]}: 文件不存在`;
@@ -881,7 +890,7 @@ const iptablesCommand: Command = {
 2. 数据泄露已被阻止
 3. 系统安全状态：已恢复
 
-发现通关密码：P@ssw0rd_2024`;
+发现通关密码：5CHaJ1_2024`;
         }
 
         return "规则格式错误或无效";
@@ -1110,7 +1119,7 @@ const loganalyzerCommand: Command = {
    - IP: 192.168.1.100
    - 持续时间: 约2分35秒
 
-[提示] 发现多个可疑事件，建议使用 timeline 命令生成完整的攻击过程时间线`;
+[提示] 发现多个可疑事件，建议使用 timeline 命令生成完整的攻击过��时间线`;
         }
 
         if (logFile === "access.log") {
@@ -1356,7 +1365,7 @@ const volatilityCommand: Command = {
     description: "高级内存取证分析",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 11) {
+        if (gameStore.currentLevel !== 9) {
             return "volatility: 命令不可用";
         }
 
