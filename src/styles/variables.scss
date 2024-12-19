@@ -1,10 +1,10 @@
 // 主题色
-$primary-color: #33ff3b;
+$primary-color: #2eb7eb;
 $primary-color-light: rgba(51, 255, 59, 0.7);
 $primary-color-dark: darken($primary-color, 20%);
 
 // 背景色
-$bg-primary: #000911;
+$bg-primary: #000000;
 $bg-secondary: #001622;
 $bg-tertiary: #002433;
 $bg-scrollbar: #003344;
@@ -30,8 +30,8 @@ $border-radius: 2px;
 $transition-duration: 0.3s;
 
 // 终端相关
-$prompt-color: $primary-color;
-$caret-color: $primary-color;
+$prompt-color: $text-primary;
+$caret-color: $text-primary;
 
 // 阴影
 $glow-shadow: 0 0 10px rgba($primary-color, 0.5);

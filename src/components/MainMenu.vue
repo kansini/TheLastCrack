@@ -210,8 +210,8 @@ const toggleLanguage = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba($primary-color, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba($primary-color, 0.1) 1px, transparent 1px);
+    background: linear-gradient(rgba($primary-color, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba($primary-color, 0.3) 1px, transparent 1px);
     background-size: 50px 50px;
     opacity: 0.3;
     animation: gridMove 20s linear infinite;
