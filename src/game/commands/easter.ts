@@ -143,7 +143,7 @@ export const asciiCommand: Command = {
             const ghostHeight = frames[0].length;
             for (let row = 0; row < ghostHeight; row++) {
                 let line = '';
-                ghosts.forEach((ghost, index) => {
+                ghosts.forEach((ghost) => {
                     // 计算当前位置
                     ghost.offset += ghost.speed * ghost.direction;
                     if (Math.abs(ghost.offset) > 2) {
