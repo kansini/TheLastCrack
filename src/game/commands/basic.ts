@@ -39,6 +39,15 @@ const helpCommand: Command = {
   timeline <事件ID> - 分析事件时间线`;
         }
 
+        if (gameStore.currentLevel === 11) {
+            baseCommands += `\n
+邮件分析命令：
+  mail list - 列出所有邮箱用户
+  mail read <用户> - 读取用户邮件
+  mail search <关键词> - 搜索邮件内容
+  mail trash - 查看已删除邮件`;
+        }
+
         return baseCommands;
     }
 };
@@ -62,12 +71,17 @@ const lsCommand: Command = {
         // 检查是否使用了 -a 参数
         const showHidden = args.includes("-a");
 
-        // 过滤文件列表
+        // 过滤文件列表并添加目录标记
         const filteredFiles = files.filter(file => {
             if (showHidden) {
                 return true;
             }
             return !file.startsWith(".");
+        }).map(file => {
+            // 检查是否是目录
+            const fullPath = currentDir === "~" ? `~/${file}` : `${currentDir}/${file}`;
+            const isDirectory = levelData.fileSystem[fullPath] !== undefined;
+            return isDirectory ? `${file}/` : file;
         });
 
         return filteredFiles.join("\n");
@@ -145,7 +159,14 @@ const catCommand: Command = {
 
         const gameStore = useGameStore();
         const levelData = getCurrentLevelData(gameStore.currentLevel);
+        const currentDir = gameStore.currentDirectory;
         const filename = args[0];
+
+        // 检查是否是目录
+        const fullPath = currentDir === "~" ? `~/${filename}` : `${currentDir}/${filename}`;
+        if (levelData.fileSystem[fullPath] !== undefined) {
+            return `cat: ${filename}: 是一个目录`;
+        }
 
         const fileContent = levelData.fileContents[filename];
         if (!fileContent) {
@@ -308,10 +329,10 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 break;
 
             case 11:
-                if (!gameStore.completedTasks.includes("extract_info")) {
-                    return "你需要先完成内存分析！";
+                if (!gameStore.completedTasks.includes("decode_secret")) {
+                    return "你需要先破解隐藏的信息！";
                 }
-                if (password === "BACKDOOR_2024") {
+                if (password === "KING_ROOK_2024") {
                     gameStore.completeLevel();
                     return showLevelInfo();
                 }
@@ -510,7 +531,7 @@ const repairCommand: Command = {
 这就是你需要的密码！`;
         }
 
-        return "修复失败：备份文件不匹配或已损���";
+        return "修复失败：备份文件不匹配或已损坏";
     }
 };
 
@@ -629,7 +650,7 @@ CPU 使用率：88%
   PID 名称          CPU    内存   状态     启动时间
  1234 sysservice   85%    45%    运行中   23:59:59
  2345 normal.exe    2%     5%    运行中   00:00:01
- 3456 update.exe    1%     3%    运行中   00:00:02
+ 3456 update.exe    1%     3%    运行���   00:00:02
 
 提示：输入 "top q" 退出监控`;
     }
@@ -767,7 +788,7 @@ const sudoCommand: Command = {
 user:$6$abc$hash:19000:0:99999:7:::
 guest:$6$def$hash:19000:0:99999:7:::
 
-解密后的 root 密码：Pr1v1l3ge_2024`;
+解密后的 root 密：Pr1v1l3ge_2024`;
         }
 
         return `sudo: ${args[0]}: 命令未找到`;
@@ -1198,7 +1219,7 @@ const timelineCommand: Command = {
         }
 
         if (eventId === "888") {
-            return `网络连接事件分析：
+            return `���络连接事件分析：
 时间：02:15:30
 连接详情：
 1. 本地端口：445
@@ -1426,6 +1447,67 @@ TCP    0.0.0.0:443        185.192.69.69:52984   已建立
     }
 };
 
+// 添加新的邮件命令
+const mailListCommand: Command = {
+    name: "mail",
+    description: "邮箱操作命令",
+    execute: (args: string[]) => {
+        const gameStore = useGameStore();
+        if (gameStore.currentLevel !== 11) {
+            return "mail: 命令不可用";
+        }
+
+        if (!args.length) {
+            return "Usage: mail <list|read|search|trash> [参数]";
+        }
+
+        const subCommand = args[0];
+        
+        if (subCommand === "list") {
+            return `可用邮箱列表：
+- alex@company.com
+- sarah@company.com
+- mike@company.com`;
+        }
+
+        if (subCommand === "read") {
+            if (args.length < 2) {
+                return "Usage: mail read <用户名>";
+            }
+            const user = args[1].toLowerCase();
+            if (!["alex", "sarah", "mike"].includes(user)) {
+                return "用户不存在";
+            }
+            gameStore.completeTask("access_mail");
+            return gameStore.currentLevelData.fileContents[`${user}.mbox`];
+        }
+
+        if (subCommand === "search") {
+            if (args.length < 2) {
+                return "Usage: mail search <关键词>";
+            }
+            const keyword = args[1].toLowerCase();
+            if (keyword === "密码" || keyword === "暗号" || keyword === "象棋") {
+                gameStore.completeTask("find_evidence");
+                return `搜索结果：
+1. Sarah 提到了新的密码规则
+2. Mike 提到了象棋术语
+3. 发现了一个关于"王车易位"的暗号
+
+[提示] 检查草稿箱可能有更多线索`;
+            }
+            return "未找到相关邮件";
+        }
+
+        if (subCommand === "trash") {
+            gameStore.completeTask("decode_secret");
+            return gameStore.currentLevelData.fileContents["deleted.mbox"];
+        }
+
+        return "无效的邮件命令";
+    }
+};
+
 export {
     helpCommand,
     lsCommand,
@@ -1468,5 +1550,6 @@ export {
     volatilityCommand,
     levelCommand,
     netstatCommand,
-    hintCommand
+    hintCommand,
+    mailListCommand
 }; 

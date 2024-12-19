@@ -71,18 +71,113 @@ export const helloCommand: Command = {
 
 // ASCII 艺术
 export const asciiCommand: Command = {
-    name: "ascii",
+    name: "ghost",
     description: "??????????",
     execute: () => {
-        return `
-   _____          _____   _____ ______ _____  
-  / ____|   /\\   |  __ \\ / ____|  ____|  __ \\ 
- | |       /  \\  | |__) | (___ | |__  | |  | |
- | |      / /\\ \\ |  ___/ \\___ \\|  __| | |  | |
- | |____ / ____ \\| |     ____) | |____| |__| |
-  \\_____/_/    \\_\\_|    |_____/|______|_____/ 
-                                              
-[CASPER] The friendly ghost in your terminal...`;
+        const store = useTerminalStore();
+        store.clearHistory();
+
+        // 将幽灵帧分成多行，以便控制布局
+        const ghostLines = [
+            "      .-\\\"\\\"\\\"\\\"-.      ",
+            "     /  _  _  \\     ",
+            "    |  (o)(o)  |    ",
+            "    |   (ll)   |    ",
+            "     \\   --   /     ",
+            "    .-'\\.__.'/-,    ",
+            "   /  /\\    /\\  \\   ",
+            "   \\ /  \\  /  \\ /   ",
+            "    '    \\/    '    ",
+            "          ''        "
+        ];
+
+        const ghostLines2 = [
+            "      .-\\\"\\\"\\\"\\\"-.      ",
+            "     /  ^  ^  \\     ",
+            "    |  (o)(o)  |    ",
+            "    |   (ll)   |    ",
+            "     \\   --   /     ",
+            "    .-'\\.__.'/-,    ",
+            "   /  /\\    /\\  \\   ",
+            "   \\ /  \\  /  \\ /   ",
+            "    '    \\/    '    ",
+            "          ''        "
+        ];
+
+        const frames = [ghostLines, ghostLines, ghostLines2, ghostLines2];
+
+        // 创建5个幽灵的状态，初始位置均匀分布
+        const ghostCount = 5;
+        const spacing = 20; // 增加间距
+        const ghosts = Array(ghostCount).fill(null).map((_, index) => ({
+            frameIndex: Math.floor(Math.random() * frames.length),
+            basePosition: index * spacing,
+            offset: 0,
+            direction: Math.random() > 0.5 ? 1 : -1,
+            speed: 0.2 + Math.random() * 0.3,
+        }));
+
+        // 添加 CSS 样式
+        const style = document.createElement('style');
+        style.id = 'ghost-style';
+        style.innerHTML = `
+            @keyframes ghostFloat {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-10px); }
+            }
+            .ghost-frame {
+                color: #fff;
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #4ff;
+                animation: ghostFloat 2s ease-in-out infinite;
+                position: relative;
+                white-space: pre;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 动画间隔
+        const interval = setInterval(() => {
+            store.clearHistory();
+            
+            // 对于每一行，构建包含所有幽灵的输出
+            const ghostHeight = frames[0].length;
+            for (let row = 0; row < ghostHeight; row++) {
+                let line = '';
+                ghosts.forEach((ghost, index) => {
+                    // 计算当前位置
+                    ghost.offset += ghost.speed * ghost.direction;
+                    if (Math.abs(ghost.offset) > 2) {
+                        ghost.direction *= -1;
+                    }
+                    
+                    const totalPosition = Math.max(0, Math.floor(ghost.basePosition + ghost.offset));
+                    const spaces = " ".repeat(totalPosition);
+                    
+                    // 添加当前行的幽灵部分
+                    line += spaces + frames[ghost.frameIndex][row];
+                });
+                store.addLine("output", line, `ghost-line-${row}`);
+            }
+            
+            // 更新幽灵帧
+            ghosts.forEach(ghost => {
+                ghost.frameIndex = (ghost.frameIndex + 1) % frames.length;
+            });
+            
+            // 添加提示信息
+            store.addLine("output", "\n👻 The friendly ghosts in your terminal... 👻", "ghost-message");
+        }, 100);
+
+        // 30秒后停止动画
+        setTimeout(() => {
+            clearInterval(interval);
+            const style = document.getElementById('ghost-style');
+            if (style) {
+                style.remove();
+            }
+        }, 30000);
+
+        return "";
     }
 };
 
@@ -144,44 +239,130 @@ export const rainbowCommand: Command = {
 // 黑客帝国风格的倒计时
 export const countdownCommand: Command = {
     name: "countdown",
-    description: "??????????",
+    description: "启动倒计时序列",
     execute: () => {
-        const store = useTerminalStore();
+        const terminalStore = useTerminalStore();
         
-        // 添加初始警告
-        store.addLine("output", "[系统] 正在初始化自毁程序...", "countdown-init");
-        
-        setTimeout(() => {
-            store.addLine("output", "[警告] 系统将在以下时间后自毁：\n", "countdown-warning");
-        }, 1000);
+        // 禁用鼠标和键盘
+        const disableInteraction = () => {
+            const style = document.createElement('style');
+            style.id = 'countdown-style';
+            style.innerHTML = `
+                * {
+                    cursor: none !important;
+                    user-select: none !important;
+                    pointer-events: none !important;
+                }
+                body::before {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(255, 0, 0, 0.1);
+                    z-index: 9999;
+                    animation: pulse 1s infinite;
+                }
+                @keyframes pulse {
+                    0% { background: rgba(255, 0, 0, 0.1); }
+                    50% { background: rgba(255, 0, 0, 0.2); }
+                    100% { background: rgba(255, 0, 0, 0.1); }
+                }
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+                .terminal {
+                    animation: shake 0.5s infinite;
+                }
+            `;
+            document.head.appendChild(style);
+        };
 
-        // 倒计时动画
+        // 启用鼠标和键盘
+        const enableInteraction = () => {
+            const style = document.getElementById('countdown-style');
+            if (style) {
+                style.remove();
+            }
+        };
+
+        // 阻止刷新和关闭页面
+        const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        };
+        window.addEventListener('beforeunload', beforeUnloadHandler);
+
+        // 警告音效
+        const playWarningSound = () => {
+            try {
+                const audio = new Audio();
+                // 使用更简单的警告音效
+                audio.src = 'data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgA';
+                audio.loop = true;
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Audio playback failed:", error);
+                    });
+                }
+                return audio;
+            } catch (error) {
+                console.log("Failed to create audio:", error);
+                return {
+                    pause: () => {} // 提供一个空的 pause 方法
+                };
+            }
+        };
+
         let count = 10;
-        const countdownInterval = setInterval(() => {
-            if (count > 0) {
-                store.addLine("output", `${count}...`, `countdown-${count}`);
-                count--;
-            } else {
-                clearInterval(countdownInterval);
+        const warningSound = playWarningSound();
+
+        // 添加红色闪烁效果
+        disableInteraction();
+
+        const updateDisplay = () => {
+            const display = `
+⚠️ 💣💥 警告：系统即将自毁 💥💣 ⚠️
+================================
+
+         倒计时: ${count} 秒
+
+================================
+${count <= 5 ? '\n⚠️  💣💥警告：无法中止自毁程序💥💣  ⚠️' : ''}
+${count <= 3 ? '\n⚠️  💣💥警告：系统关键模块已锁定💥💣  ⚠️' : ''}
+${count <= 2 ? '\n⚠️  💣💥警告：正在清除所有数据💥💣  ⚠️' : ''}
+`;
+            terminalStore.clearHistory();
+            terminalStore.addLine("output", display, "countdown-warning");
+        };
+
+        const interval = setInterval(() => {
+            count--;
+            updateDisplay();
+
+            if (count <= 0) {
+                clearInterval(interval);
+                warningSound.pause();
+                enableInteraction();
+                window.removeEventListener('beforeunload', beforeUnloadHandler);
                 
+                // 恢复正常显示
                 setTimeout(() => {
-                    store.addLine("output", "\n[警告] 自毁程序已启动！", "countdown-final-warning");
-                }, 500);
-
-                setTimeout(() => {
-                    store.addLine("output", "[系统] 检测到紧急中止指令...", "countdown-abort");
-                }, 2000);
-
-                setTimeout(() => {
-                    store.addLine("output", "[系统] 自毁程序已取消！", "countdown-cancel");
-                }, 3000);
-
-                setTimeout(() => {
-                    store.addLine("output", "[系统] 开个玩笑 😄\n[系统] 你的终端很安全...", "countdown-safe");
-                }, 4000);
+                    terminalStore.clearHistory();
+                    terminalStore.addLine("output", `
+自毁程序已中止 
+系统恢复正常! 🎉😊🎉😊🎉😊
+`, "countdown-complete");
+                }, 1000);
             }
         }, 1000);
 
-        return "";
+        updateDisplay();
+        return '';
     }
 }; 
