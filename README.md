@@ -1,6 +1,24 @@
-# TheLastCrack - 黑客模拟游戏
+# TheLastCrack
 
-这是一个基于终端界面的黑客模拟游戏，玩家将扮演一名白帽黑客，通过完成各种网络安全挑战来提升技能。
+## 游戏截图
+
+### 主菜单界面
+![主菜单界面](screenshot/01.png)
+
+### 游戏教程
+![游戏教程](screenshot/02.png)
+
+### 关于页面
+![关于页面](screenshot/03.png)
+
+### 存档列表
+![存档列表](screenshot/04.png)
+
+### 终端界面
+![终端界面](screenshot/05.png)
+
+### 游戏关卡
+![游戏关卡](screenshot/06.png)
 
 ## 游戏特色
 

@@ -29,6 +29,10 @@
               <span class="label">{{ t('developer') }}</span>
               <span class="value">ssflood</span>
             </div>
+            <div class="info-item">
+              <span class="label"> github </span>
+              <a class="value" target="_blank" href="https://github.com/kansini/TheLastCrack">https://github.com/kansini/TheLastCrack</a>
+            </div>
           </div>
         </section>
       </div>

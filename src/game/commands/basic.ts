@@ -991,7 +991,7 @@ const draftCommand: Command = {
         }
 
         const user = args[0].toLowerCase();
-        if (user === "charlie") {
+        if (user === "mike") {
             // 当查了 Charlie 的草稿时，标记发现秘密
             gameStore.completeTask("find_secret");
             return gameStore.currentLevelData.fileContents[".charlie_draft"];
