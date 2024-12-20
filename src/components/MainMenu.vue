@@ -20,28 +20,28 @@
         </div>
 
         <div class="menu-options">
-          <button @click="startNewGame" class="menu-btn">
+          <button @click="startNewGame" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
               <span class="btn-text">{{ t("newGame") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
-          <button @click="toggleLoadGame" v-if="hasSaves" class="menu-btn">
+          <button @click="toggleLoadGame" v-if="hasSaves" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
               <span class="btn-text">{{ t("continueGame") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
-          <button @click="showTutorial" class="menu-btn">
+          <button @click="showTutorial" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
               <span class="btn-text">{{ t("tutorial") }}</span>
             </div>
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
-          <button @click="showAbout" class="menu-btn">
+          <button @click="showAbout" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
               <span class="btn-text">{{ t("about") }}</span>
             </div>
@@ -121,22 +121,19 @@ const hasSaves = computed(() => saves.value.length > 0);
 const currentLanguage = computed(() => languageStore.currentLanguage);
 const t = computed(() => languageStore.t);
 
-// const uptime = computed(() => {
-//   const hours = Math.floor(uptimeSeconds.value / 3600);
-//   const minutes = Math.floor((uptimeSeconds.value % 3600) / 60);
-//   const seconds = uptimeSeconds.value % 60;
-//   return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-// });
-//
-// const lastSaveTime = computed(() => {
-//   if (saves.value.length === 0) return "N/A";
-//   const lastSave = saves.value[saves.value.length - 1];
-//   return new Date(lastSave.save.timestamp).toLocaleString();
-// });
-
 let uptimeInterval: number;
 
+// 添加音效相关代码
+const buttonSound = new URL('../assets/audio/button.wav', import.meta.url).href;
+const buttonSoundRef = ref<HTMLAudioElement>();
+
 onMounted(() => {
+  // 初始化音频
+  buttonSoundRef.value = new Audio(buttonSound);
+  if (buttonSoundRef.value) {
+    buttonSoundRef.value.volume = 0.3;
+  }
+
   uptimeInterval = window.setInterval(() => {
     uptimeSeconds.value++;
   }, 1000);
@@ -189,6 +186,15 @@ const closeAbout = () => {
 
 const toggleLanguage = () => {
   languageStore.toggleLanguage();
+};
+
+const playButtonSound = () => {
+  if (buttonSoundRef.value) {
+    buttonSoundRef.value.currentTime = 0;
+    buttonSoundRef.value.play().catch(error => {
+      console.info('Button sound play prevented:', error);
+    });
+  }
 };
 </script>
 
@@ -860,7 +866,7 @@ const toggleLanguage = () => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
+    background:
       linear-gradient(rgba($primary-color, 0.2) 1px, transparent 1px),
       linear-gradient(90deg, rgba($primary-color, 0.2) 1px, transparent 1px);
     background-size: 30px 30px;
