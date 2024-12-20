@@ -25,7 +25,7 @@ const translations: Translation = {
     en: 'About'
   },
   systemReady: {
-    zh: '系统就绪',
+    zh: 'SYSTEM READY',
     en: 'SYSTEM READY'
   },
   selectSaveFile: {

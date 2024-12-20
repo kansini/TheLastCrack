@@ -1,5 +1,6 @@
 <template>
   <div class="main-menu">
+    <div class="cyber-grid"></div>
     <div class="menu-container">
       <!-- 中央主菜单 -->
       <div class="central-menu">
@@ -87,12 +88,13 @@
     <Tutorial :visible="showTutorialModal" @close="closeTutorial"/>
     <About :visible="showAboutModal" @close="closeAbout"/>
 
-    <div class="glitch-effects">
-      <div class="glitch-line"></div>
-      <div class="glitch-line"></div>
-      <div class="glitch-line"></div>
-    </div>
+<!--    <div class="glitch-effects">-->
+<!--      <div class="glitch-line"></div>-->
+<!--      <div class="glitch-line"></div>-->
+<!--      <div class="glitch-line"></div>-->
+<!--    </div>-->
     <div class="noise-overlay"></div>
+    <div class="scan-lines"></div>
   </div>
 </template>
 
@@ -210,11 +212,11 @@ const toggleLanguage = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba($primary-color, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba($primary-color, 0.3) 1px, transparent 1px);
+    background: linear-gradient(rgba($primary-color, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba($primary-color, 0.4) 1px, transparent 1px);
     background-size: 50px 50px;
-    opacity: 0.3;
-    animation: gridMove 20s linear infinite;
+    opacity: 0.35;
+    animation: gridMove 10s linear infinite;
   }
 
   .menu-container {
@@ -761,6 +763,176 @@ const toggleLanguage = () => {
       }
     }
   }
+
+  .ambient-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba($primary-color, 0.1),
+      transparent 50%
+    );
+    animation: pulse 4s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba($primary-color, 0.1) 0px,
+      rgba($primary-color, 0.1) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    animation: scanline 10s linear infinite;
+    opacity: 0.5;
+    z-index: 2;
+  }
+
+  .scan-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 51%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanlines 0.5s linear infinite;
+    opacity: 0.3;
+    z-index: 3;
+  }
+
+  .title-wrapper h1 {
+    position: relative;
+    animation: glitchText 5s infinite;
+    text-shadow: 0 0 10px $primary-color,
+                0 0 20px $primary-color,
+                0 0 30px $primary-color;
+
+    &::before,
+    &::after {
+      content: 'THE LAST CRACK';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      clip: rect(0, 900px, 0, 0);
+    }
+
+    &::before {
+      text-shadow: 2px 0 #ff00ff;
+      animation: glitch 3s infinite linear alternate-reverse;
+    }
+
+    &::after {
+      text-shadow: -2px 0 #00ffff;
+      animation: glitch 2s infinite linear alternate;
+    }
+  }
+
+  .menu-btn {
+    &:hover {
+      .btn-text {
+        animation: neonPulse 1.5s ease-in-out infinite;
+      }
+    }
+  }
+
+  .cyber-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      linear-gradient(rgba($primary-color, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($primary-color, 0.2) 1px, transparent 1px);
+    background-size: 30px 30px;
+    transform-origin: center;
+    animation: gridRotate 120s linear infinite;
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  .title-wrapper {
+    h1 {
+      position: relative;
+      animation: glitchText 5s infinite;
+      text-shadow: 0 0 10px $primary-color,
+                  0 0 20px $primary-color,
+                  0 0 30px $primary-color;
+
+      &::before,
+      &::after {
+        content: 'THE LAST CRACK';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        clip: rect(0, 900px, 0, 0);
+      }
+
+      &::before {
+        text-shadow: 2px 0 #ff00ff;
+        animation: glitch 3s infinite linear alternate-reverse;
+      }
+
+      &::after {
+        text-shadow: -2px 0 #00ffff;
+        animation: glitch 2s infinite linear alternate;
+      }
+    }
+  }
+
+  .menu-btn {
+    &:hover {
+      .btn-text {
+        animation: neonPulse 1.5s ease-in-out infinite;
+      }
+
+      .btn-border {
+        &::before,
+        &::after {
+          animation: borderGlow 1.5s ease-in-out infinite;
+        }
+      }
+    }
+  }
+
+  .scan-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 51%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanlines 0.5s linear infinite;
+    opacity: 0.3;
+    z-index: 3;
+  }
 }
 
 @keyframes gridMove {
@@ -809,17 +981,111 @@ const toggleLanguage = () => {
 }
 
 @keyframes pulse {
-  0% {
-    opacity: 1;
+  0%, 100% {
+    opacity: 0.5;
     transform: scale(1);
   }
   50% {
-    opacity: 0.5;
-    transform: scale(0.95);
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
   }
   100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateY(100%);
+  }
+}
+
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px $primary-color,
+                 0 0 20px $primary-color,
+                 0 0 30px $primary-color;
+  }
+  50% {
+    text-shadow: 0 0 20px $primary-color,
+                 0 0 30px $primary-color,
+                 0 0 40px $primary-color,
+                 0 0 50px $primary-color;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    clip: rect(44px, 9999px, 56px, 0);
+  }
+  5% {
+    clip: rect(12px, 9999px, 23px, 0);
+  }
+  10% {
+    clip: rect(64px, 9999px, 70px, 0);
+  }
+  15% {
+    clip: rect(32px, 9999px, 39px, 0);
+  }
+  20% {
+    clip: rect(27px, 9999px, 36px, 0);
+  }
+  25% {
+    clip: rect(54px, 9999px, 63px, 0);
+  }
+  30% {
+    clip: rect(19px, 9999px, 28px, 0);
+  }
+  35% {
+    clip: rect(42px, 9999px, 51px, 0);
+  }
+  40% {
+    clip: rect(35px, 9999px, 44px, 0);
+  }
+  45% {
+    clip: rect(63px, 9999px, 72px, 0);
+  }
+  50% {
+    clip: rect(15px, 9999px, 24px, 0);
+  }
+  55% {
+    clip: rect(47px, 9999px, 56px, 0);
+  }
+  60% {
+    clip: rect(29px, 9999px, 38px, 0);
+  }
+  65% {
+    clip: rect(52px, 9999px, 61px, 0);
+  }
+  70% {
+    clip: rect(21px, 9999px, 30px, 0);
+  }
+  75% {
+    clip: rect(46px, 9999px, 55px, 0);
+  }
+  80% {
+    clip: rect(33px, 9999px, 42px, 0);
+  }
+  85% {
+    clip: rect(59px, 9999px, 68px, 0);
+  }
+  90% {
+    clip: rect(24px, 9999px, 33px, 0);
+  }
+  95% {
+    clip: rect(49px, 9999px, 58px, 0);
+  }
+  100% {
+    clip: rect(37px, 9999px, 46px, 0);
   }
 }
 
@@ -889,14 +1155,17 @@ const toggleLanguage = () => {
   width: 100%;
   height: 100%;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05;
+  opacity: .1;
   pointer-events: none;
   z-index: 1;
 }
 
 .title-wrapper h1 {
   position: relative;
-  animation: textGlitch 3s infinite;
+  animation: glitchText 5s infinite;
+  text-shadow: 0 0 10px $primary-color,
+              0 0 20px $primary-color,
+              0 0 30px $primary-color;
 
   &::before,
   &::after {
@@ -910,13 +1179,13 @@ const toggleLanguage = () => {
   }
 
   &::before {
-    text-shadow: -2px 0 $primary-color;
-    animation: glitchText 3s infinite linear alternate-reverse;
+    text-shadow: 2px 0 #ff00ff;
+    animation: glitch 3s infinite linear alternate-reverse;
   }
 
   &::after {
-    text-shadow: 2px 0 $primary-color;
-    animation: glitchText 2s infinite linear alternate;
+    text-shadow: -2px 0 #00ffff;
+    animation: glitch 2s infinite linear alternate;
   }
 }
 
@@ -1062,5 +1331,84 @@ const toggleLanguage = () => {
 
 .language-switch {
   display: none;
+}
+
+@keyframes gridRotate {
+  0% {
+    transform: perspective(500px) rotateX(20deg);
+  }
+  100% {
+    transform: perspective(500px) rotateX(20deg) translateY(100%);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px $primary-color,
+                 0 0 20px $primary-color,
+                 0 0 30px $primary-color;
+  }
+  50% {
+    text-shadow: 0 0 20px $primary-color,
+                 0 0 30px $primary-color,
+                 0 0 40px $primary-color,
+                 0 0 50px $primary-color;
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px $primary-color,
+                inset 0 0 5px $primary-color;
+  }
+  50% {
+    box-shadow: 0 0 20px $primary-color,
+                inset 0 0 10px $primary-color;
+  }
+}
+
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes glitch {
+  0% {
+    clip: rect(44px, 9999px, 56px, 0);
+  }
+  5% {
+    clip: rect(12px, 9999px, 23px, 0);
+  }
+  10% {
+    clip: rect(64px, 9999px, 70px, 0);
+  }
+  15% {
+    clip: rect(32px, 9999px, 39px, 0);
+  }
+  20% {
+    clip: rect(27px, 9999px, 36px, 0);
+  }
+  25% {
+    clip: rect(54px, 9999px, 63px, 0);
+  }
+  30% {
+    clip: rect(19px, 9999px, 28px, 0);
+  }
+  35% {
+    clip: rect(42px, 9999px, 51px, 0);
+  }
+  40% {
+    clip: rect(35px, 9999px, 44px, 0);
+  }
+  45% {
+    clip: rect(63px, 9999px, 72px, 0);
+  }
+  50% {
+    clip: rect(15px, 9999px, 24px, 0);
+  }
 }
 </style> 
