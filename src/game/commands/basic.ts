@@ -924,7 +924,7 @@ const mailCommand: Command = {
     description: "查看用户邮箱",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 9) {
+        if (gameStore.currentLevel !== 11) {
             return "mail: 命令不可用";
         }
 
@@ -953,7 +953,7 @@ const searchCommand: Command = {
     description: "搜索邮件内容",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 9) {
+        if (gameStore.currentLevel !== 11) {
             return "search: 命令不可用";
         }
 
@@ -982,7 +982,7 @@ const draftCommand: Command = {
     description: "查看邮件草稿",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 9) {
+        if (gameStore.currentLevel !== 11) {
             return "draft: 命令不可用";
         }
 
@@ -1458,7 +1458,7 @@ const mailListCommand: Command = {
         }
 
         if (!args.length) {
-            return "Usage: mail <list|read|search|trash> [参数]";
+            return "Usage: mail <list|read|search|trash|draft> [参数]";
         }
 
         const subCommand = args[0];
@@ -1487,21 +1487,25 @@ const mailListCommand: Command = {
                 return "Usage: mail search <关键词>";
             }
             const keyword = args[1].toLowerCase();
-            if (keyword === "密码" || keyword === "暗号" || keyword === "象棋") {
+            if (keyword === "密码" || keyword === "暗号" || keyword === "象棋" || keyword === "chess") {
                 gameStore.completeTask("find_evidence");
                 return `搜索结果：
 1. Sarah 提到了新的密码规则
 2. Mike 提到了象棋术语
 3. 发现了一个关于"王车易位"的暗号
 
-[提示] 检查草稿箱可能有更多线索`;
+[提示] 检查草稿箱(draft)可能有更多线索`;
             }
             return "未找到相关邮件";
         }
 
         if (subCommand === "trash") {
-            gameStore.completeTask("decode_secret");
+            // gameStore.completeTask("decode_secret");
             return gameStore.currentLevelData.fileContents["deleted.mbox"];
+        }
+        if (subCommand === "draft") {
+            gameStore.completeTask("decode_secret");
+            return gameStore.currentLevelData.fileContents[".secret_draft"];
         }
 
         return "无效的邮件命令";
