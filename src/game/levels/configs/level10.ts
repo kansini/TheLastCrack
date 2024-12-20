@@ -39,7 +39,7 @@ To Eve: 2024-04-01的配置文件里有几处要改动
 From Eve: 好的，我马上看看加密文件
 To Frank: 记得清理那天的日志记录
 From Frank: 明白，我会处理好的
-To Eve: 用老方法加密，别用新的方式`,
+To Eve: 用老方法加密，后缀_YYYY,别用新的方式`,
 
     'private/eve.txt': `[私聊记录 - Eve]
 From David: 你看到今天的行动计划了吗？

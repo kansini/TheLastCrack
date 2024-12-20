@@ -28,6 +28,7 @@ export const level12: LevelData = {
 可用工具：
 - loganalyzer <日志文件> - 分析日志文件
 - timeline <事件> - 生成完整的事件时间线
+- trace <IP> - 追踪IP
 
 提示：在 logs 目录中有多个需要分析的日志文件`,
 
@@ -35,7 +36,9 @@ export const level12: LevelData = {
 [严重] 多个服务异常
 [警告] 发现未知进程
 [错误] 检测到数据外泄（来自IP：192.168.1.xxx）
-[警告] 网络连接异常
+[警告] 网络连接异常  
+- 使用 trace 命令跟踪
+   
 `,
 
     'warning.txt': `安全警告：

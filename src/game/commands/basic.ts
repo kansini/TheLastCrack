@@ -319,7 +319,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 break;
 
             case 10:
-                if (!gameStore.completedTasks.includes('decode_plan')) {
+                if (!gameStore.completedTasks.includes("decode_plan")) {
                     return "你需要先破解加密的信息！";
                 }
                 if (password === "WUCHAJI_2024") {
@@ -373,7 +373,7 @@ const hintCommand: Command = {
         const levelData = getCurrentLevelData(level);
 
         // 直接返回当前关卡的提示信息
-        return `提示：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join('\n')}`;
+        return `提示：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join("\n")}`;
     }
 };
 
@@ -782,7 +782,7 @@ const sudoCommand: Command = {
         }
 
         const command = args.join(" ");
-        if (command === "cat etc/shadow" || command === "cat ~/etc/shadow"  || command === "cat shadow") {
+        if (command === "cat etc/shadow" || command === "cat ~/etc/shadow" || command === "cat shadow") {
             gameStore.completeTask("read_shadow");
             return `root:$6$xyz$hash:19000:0:99999:7:::
 user:$6$abc$hash:19000:0:99999:7:::
@@ -1041,8 +1041,7 @@ const privateCommand: Command = {
             gameStore.completeTask("find_evidence");
             return `${gameStore.currentLevelData.fileContents[`private/${user}.txt`]}
 
-[提示] 发现可疑的历史记录
-建议使用 history 2024-04-01 查看详细信息`;
+[提示] 发现可疑的历史记录(2024-04-01)查看详细信息`;
         }
 
         return "用户不存在";
@@ -1125,7 +1124,8 @@ const loganalyzerCommand: Command = {
    - 结果: 失败
 4. 可疑行为
    - 尝试访问 /root 目录
-   - 权限被拒绝`;
+   - 权限被拒绝
+   `;
         }
 
         if (logFile === "system.log") {
@@ -1163,7 +1163,9 @@ const loganalyzerCommand: Command = {
 
 [提示] 发现两种不同类型的攻击事件：
 - 系统层面的入侵尝试(system)
-- Web应用层面的攻击行为(web)`;
+- Web应用层面的攻击行为(web)
+- 事件ID:666
+`;
         }
 
         if (logFile === "error.log") {
@@ -1190,7 +1192,7 @@ const timelineCommand: Command = {
     description: "分析事件时间线",
     execute: (args: string[]) => {
         const gameStore = useGameStore();
-        if (gameStore.currentLevel !== 9) {
+        if (gameStore.currentLevel !== 9 && gameStore.currentLevel !== 12) {
             return "timeline: 命令不可用";
         }
 
@@ -1218,8 +1220,8 @@ const timelineCommand: Command = {
 [提示] 使用 timeline 888 分析相关的网络连接`;
         }
 
-        if (eventId === "888") {
-            return `���络连接事件分析：
+        if (gameStore.currentLevel === 9 && eventId === "888") {
+            return `网络连接事件分析：
 时间：02:15:30
 连接详情：
 1. 本地端口：445
@@ -1231,10 +1233,20 @@ const timelineCommand: Command = {
    
 [提示] 这些数据需要解码 最终密码为：解码@YYYY-MM-DD`;
         }
+        if (gameStore.currentLevel === 12 && eventId === "888") {
+            return `网络连接事件分析：
+时间：02:15:30
+连接详情：
+1. 本地端口：445
+2. 远程地址：185.192.69.69
+3. 连接状态：ESTABLISHED
+4. 关联进程：svchost.exe`;
+        }
 
         return "未找到指定的事件ID";
     }
 };
+
 
 const traceCommand: Command = {
     name: "trace",
@@ -1413,7 +1425,7 @@ const levelCommand: Command = {
     execute: () => {
         const gameStore = useGameStore();
         const levelData = getCurrentLevelData(gameStore.currentLevel);
-        
+
         return `【第${gameStore.currentLevel}关】${levelData.title}
 ${levelData.description}
 
@@ -1462,7 +1474,7 @@ const mailListCommand: Command = {
         }
 
         const subCommand = args[0];
-        
+
         if (subCommand === "list") {
             return `可用邮箱列表：
 - alex@company.com
