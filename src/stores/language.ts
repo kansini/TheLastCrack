@@ -9,19 +9,19 @@ interface Translation {
 
 const translations: Translation = {
   newGame: {
-    zh: '新游戏',
-    en: 'New Game'
+    zh: '进入系统',
+    en: 'Enter'
   },
   continueGame: {
-    zh: '继续游戏',
+    zh: '读取存档',
     en: 'Continue'
   },
   tutorial: {
-    zh: '游戏教程',
+    zh: '教程',
     en: 'Tutorial'
   },
   about: {
-    zh: '关于游戏',
+    zh: '关于',
     en: 'About'
   },
   systemReady: {

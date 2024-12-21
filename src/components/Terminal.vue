@@ -176,6 +176,27 @@ onMounted(() => {
   top: 0;
   left: 0;
 
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(0, 255, 0, 0.1);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(100vh);
+    }
+  }
+
   .terminal-content {
     height: 100%;
     overflow-y: auto;
@@ -238,19 +259,19 @@ onMounted(() => {
 
     // Matrix 效果
     &[class*="matrix-rain-"] {
-        color: #00ff00;
-        text-shadow: 0 0 5px #00ff00;
-        font-family: $font-family-mono;
-        display: block;
-        animation: matrix-drop 2s forwards;
-        opacity: 0;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      font-family: $font-family-mono;
+      display: block;
+      animation: matrix-drop 2s forwards;
+      opacity: 0;
     }
 
     // Matrix 消息效果
     &.matrix-message {
-        color: #00ff00;
-        text-shadow: 0 0 5px #00ff00;
-        animation: matrix-glow 1.5s infinite;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      animation: matrix-glow 1.5s infinite;
     }
 
     // Hello World 效果
@@ -268,9 +289,9 @@ onMounted(() => {
 
     // Rainbow 效果
     &.rainbow {
-      background: linear-gradient(to right, 
-        #ff0000, #ff7f00, #ffff00, #00ff00, 
-        #0000ff, #4b0082, #8f00ff);
+      background: linear-gradient(to right,
+          #ff0000, #ff7f00, #ffff00, #00ff00,
+          #0000ff, #4b0082, #8f00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: rainbow 5s linear infinite;
@@ -285,127 +306,161 @@ onMounted(() => {
 
     // Countdown 效果
     &.countdown-init {
-        color: #ffff00;
-        text-shadow: 0 0 5px #ffff00;
+      color: #ffff00;
+      text-shadow: 0 0 5px #ffff00;
     }
 
     &.countdown-warning {
-        color: #ff0000;
-        text-shadow: 0 0 5px #ff0000;
-        animation: warning-flash 0.5s infinite;
+      color: #ff0000;
+      text-shadow: 0 0 5px #ff0000;
+      animation: warning-flash 0.5s infinite;
     }
 
     &[class*="countdown-"] {
-        font-size: 1.2em;
-        font-weight: bold;
-        text-align: center;
-        animation: countdown-pulse 1s ease-in-out;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+      animation: countdown-pulse 1s ease-in-out;
     }
 
     &.countdown-final-warning {
-        color: #ff0000;
-        text-shadow: 0 0 10px #ff0000;
-        font-size: 1.3em;
-        animation: danger-flash 0.2s infinite;
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000;
+      font-size: 1.3em;
+      animation: danger-flash 0.2s infinite;
     }
 
     &.countdown-abort {
-        color: #ffa500;
-        text-shadow: 0 0 5px #ffa500;
+      color: #ffa500;
+      text-shadow: 0 0 5px #ffa500;
     }
 
     &.countdown-cancel {
-        color: #00ff00;
-        text-shadow: 0 0 5px #00ff00;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
     }
 
     &.countdown-safe {
-        color: #00ffff;
-        text-shadow: 0 0 5px #00ffff;
-        animation: safe-glow 2s infinite;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      animation: safe-glow 2s infinite;
     }
   }
 }
 
 @keyframes flicker {
-  0% { opacity: 1; }
-  50% { opacity: 0.8; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes scroll {
-  0% { transform: perspective(300px) rotateX(20deg) translateY(100%); }
-  100% { transform: perspective(300px) rotateX(20deg) translateY(-100%); }
+  0% {
+    transform: perspective(300px) rotateX(20deg) translateY(100%);
+  }
+  100% {
+    transform: perspective(300px) rotateX(20deg) translateY(-100%);
+  }
 }
 
 @keyframes rainbow {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes matrix-drop {
-    0% {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 0.7;
-    }
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
 }
 
 @keyframes matrix-glow {
-    0% {
-        text-shadow: 0 0 5px #00ff00;
-    }
-    50% {
-        text-shadow: 0 0 20px #00ff00;
-    }
-    100% {
-        text-shadow: 0 0 5px #00ff00;
-    }
+  0% {
+    text-shadow: 0 0 5px #00ff00;
+  }
+  50% {
+    text-shadow: 0 0 20px #00ff00;
+  }
+  100% {
+    text-shadow: 0 0 5px #00ff00;
+  }
 }
 
 @keyframes warning-flash {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes countdown-pulse {
-    0% {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
+  0% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
 }
 
 @keyframes danger-flash {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 @keyframes safe-glow {
-    0% { text-shadow: 0 0 5px #00ffff; }
-    50% { text-shadow: 0 0 20px #00ffff; }
-    100% { text-shadow: 0 0 5px #00ffff; }
+  0% {
+    text-shadow: 0 0 5px #00ffff;
+  }
+  50% {
+    text-shadow: 0 0 20px #00ffff;
+  }
+  100% {
+    text-shadow: 0 0 5px #00ffff;
+  }
 }
 </style> 

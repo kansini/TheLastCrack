@@ -1,24 +1,36 @@
 <template>
   <div class="main-menu">
-    <div class="cyber-grid"></div>
+    <!--    <div class="cyber-grid"></div>-->
+    <div class="radar-container">
+      <svg class="radar-svg" viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="scanGradient">
+            <stop offset="0%" stop-color="rgba(0, 255, 255, 0.6)"/>
+            <stop offset="60%" stop-color="rgba(0, 255, 255, 0.2)"/>
+            <stop offset="100%" stop-color="rgba(0, 255, 255, 0)"/>
+          </radialGradient>
+        </defs>
+
+        <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(0, 255, 255, 0.4)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(0, 255, 255, 0.3)" stroke-width=".5"/>
+        <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(0, 255, 255, 0.2)" stroke-width=".5"/>
+        <circle cx="100" cy="100" r="25" fill="none" stroke="rgba(0, 255, 255, 0.1)" stroke-width="1"/>
+
+        <line x1="0" y1="100" x2="200" y2="100" stroke="rgba(0, 255, 255, 0.3)" stroke-width=".5"/>
+        <line x1="100" y1="0" x2="100" y2="200" stroke="rgba(0, 255, 255, 0.3)" stroke-width=".5"/>
+
+        <path class="radar-sweep"
+              d="M 100,100 L 100,0 A 100,100 0 0,1 190,50 L 100,100"
+              fill="url(#scanGradient)"/>
+      </svg>
+    </div>
     <div class="menu-container">
+      <div class="game-logo">
+        <div class="glitch-text" data-text="THE LAST TRACK">THE LAST TRACK</div>
+        <div class="sub-title">SYSTEM INFILTRATION v1.0.1</div>
+      </div>
       <!-- 中央主菜单 -->
       <div class="central-menu">
-        <div class="grid-overlay"></div>
-
-        <div class="title-container">
-          <div class="title-line"></div>
-          <div class="title-wrapper">
-            <div class="title-decoration left"></div>
-            <h1>THE LAST CRACK</h1>
-            <div class="title-decoration right"></div>
-          </div>
-          <div class="title-line"></div>
-          <button @click="toggleLanguage" class="lang-btn">
-            {{ currentLanguage === "zh" ? "ENG" : "中文" }}
-          </button>
-        </div>
-
         <div class="menu-options">
           <button @click="startNewGame" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
@@ -48,6 +60,9 @@
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
+          <button @click="toggleLanguage" class="lang-btn">
+            {{ currentLanguage === "zh" ? "ENG" : "中文" }}
+          </button>
         </div>
 
         <div class="decoration-container">
@@ -71,7 +86,9 @@
             <div v-else v-for="save in saves" :key="save.id" class="save-item">
               <div class="save-info">
                 <span class="save-name">SAVE_#{{ save.id }}: {{ save.name }}</span>
-                <span class="save-level">第{{ save.save.currentLevel }}关 - {{ getCurrentLevelData(save.save.currentLevel).title }}</span>
+                <span class="save-level">第{{
+                    save.save.currentLevel
+                  }}关 - {{ getCurrentLevelData(save.save.currentLevel).title }}</span>
                 <span class="save-date">{{ formatDate(save.save.timestamp) }}</span>
               </div>
               <div class="save-actions">
@@ -88,11 +105,11 @@
     <Tutorial :visible="showTutorialModal" @close="closeTutorial"/>
     <About :visible="showAboutModal" @close="closeAbout"/>
 
-<!--    <div class="glitch-effects">-->
-<!--      <div class="glitch-line"></div>-->
-<!--      <div class="glitch-line"></div>-->
-<!--      <div class="glitch-line"></div>-->
-<!--    </div>-->
+    <!--    <div class="glitch-effects">-->
+    <!--      <div class="glitch-line"></div>-->
+    <!--      <div class="glitch-line"></div>-->
+    <!--      <div class="glitch-line"></div>-->
+    <!--    </div>-->
     <div class="noise-overlay"></div>
     <div class="scan-lines"></div>
   </div>
@@ -124,7 +141,7 @@ const t = computed(() => languageStore.t);
 let uptimeInterval: number;
 
 // 添加音效相关代码
-const buttonSound = new URL('../assets/audio/button.wav', import.meta.url).href;
+const buttonSound = new URL("../assets/audio/button.wav", import.meta.url).href;
 const buttonSoundRef = ref<HTMLAudioElement>();
 
 onMounted(() => {
@@ -192,7 +209,7 @@ const playButtonSound = () => {
   if (buttonSoundRef.value) {
     buttonSoundRef.value.currentTime = 0;
     buttonSoundRef.value.play().catch(error => {
-      console.info('Button sound play prevented:', error);
+      console.info("Button sound play prevented:", error);
     });
   }
 };
@@ -218,17 +235,49 @@ const playButtonSound = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba($primary-color, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba($primary-color, 0.4) 1px, transparent 1px);
+    background: linear-gradient(rgba($primary-color, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba($primary-color, 0.2) 1px, transparent 1px);
     background-size: 50px 50px;
-    opacity: 0.35;
+    opacity: 0.2;
     animation: gridMove 10s linear infinite;
+  }
+
+  .radar-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vh;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    opacity: 0.3;
+    z-index: 999;
+    pointer-events: none;
+    background: radial-gradient(
+            circle at center,
+            rgba(0, 255, 255, 0.1) 0%,
+            rgba(0, 255, 255, 0.08) 50%,
+            transparent 70%
+    );
+
+    .radar-svg {
+      width: 100%;
+      height: 100%;
+
+      .radar-sweep {
+        transform-origin: 100px 100px;
+        animation: radar-sweep 3s linear infinite;
+        filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+      }
+    }
   }
 
   .menu-container {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: $spacing-lg;
@@ -237,6 +286,51 @@ const playButtonSound = () => {
 
     @media (max-width: 768px) {
       padding: $spacing-md;
+    }
+
+    .game-logo {
+      text-align: center;
+
+      .glitch-text {
+        font-size: 3.5em;
+        font-weight: bold;
+        letter-spacing: 0.2em;
+        position: relative;
+        text-shadow: 0 0 10px $primary-green;
+        color: $primary-green;
+
+        &::before,
+        &::after {
+          content: attr(data-text);
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        &::before {
+          left: 2px;
+          text-shadow: -2px 0 #ff0000;
+          animation: glitch-1 2s infinite linear alternate-reverse;
+        }
+
+        &::after {
+          left: -2px;
+          text-shadow: 2px 0 #0000ff;
+          animation: glitch-2 3s infinite linear alternate-reverse;
+        }
+      }
+
+      .sub-title {
+        font-size: 1em;
+        color: $text-color;
+        margin-top: 8px;
+        letter-spacing: 0.5em;
+        @media (max-width: 768px) {
+          font-size: 0.6em;
+        }
+      }
     }
   }
 
@@ -380,86 +474,6 @@ const playButtonSound = () => {
       margin: $spacing-md 0;
     }
 
-    .title-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: $spacing-md;
-      justify-content: center;
-
-      .title-decoration {
-        width: 20px;
-        height: 20px;
-        position: relative;
-
-        &::before, &::after {
-          content: '';
-          position: absolute;
-          background: $primary-color;
-          box-shadow: 0 0 10px $primary-color;
-        }
-
-        &.left {
-          &::before {
-            left: 0;
-            top: 50%;
-            width: 100%;
-            height: 2px;
-            transform: translateY(-50%);
-          }
-
-          &::after {
-            left: 0;
-            top: 0;
-            width: 2px;
-            height: 100%;
-          }
-        }
-
-        &.right {
-          &::before {
-            right: 0;
-            top: 50%;
-            width: 100%;
-            height: 2px;
-            transform: translateY(-50%);
-          }
-
-          &::after {
-            right: 0;
-            top: 0;
-            width: 2px;
-            height: 100%;
-          }
-        }
-      }
-
-      h1 {
-        font-size: 3rem;
-        text-shadow: 0 0 20px $primary-color;
-        letter-spacing: 4px;
-        margin: 0 $spacing-md;
-        white-space: nowrap;
-      }
-    }
-
-    .lang-btn {
-      background: transparent;
-      border: 1px solid $primary-color;
-      color: $primary-color;
-      padding: $spacing-xs $spacing-sm;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      margin-top: $spacing-md;
-      letter-spacing: 2px;
-
-      &:hover {
-        background: rgba($primary-color, 0.1);
-        border-color: lighten($primary-color, 20%);
-        color: lighten($primary-color, 20%);
-      }
-    }
 
     @media (max-width: 768px) {
       margin-bottom: $spacing-lg;
@@ -468,22 +482,28 @@ const playButtonSound = () => {
         width: 200px;
       }
 
-      .title-wrapper {
-        h1 {
-          font-size: 2rem;
-          margin: 0 $spacing-sm;
-        }
-
-        .title-decoration {
-          width: 15px;
-          height: 15px;
-        }
-      }
-
       .lang-btn {
         margin-top: $spacing-sm;
         font-size: 0.8rem;
       }
+    }
+  }
+
+  .lang-btn {
+    background: transparent;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    padding: $spacing-xs $spacing-sm;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-top: $spacing-md;
+    letter-spacing: 2px;
+
+    &:hover {
+      background: rgba($primary-color, 0.1);
+      border-color: lighten($primary-color, 20%);
+      color: lighten($primary-color, 20%);
     }
   }
 
@@ -778,9 +798,9 @@ const playButtonSound = () => {
     height: 100%;
     pointer-events: none;
     background: radial-gradient(
-      circle at 50% 50%,
-      rgba($primary-color, 0.1),
-      transparent 50%
+            circle at 50% 50%,
+            rgba($primary-color, 0.1),
+            transparent 50%
     );
     animation: pulse 4s ease-in-out infinite;
     z-index: 1;
@@ -793,11 +813,11 @@ const playButtonSound = () => {
     width: 100%;
     height: 100%;
     background: repeating-linear-gradient(
-      0deg,
-      rgba($primary-color, 0.1) 0px,
-      rgba($primary-color, 0.1) 1px,
-      transparent 1px,
-      transparent 2px
+            0deg,
+            rgba($primary-color, 0.1) 0px,
+            rgba($primary-color, 0.1) 1px,
+            transparent 1px,
+            transparent 2px
     );
     pointer-events: none;
     animation: scanline 10s linear infinite;
@@ -812,9 +832,9 @@ const playButtonSound = () => {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      to bottom,
-      transparent 50%,
-      rgba(0, 0, 0, 0.5) 51%
+            to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.5) 51%
     );
     background-size: 100% 4px;
     pointer-events: none;
@@ -827,8 +847,8 @@ const playButtonSound = () => {
     position: relative;
     animation: glitchText 5s infinite;
     text-shadow: 0 0 10px $primary-color,
-                0 0 20px $primary-color,
-                0 0 30px $primary-color;
+    0 0 20px $primary-color,
+    0 0 30px $primary-color;
 
     &::before,
     &::after {
@@ -866,13 +886,12 @@ const playButtonSound = () => {
     left: 0;
     width: 100%;
     height: 100%;
-    background:
-      linear-gradient(rgba($primary-color, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba($primary-color, 0.2) 1px, transparent 1px);
+    background: linear-gradient(rgba($primary-color, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba($primary-color, 0.5) 1px, transparent 1px);
     background-size: 30px 30px;
     transform-origin: center;
     animation: gridRotate 120s linear infinite;
-    opacity: 0.3;
+    opacity: .5;
     z-index: 0;
   }
 
@@ -881,8 +900,8 @@ const playButtonSound = () => {
       position: relative;
       animation: glitchText 5s infinite;
       text-shadow: 0 0 10px $primary-color,
-                  0 0 20px $primary-color,
-                  0 0 30px $primary-color;
+      0 0 20px $primary-color,
+      0 0 30px $primary-color;
 
       &::before,
       &::after {
@@ -929,9 +948,9 @@ const playButtonSound = () => {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      to bottom,
-      transparent 50%,
-      rgba(0, 0, 0, 0.5) 51%
+            to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.5) 51%
     );
     background-size: 100% 4px;
     pointer-events: none;
@@ -1018,14 +1037,14 @@ const playButtonSound = () => {
 @keyframes neonPulse {
   0%, 100% {
     text-shadow: 0 0 10px $primary-color,
-                 0 0 20px $primary-color,
-                 0 0 30px $primary-color;
+    0 0 20px $primary-color,
+    0 0 30px $primary-color;
   }
   50% {
     text-shadow: 0 0 20px $primary-color,
-                 0 0 30px $primary-color,
-                 0 0 40px $primary-color,
-                 0 0 50px $primary-color;
+    0 0 30px $primary-color,
+    0 0 40px $primary-color,
+    0 0 50px $primary-color;
   }
 }
 
@@ -1161,39 +1180,11 @@ const playButtonSound = () => {
   width: 100%;
   height: 100%;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: .1;
+  opacity: .08;
   pointer-events: none;
   z-index: 1;
 }
 
-.title-wrapper h1 {
-  position: relative;
-  animation: glitchText 5s infinite;
-  text-shadow: 0 0 10px $primary-color,
-              0 0 20px $primary-color,
-              0 0 30px $primary-color;
-
-  &::before,
-  &::after {
-    content: 'THE LAST CRACK';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    clip: rect(0, 900px, 0, 0);
-  }
-
-  &::before {
-    text-shadow: 2px 0 #ff00ff;
-    animation: glitch 3s infinite linear alternate-reverse;
-  }
-
-  &::after {
-    text-shadow: -2px 0 #00ffff;
-    animation: glitch 2s infinite linear alternate;
-  }
-}
 
 @keyframes glitch1 {
   0% {
@@ -1351,25 +1342,25 @@ const playButtonSound = () => {
 @keyframes neonPulse {
   0%, 100% {
     text-shadow: 0 0 10px $primary-color,
-                 0 0 20px $primary-color,
-                 0 0 30px $primary-color;
+    0 0 20px $primary-color,
+    0 0 30px $primary-color;
   }
   50% {
     text-shadow: 0 0 20px $primary-color,
-                 0 0 30px $primary-color,
-                 0 0 40px $primary-color,
-                 0 0 50px $primary-color;
+    0 0 30px $primary-color,
+    0 0 40px $primary-color,
+    0 0 50px $primary-color;
   }
 }
 
 @keyframes borderGlow {
   0%, 100% {
     box-shadow: 0 0 5px $primary-color,
-                inset 0 0 5px $primary-color;
+    inset 0 0 5px $primary-color;
   }
   50% {
     box-shadow: 0 0 20px $primary-color,
-                inset 0 0 10px $primary-color;
+    inset 0 0 10px $primary-color;
   }
 }
 
@@ -1415,6 +1406,57 @@ const playButtonSound = () => {
   }
   50% {
     clip: rect(15px, 9999px, 24px, 0);
+  }
+}
+
+@keyframes glitch-1 {
+  0% {
+    clip-path: inset(20% 0 30% 0);
+  }
+  20% {
+    clip-path: inset(60% 0 10% 0);
+  }
+  40% {
+    clip-path: inset(40% 0 50% 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+  }
+  100% {
+    clip-path: inset(30% 0 20% 0);
+  }
+}
+
+@keyframes glitch-2 {
+  0% {
+    clip-path: inset(10% 0 60% 0);
+  }
+  20% {
+    clip-path: inset(30% 0 20% 0);
+  }
+  40% {
+    clip-path: inset(70% 0 10% 0);
+  }
+  60% {
+    clip-path: inset(20% 0 50% 0);
+  }
+  80% {
+    clip-path: inset(50% 0 30% 0);
+  }
+  100% {
+    clip-path: inset(40% 0 40% 0);
+  }
+}
+
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 </style> 
