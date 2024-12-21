@@ -12,7 +12,7 @@ export const level5: LevelData = {
   ],
   requiredTasks: ['connect_server', 'get_data'],
   fileSystem: {
-    '~': ['readme.txt', 'network_config.txt', 'connection.log', 'notes.txt']
+    '~': ['readme.txt', 'network_config.txt', 'connection.log', '.notes.txt']
   },
   fileContents: {
     'readme.txt': '远程服务器信息：\nIP: 192.168.1.200\n用户名: kansini\n\n请尝试连接这台服务器并获取其中的数据。\n\n[注意] 服务器上有一个名为 secret_data 的重要文件。',
@@ -21,7 +21,7 @@ export const level5: LevelData = {
     
     'connection.log': '最近的连接记录：\n[失败] 密码格式：8位以上，包含大小写字母和特殊字符\n[提示] 密码以 \'@2024\' 结尾\n[提示] 密码与 Network 相关，但使用了一些常见的密码变形技巧',
     
-    'notes.txt': '安全备忘：\n 密码提示：\n   - 与 Network 有关\n   - 把字母 \'o\' 替换成数字 \'0\'\n   - 首字母大写'
+    '.notes.txt': '安全备忘：\n 密码提示：\n   - 与 Network 有关\n   - 把字母 \'o\' 替换成数字 \'0\'\n   - 首字母大写'
   },
   hints: [
     '使用 ping 命令测试服务器连接状态',

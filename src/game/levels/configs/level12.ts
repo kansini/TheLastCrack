@@ -57,7 +57,7 @@ export const level12: LevelData = {
     'system.log': `系统日志包含了系统状态和进程信息。
 使用 loganalyzer system.log 查看详细信息。
 
-分析完成后，建议使用 timeline 命令查看完整的攻击过程。`,
+`,
 
     'access.log': `访问日志记录了所有HTTP请求和文件访问。
 使用 loganalyzer access.log 查看详细信息。`,

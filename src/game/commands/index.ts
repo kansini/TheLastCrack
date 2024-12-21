@@ -1,4 +1,5 @@
-import type { Command } from '@/types/terminal';
+import type {Command} from "@/types/terminal";
+import { trojanCommand } from './trojan';
 
 import {
     helpCommand,
@@ -28,8 +29,6 @@ import {
     wiresharkCommand,
     iptablesCommand,
     mailListCommand,
-    // searchCommand,
-    draftCommand,
     chatCommand,
     privateCommand,
     historyCommand,
@@ -42,8 +41,9 @@ import {
     volatilityCommand,
     levelCommand,
     netstatCommand,
-    hintCommand
-} from './basic';
+    hintCommand,
+    remoteCommand
+} from "./basic";
 
 export const commands: { [key: string]: Command } = {
     help: helpCommand,
@@ -73,8 +73,6 @@ export const commands: { [key: string]: Command } = {
     wireshark: wiresharkCommand,
     iptables: iptablesCommand,
     mail: mailListCommand,
-    // search: searchCommand,
-    draft: draftCommand,
     chat: chatCommand,
     private: privateCommand,
     history: historyCommand,
@@ -87,5 +85,11 @@ export const commands: { [key: string]: Command } = {
     volatility: volatilityCommand,
     level: levelCommand,
     netstat: netstatCommand,
-    hint: hintCommand
+    hint: hintCommand,
+    remote: remoteCommand,
+    trojan: trojanCommand
+};
+
+export const getCommands = () => {
+    return commands;
 }; 

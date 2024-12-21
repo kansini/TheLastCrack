@@ -247,12 +247,11 @@ const playButtonSound = () => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100vh;
+    width: 80vh;
     aspect-ratio: 1;
     border-radius: 50%;
     border: 1px solid rgba(0, 255, 255, 0.2);
     opacity: 0.3;
-    z-index: 999;
     pointer-events: none;
     background: radial-gradient(
             circle at center,
@@ -267,7 +266,7 @@ const playButtonSound = () => {
 
       .radar-sweep {
         transform-origin: 100px 100px;
-        animation: radar-sweep 3s linear infinite;
+        animation: radar-sweep 5s linear infinite;
         filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
       }
     }

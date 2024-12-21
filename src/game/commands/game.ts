@@ -52,7 +52,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
             // ... 其他关卡的判断逻辑 ...
 
             default:
-                return "关卡 " + level + " 正在紧张开发中...";
+                // return "关卡 " + level + " 正在紧张开发中...";
         }
 
         return "密码错误，请继续寻找线索。";

@@ -27,7 +27,7 @@
             </div>
             <div class="info-item">
               <span class="label">{{ t('developer') }}</span>
-              <span class="value">ssflood</span>
+              <span class="value">Old Flood</span>
             </div>
             <div class="info-item">
               <span class="label"> github </span>

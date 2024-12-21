@@ -429,4 +429,60 @@ ${count <= 2 ? '\n⚠️  💣💥警告：正在清除所有数据💥💣  ⚠
         updateDisplay();
         return '';
     }
+};
+
+export const showGameCompleteEasterEgg = async () => {
+    const terminalStore = useTerminalStore();
+    
+    // 清屏
+    terminalStore.clearHistory();
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // ASCII 艺术
+    const asciiArt = [
+        "    ____                            __      __  _           _ ",
+        "   / ___| __ _ _ __ ___   ___      \\ \\    / / (_) _ __   | |",
+        "  | |    / _` | '_ ` _ \\ / _ \\      \\ \\/\\/ /  | || '_ \\  | |",
+        "  | |___| (_| | | | | | |  __/       \\    /   | || | | | |_|",
+        "   \\____|\\__,_|_| |_| |_|\\___|        \\/\\/    |_||_| |_| (_)",
+        "",
+        "  ★ ★ ★ ★ ★ 恭喜你通关了 The Last Crack! ★ ★ ★ ★ ★",
+        "",
+        "     你成功完成了所有关卡，成为了一名真正的黑客高手！",
+        "",
+        "     制作人员名单：",
+        "     - 游戏设计：Old Flood",
+        "     - 关卡设计：Old Flood",
+        "     - 程序开发：Old Flood",
+        "     - 特别感谢：所有测试玩家",
+        "",
+        "     按 Enter 键继续..."
+    ];
+
+    // 逐行显示 ASCII 艺术
+    for (const line of asciiArt) {
+        terminalStore.addLine('output', line);
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    // 添加动态效果
+    const stars = "★ ".repeat(20);
+    for (let i = 0; i < 5; i++) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        terminalStore.addLine('output', stars);
+    }
+
+    // 最终消息
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    terminalStore.addLine('output', "\n感谢游玩！期待与你的下次相遇！\n");
+};
+
+// 导出一个命令用于测试
+export const easterEggCommand: Command = {
+    name: "easteregg",
+    description: "显示通关彩蛋",
+    execute: async () => {
+        await showGameCompleteEasterEgg();
+        return "";
+    }
 }; 

@@ -3,6 +3,7 @@ import {useGameStore} from "@/stores/game";
 import {getCurrentLevelData} from "@/game/levels";
 import {useTerminalStore} from "@/stores/terminal";
 import {useSaveStore} from "@/stores/save";
+import {showGameComplete} from "./gameComplete";
 
 const helpCommand: Command = {
     name: "help",
@@ -201,7 +202,7 @@ const clearCommand: Command = {
 const unlockCommand: Command = {
     name: "unlock",
     description: "使用密码解锁下一关",
-    execute: (args: string[]) => {
+    execute: async (args: string[]) => {
         if (!args.length) {
             return "Usage: unlock <password>";
         }
@@ -344,20 +345,25 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 }
                 if (password === "L0G_H4CK_2024") {
                     gameStore.completeLevel();
-                    return `恭喜你通关了！
-
-你已经完成了所有关卡，成为了一名真正的黑客！
-感谢你的游玩，未来还会有更多关卡加入...
-
-输入 exit 返回主菜单`;
+                    return showLevelInfo();
+                }
+                break;
+            case 13:
+                if (!gameStore.completedTasks.includes("trojan_planted")) {
+                    return "你需要先植入木马程序！";
+                }
+                if (password === "TheLastCrack") {
+                    gameStore.completeLevel();
+                    return showLevelInfo();
                 }
                 break;
 
             default:
-                if (level >= 12) {
-                    return "恭喜你已经通关了所有关卡！";
+                if (level > 13) {
+                    await showGameComplete();
+                    return "";
                 }
-                return "关卡 " + level + " 正在紧张开发中...";
+            // return "关卡 " + level + " 正在紧张开发中...";
         }
 
         return "密码错误，请继续寻找线索。";
@@ -962,7 +968,7 @@ const searchCommand: Command = {
         }
 
         const keyword = args[0].toLowerCase();
-        if (keyword === "chess" || keyword === "棋盘" || keyword === "加密") {
+        if (keyword === "chess" || keyword === "棋盘" || keyword === "加") {
             gameStore.completeTask("find_secret");
             return `搜索结果：
 1. 发现邮件提到国际象棋加密案
@@ -1484,7 +1490,7 @@ const mailListCommand: Command = {
 
         if (subCommand === "read") {
             if (args.length < 2) {
-                return "Usage: mail read <用户名>";
+                return "Usage: mail read <用户���>";
             }
             const user = args[1].toLowerCase();
             if (!["alex", "sarah", "mike"].includes(user)) {
@@ -1523,6 +1529,27 @@ const mailListCommand: Command = {
         return "无效的邮件命令";
     }
 };
+const remoteCommand: Command = {
+    name: "remote",
+    description: "连接远程服务器",
+    execute: (args: string[]) => {
+        if (args.length !== 3) {
+            return "Usage: remote <IP> <username> <password>";
+        }
+
+        const gameStore = useGameStore();
+        const [ip, username, password] = args;
+
+        if (ip === "10.0.13.37" && username === "Robert" && password === "Robert0315") {
+            gameStore.completeTask("server_access");
+            return `连接成功！
+服务器已就绪。`;
+        }
+
+        return "连接失败：认证错误。请检查 IP、用户名和密码。";
+    }
+};
+
 
 export {
     helpCommand,
@@ -1567,5 +1594,6 @@ export {
     levelCommand,
     netstatCommand,
     hintCommand,
-    mailListCommand
-}; 
+    mailListCommand,
+    remoteCommand
+};
