@@ -12,7 +12,7 @@ export const level15: LevelData = {
     ],
     requiredTasks: ["analyze_vuln", "check_service", "exploit_vuln", "get_root"],
     fileSystem: {
-        "~": ["readme.txt", "reports", "services", ], // "exploits","root"
+        "~": ["readme.txt", "reports" ], // , "services","exploits","root"
         "~/reports": ["vuln_report.txt", "service_scan.txt", "system_info.txt"],
         "~/services": ["running_services.txt", "config", "logs"],
         "~/services/config": ["sshd_config", "apache2.conf", "mysql.cnf"],
@@ -28,11 +28,6 @@ export const level15: LevelData = {
 2. 检查受影响的系统服务
 3. 利用漏洞获取系统权限
 4. 提取管理员凭证
-
-步骤提示：
-1. 使用 cat service_scan.txt 查看目标系统信息
-2. 使用 ssh_exploit <目标IP> --check 检查漏洞
-3. 使用 ssh_exploit <目标IP> --exploit 利用漏洞
 
 注意：仔细阅读漏洞报告和系统日志`,
 
