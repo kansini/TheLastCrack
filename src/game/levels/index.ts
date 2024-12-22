@@ -12,6 +12,7 @@ import {level10} from "./configs/level10";
 import {level11} from "./configs/level11";
 import {level12} from "./configs/level12";
 import {level13} from "./configs/level13";
+import {level14} from "./configs/level14";
 import {showGameComplete} from "../commands/gameComplete";
 
 // 导入所有关卡配置
@@ -28,11 +29,13 @@ const levelConfigs: Record<number, LevelData> = {
     10: level10,
     11: level11,
     12: level12,
-    13: level13
+    13: level13,
+    14: level14
 };
 
 export function getCurrentLevelData(level: number): LevelData {
-    if (level > 13) {
+    const lastLevel = import.meta.env.VITE_APP_LAST_LEVEL
+    if (level > lastLevel) {
         showGameComplete().then(_r => {
             return {
                 id: level,
@@ -46,13 +49,11 @@ export function getCurrentLevelData(level: number): LevelData {
             };
         });
         // 返回一个通关后的虚拟关卡数据
-
     }
 
     const levelData = levelConfigs[level];
-    console.log("levelData", levelData)
     if (!levelData) {
-        // throw new Error(`关卡 ${level} 正在紧张开发中...`);
+        throw (``);
     }
     return levelData;
 }

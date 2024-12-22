@@ -185,6 +185,13 @@ const catCommand: Command = {
             gameStore.completeTask("find_key");
         }
 
+        // 如果查看了第14关的关键文件，标记任务完成
+        if (gameStore.currentLevel === 14) {
+            gameStore.completeTask("find_person");
+            gameStore.completeTask("check_meeting");
+            gameStore.completeTask("read_mail");
+        }
+
         return fileContent;
     }
 };
@@ -357,9 +364,21 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                     return showLevelInfo();
                 }
                 break;
-
+            case 14:
+                if (!gameStore.completedTasks.includes("find_person") || 
+                    !gameStore.completedTasks.includes("check_meeting") || 
+                    !gameStore.completedTasks.includes("read_mail")) {
+                    return "你需要先完成所有调查任务！";
+                }
+                if (password === "PHOENIX_LQ_1005") {
+                    gameStore.completeLevel();
+                    await showGameComplete();
+                    return "";
+                }
+                break;
             default:
-                if (level > 13) {
+                const lastLevel = import.meta.env.VITE_APP_LAST_LEVEL
+                if (level > lastLevel) {
                     await showGameComplete();
                     return "";
                 }
@@ -888,7 +907,7 @@ const wiresharkCommand: Command = {
 1. 协议：TCP
 2. 源地址：10.0.0.100:31337
 3. 目标地址：10.0.0.1:31337
-4. 警告检测到密码泄露！
+4. 警告检到密码泄露！
 5. 阻止方法: iptables -A OUTPUT -d <目标地址> -j DROP`;
         }
 
@@ -998,7 +1017,7 @@ const draftCommand: Command = {
 
         const user = args[0].toLowerCase();
         if (user === "mike") {
-            // 当查了 Charlie 的草稿时，标记发现秘密
+            // 当查了 Charlie 的草稿，标记发现秘密
             gameStore.completeTask("find_secret");
             return gameStore.currentLevelData.fileContents[".charlie_draft"];
         }
@@ -1465,7 +1484,7 @@ TCP    0.0.0.0:443        185.192.69.69:52984   已建立
     }
 };
 
-// 添加新的邮件命令
+// 加新的邮件命令
 const mailListCommand: Command = {
     name: "mail",
     description: "邮箱操作命令",
@@ -1490,7 +1509,7 @@ const mailListCommand: Command = {
 
         if (subCommand === "read") {
             if (args.length < 2) {
-                return "Usage: mail read <用户���>";
+                return "Usage: mail read <用户名>";
             }
             const user = args[1].toLowerCase();
             if (!["alex", "sarah", "mike"].includes(user)) {
@@ -1541,6 +1560,7 @@ const remoteCommand: Command = {
         const [ip, username, password] = args;
 
         if (ip === "10.0.13.37" && username === "Robert" && password === "Robert0315") {
+            // remote 10.0.13.37 Robert Robert0315
             gameStore.completeTask("server_access");
             return `连接成功！
 服务器已就绪。`;

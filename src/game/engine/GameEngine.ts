@@ -31,7 +31,7 @@ export class GameEngine {
       }
       return output;
     } catch (error) {
-      return `执行命令出错: ${error}`;
+      return ` ${error}`; // 执行命令出错:
     }
   }
 }
