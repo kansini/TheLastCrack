@@ -13,6 +13,7 @@ import {level11} from "./configs/level11";
 import {level12} from "./configs/level12";
 import {level13} from "./configs/level13";
 import {level14} from "./configs/level14";
+import {level15} from "./configs/level15";
 import {showGameComplete} from "../commands/gameComplete";
 
 // 导入所有关卡配置
@@ -30,7 +31,8 @@ const levelConfigs: Record<number, LevelData> = {
     11: level11,
     12: level12,
     13: level13,
-    14: level14
+    14: level14,
+    15: level15
 };
 
 export function getCurrentLevelData(level: number): LevelData {

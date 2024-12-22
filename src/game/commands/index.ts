@@ -42,7 +42,8 @@ import {
     levelCommand,
     netstatCommand,
     hintCommand,
-    remoteCommand
+    remoteCommand,
+    ssh_exploitCommand
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -87,6 +88,7 @@ export const commands: { [key: string]: Command } = {
     netstat: netstatCommand,
     hint: hintCommand,
     remote: remoteCommand,
+    ssh_exploit: ssh_exploitCommand,
     trojan: trojanCommand
 };
 
