@@ -98,6 +98,13 @@ const cdCommand: Command = {
         const currentDir = gameStore.currentDirectory;
         const levelData = getCurrentLevelData(gameStore.currentLevel);
 
+        // 检查是否尝试访问root目录
+        if ((path === "root" || path === "/root" || path.includes("/root/")) && 
+            gameStore.currentLevel === 15 && 
+            !gameStore.completedTasks.includes("get_root")) {
+            return "cd: root: 权限不足，需要root权限";
+        }
+
         // 处理特殊路径
         if (path === "~") {
             gameStore.setCurrentDirectory("~");
@@ -120,9 +127,9 @@ const cdCommand: Command = {
             return "";
         }
 
-        // 处理绝对路径（以 ~ 开头）
-        if (path.startsWith("~/")) {
-            const targetPath = path;
+        // 处理绝对路径（以 ~ 或 / 开头）
+        if (path.startsWith("~/") || path.startsWith("/")) {
+            const targetPath = path.startsWith("~/") ? path : path.substring(1);
             const dirToCheck = targetPath === "~" ? "~" : `${targetPath}`;
             if (levelData.fileSystem[dirToCheck]) {
                 gameStore.setCurrentDirectory(targetPath);
@@ -162,6 +169,13 @@ const catCommand: Command = {
         const levelData = getCurrentLevelData(gameStore.currentLevel);
         const currentDir = gameStore.currentDirectory;
         const filename = args[0];
+
+        // 检查是否尝试访问root目录下的文件
+        if ((filename.startsWith("/root/") || currentDir.includes("/root/")) && 
+            gameStore.currentLevel === 15 && 
+            !gameStore.completedTasks.includes("get_root")) {
+            return "cat: 权限不足，需要root权限";
+        }
 
         // 检查是否是目录
         const fullPath = currentDir === "~" ? `~/${filename}` : `${currentDir}/${filename}`;
@@ -607,7 +621,7 @@ const pingCommand: Command = {
 
 192.168.1.200 的 Ping 统计信息:
     数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
-往返行程的估计时间(以毫秒为单位):
+往返行程的估计��间(以毫秒为单位):
     最短 = 0ms，最长 = 1ms，平均 = 0ms
 
 [提示] 服务器在线，可以尝试使用 connect 命令连接`;
@@ -1642,7 +1656,7 @@ const ssh_exploitCommand: Command = {
     - 主机名: vulnserver
     - 系统版本: Ubuntu 20.04.3
     - SSH端口: 22
-[*] 漏洞利用成功，请使用格式：CVE编号_系统版本_端口号 解锁下一关`;
+[*] 漏洞利用成功，请使用格式：CVE编号_操作系统版本_端口号 解锁下一关`;
         }
 
         return "无效的参数，使用 --check 或 --exploit";

@@ -12,12 +12,14 @@ export const level15: LevelData = {
     ],
     requiredTasks: ["analyze_vuln", "check_service", "exploit_vuln", "get_root"],
     fileSystem: {
-        "~": ["readme.txt", "reports", "services", "exploits"],
+        "~": ["readme.txt", "reports", "services", ], // "exploits","root"
         "~/reports": ["vuln_report.txt", "service_scan.txt", "system_info.txt"],
         "~/services": ["running_services.txt", "config", "logs"],
         "~/services/config": ["sshd_config", "apache2.conf", "mysql.cnf"],
         "~/services/logs": ["auth.log", "error.log", "access.log"],
-        "~/exploits": ["poc.py", "exploit.py", "payload.txt"]
+        "~/exploits": ["poc.py", "exploit.py", "payload.txt"],
+        "~/root": [".ssh", ".bash_history", ".profile"],
+        "~/root/.ssh": ["id_rsa", "id_rsa.pub", "authorized_keys"]
     },
     fileContents: {
         "readme.txt": `任务简报：
@@ -60,13 +62,15 @@ export const level15: LevelData = {
 目标系统：192.168.1.100
 
 开放端口：
-TCP/22   OPEN   SSH   OpenSSH 8.9p1
+TCP/22   OPEN   SSH   OpenSSH 8.9p1  [主要目标]
 TCP/80   OPEN   HTTP  Apache/2.4.41
 TCP/443  OPEN   HTTPS Apache/2.4.41
 TCP/3306 OPEN   MySQL 5.7.32
 
-[警告] SSH服务版本过低，存在已知漏洞
-[提示] 使用命令：ssh_exploit 192.168.1.100 --check 检查漏洞`,
+[警告] SSH服务(端口22)版本过低，存在已知漏洞
+[提示] 使用命令：ssh_exploit 192.168.1.100 --check 检查漏洞
+
+[注意] 记录目标端口号(22)，这是构造最终密码的必要信息`,
 
         "system_info.txt": `系统信息：
 
@@ -223,7 +227,7 @@ def exploit(target, port=22):
         response = sock.recv(1024)
         if b"root@" in response:
             print("[+] 获取root权限成功！")
-            print("[+] 密码在/root/.ssh/id_rsa中")
+            print("[+] SSH私钥位置：/root/.ssh/id_rsa")
             return True
             
     except Exception as e:
@@ -255,14 +259,39 @@ if __name__ == "__main__":
    - 大小：27字节
    - 功能：执行/bin/sh
 
-注意：地址可能需要根据目标系统调整`
+注意：地址可能需要根据目标系统调整`,
+
+        "id_rsa": `-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAvVJ4YjmqGtQZA0c9RKNHs3+mYj8pM6J3lQH9CGkl6n4VmEYh
+X5VN+zQXUqB+vdEiVqL1h7GvNn6ZH5QQgEcNPNJBYFQXhk6M2xqHyQ2Qx5VJ5jxL
+5H+ZGgWwPOT9Bz9Ey1+dXjCKvqaHqL6TOEfGZ+v8cQGxPY6dp4LH2M2Jh/wPyW+q
+XEiUHBqJ3OfHVokmH9qYwFxV1zT8YEghHVcBzPD1L9QCvzv7tMnPJd+XmGwL4/Ey
+D+DNJJhg1B8zEpDx9vqQ7RJ9Eq8xBZ5+/1YU0qCMqxaB2xB4g6Y6VXqXL8h4MrrZ
+wIDAQABAoIBAQCJ8K9z8TnVYkqB7w6HzK0F
+-----END RSA PRIVATE KEY-----`,
+
+        "/root/.ssh/id_rsa.pub": `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9UnhiOaoa1BkDRz1Eo0ezf6ZiPykzonf... root@vulnserver`,
+
+        "/root/.ssh/authorized_keys": `# 授权的SSH密钥列表
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9UnhiOaoa1BkDRz1Eo0ezf6ZiPykzonf... root@vulnserver`,
+
+        "/root/.bash_history": `# root用户的命令历史
+ls -la
+cd /root/.ssh
+cat id_rsa
+exit`,
+
+        "/root/.profile": `# root用户的配置文件
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export HISTSIZE=1000
+export HISTFILESIZE=2000`
     },
     hints: [
         "检查系统中的OpenSSH版本",
         "分析auth.log中的异常记录",
         "查看POC代码了解漏洞原理",
         "利用exploit.py获取root权限",
-        "漏洞利用成功后，root密码就在id_rsa文件中",
+        "漏洞利用成功后，SSH私钥在/root/.ssh/id_rsa文件中",
         "最终密码格式：CVE编号_系统版本_端口号"
     ]
 }; 
