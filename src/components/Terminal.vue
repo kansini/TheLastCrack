@@ -168,8 +168,8 @@ onMounted(() => {
 .terminal {
   height: 100%;
   width: 100%;
-  background-color: $bg-primary;
-  color: $text-primary;
+  background-color: $terminal-bg;
+  color: $terminal-text;
   font-family: $font-family-mono;
   overflow: hidden;
   position: absolute;
@@ -201,6 +201,8 @@ onMounted(() => {
     height: 100%;
     overflow-y: auto;
     padding: $spacing-md;
+    color: $terminal-text;
+    font-size: $terminal-font-size;
 
     &::-webkit-scrollbar {
       width: 8px;
@@ -211,7 +213,7 @@ onMounted(() => {
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $bg-scrollbar;
+      background: var(--terminal-scrollbar-color, $bg-scrollbar);
       border-radius: $border-radius;
     }
   }
@@ -230,6 +232,8 @@ onMounted(() => {
     display: flex;
     align-items: center;
     padding: $spacing-xs 0;
+    color: $terminal-text;
+    font-size: $terminal-font-size;
 
     input {
       flex: 1;
@@ -240,12 +244,12 @@ onMounted(() => {
       font-size: inherit;
       padding: 0;
       outline: none;
-      caret-color: $caret-color;
+      caret-color: var(--terminal-caret-color, $caret-color);
     }
   }
 
   .prompt {
-    color: $prompt-color;
+    color: var(--terminal-prompt-color, $prompt-color);
     margin-right: $spacing-xs;
     user-select: none;
   }
@@ -255,7 +259,7 @@ onMounted(() => {
   }
 
   .output {
-    color: $text-secondary;
+    color: var(--terminal-output-text, $text-secondary);
 
     // Matrix 效果
     &[class*="matrix-rain-"] {

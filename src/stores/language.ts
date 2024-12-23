@@ -179,6 +179,70 @@ const translations: Translation = {
   saveName: {
     zh: '名称',
     en: 'name'
+  },
+  settings: {
+    zh: '设置',
+    en: 'Settings'
+  },
+  settingsTitle: {
+    zh: '终端设置',
+    en: 'Terminal Settings'
+  },
+  backgroundColor: {
+    zh: '背景颜色',
+    en: 'Background Color'
+  },
+  textColor: {
+    zh: '字体颜色',
+    en: 'Text Color'
+  },
+  inputTextColor: {
+    zh: '输入文字颜色',
+    en: 'Input Text Color'
+  },
+  outputTextColor: {
+    zh: '输出文字颜色',
+    en: 'Output Text Color'
+  },
+  fontSize: {
+    zh: '字体大小',
+    en: 'Font Size'
+  },
+  resetSettings: {
+    zh: '恢复默认',
+    en: 'Default'
+  },
+  colorSettings: {
+    zh: '颜色设置',
+    en: 'Color Settings'
+  },
+  fontSettings: {
+    zh: '字体设置',
+    en: 'Font Settings'
+  },
+  backgroundOpacity: {
+    zh: '背景透明度',
+    en: 'Background Opacity'
+  },
+  promptColor: {
+    zh: '提示符颜色',
+    en: 'Prompt Color'
+  },
+  caretColor: {
+    zh: '光标颜色',
+    en: 'Caret Color'
+  },
+  scrollbarColor: {
+    zh: '滚动条颜色',
+    en: 'Scrollbar Color'
+  },
+  save: {
+    zh: '确定',
+    en: 'Save'
+  },
+  cancel: {
+    zh: '取消',
+    en: 'Cancel'
   }
 };
 

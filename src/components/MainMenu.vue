@@ -46,6 +46,13 @@
             <div class="btn-border"></div>
             <div class="btn-glow"></div>
           </button>
+          <button @click="toggleSettings" class="menu-btn" @mouseenter="playButtonSound">
+            <div class="btn-content">
+              <span class="btn-text">{{ t("settings") }}</span>
+            </div>
+            <div class="btn-border"></div>
+            <div class="btn-glow"></div>
+          </button>
           <button @click="showTutorial" class="menu-btn" @mouseenter="playButtonSound">
             <div class="btn-content">
               <span class="btn-text">{{ t("tutorial") }}</span>
@@ -73,37 +80,13 @@
       </div>
 
       <!-- 存档列表 -->
-      <div class="save-list" v-if="showSaveList">
-        <div class="save-list-container">
-          <div class="save-header">
-            <h2>{{ t("selectSaveFile") }}</h2>
-            <button @click="toggleLoadGame" class="close-btn">×</button>
-          </div>
-          <div class="saves-container">
-            <div v-if="saves.length === 0" class="no-saves">
-              {{ t("noSaves") }}
-            </div>
-            <div v-else v-for="save in saves" :key="save.id" class="save-item">
-              <div class="save-info">
-                <span class="save-name">SAVE_#{{ save.id }}: {{ save.name }}</span>
-                <span class="save-level">第{{
-                    save.save.currentLevel
-                  }}关 - {{ getCurrentLevelData(save.save.currentLevel).title }}</span>
-                <span class="save-date">{{ formatDate(save.save.timestamp) }}</span>
-              </div>
-              <div class="save-actions">
-                <button @click="loadGame(save.id)" class="action-btn load">{{ t("load") }}</button>
-                <button @click="deleteSave(save.id)" class="action-btn delete">{{ t("delete") }}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SaveList :visible="showSaveList" @close="toggleLoadGame"/>
     </div>
 
     <!-- 教程和关于页面 -->
     <Tutorial :visible="showTutorialModal" @close="closeTutorial"/>
     <About :visible="showAboutModal" @close="closeAbout"/>
+    <Settings :visible="showSettingsModal" @close="closeSettings"/>
 
     <!--    <div class="glitch-effects">-->
     <!--      <div class="glitch-line"></div>-->
@@ -123,6 +106,8 @@ import {useLanguageStore} from "@/stores/language";
 import {getCurrentLevelData} from "@/game/levels";
 import Tutorial from "./Tutorial.vue";
 import About from "./About.vue";
+import Settings from "./Settings.vue";
+import SaveList from "./SaveList.vue";
 
 const gameStore = useGameStore();
 const saveStore = useSaveStore();
@@ -131,6 +116,7 @@ const languageStore = useLanguageStore();
 const showSaveList = ref(false);
 const showTutorialModal = ref(false);
 const showAboutModal = ref(false);
+const showSettingsModal = ref(false);
 const uptimeSeconds = ref(0);
 
 const saves = computed(() => saveStore.getSaves());
@@ -212,6 +198,14 @@ const playButtonSound = () => {
       console.info("Button sound play prevented:", error);
     });
   }
+};
+
+const toggleSettings = () => {
+  showSettingsModal.value = true;
+};
+
+const closeSettings = () => {
+  showSettingsModal.value = false;
 };
 </script>
 
@@ -671,120 +665,6 @@ const playButtonSound = () => {
 
       .decoration-text {
         font-size: 0.8rem;
-      }
-    }
-  }
-
-  .save-list {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba($bg-primary, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px);
-    z-index: 100;
-
-    .save-list-container {
-      width: 600px;
-      background: $bg-secondary;
-      border: 1px solid rgba($primary-color, 0.3);
-      box-shadow: 0 0 20px rgba($primary-color, 0.2);
-      position: relative;
-      z-index: 101;
-
-      .save-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: $spacing-md;
-        border-bottom: 1px solid rgba($primary-color, 0.3);
-
-        h2 {
-          font-size: 1.5rem;
-          margin: 0;
-        }
-
-        .close-btn {
-          background: none;
-          border: none;
-          color: $primary-color;
-          font-size: 1.5rem;
-          cursor: pointer;
-          padding: 0 $spacing-sm;
-
-          &:hover {
-            color: lighten($primary-color, 20%);
-          }
-        }
-      }
-
-      .saves-container {
-        max-height: 400px;
-        overflow-y: auto;
-        padding: $spacing-md;
-
-        .save-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: $spacing-sm;
-          border: 1px solid rgba($primary-color, 0.2);
-          margin-bottom: $spacing-sm;
-
-          &:hover {
-            background: rgba($primary-color, 0.1);
-          }
-
-          .save-info {
-            .save-name {
-              display: block;
-              font-size: 1.1rem;
-            }
-
-            .save-level {
-              font-size: 0.9rem;
-              opacity: 0.7;
-            }
-
-            .save-date {
-              font-size: 0.9rem;
-              opacity: 0.7;
-            }
-          }
-
-          .save-actions {
-            display: flex;
-            gap: $spacing-sm;
-
-            .action-btn {
-              padding: $spacing-xs $spacing-sm;
-              background: transparent;
-              border: 1px solid $primary-color;
-              color: $primary-color;
-              cursor: pointer;
-              transition: all 0.3s ease;
-
-              &:hover {
-                background: $primary-color;
-                color: $bg-primary;
-              }
-
-              &.delete {
-                border-color: #ff4444;
-                color: #ff4444;
-
-                &:hover {
-                  background: #ff4444;
-                  color: $bg-primary;
-                }
-              }
-            }
-          }
-        }
       }
     }
   }

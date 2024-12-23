@@ -42,4 +42,9 @@ $caret-color: $text-primary;
 // 阴影
 $glow-shadow: 0 0 10px rgba($primary-color, 0.5);
 $text-shadow: 0 0 5px rgba($primary-color, 0.5);
+
+// 终端样式变量
+$terminal-bg: var(--terminal-bg, $bg-primary);
+$terminal-text: var(--terminal-text, $text-primary);
+$terminal-font-size: var(--terminal-font-size, 16px);
   
