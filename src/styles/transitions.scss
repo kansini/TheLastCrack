@@ -1,0 +1,160 @@
+// 淡入淡出效果
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// 从上方滑入
+.slide-top-enter-active,
+.slide-top-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-top-enter-from,
+.slide-top-leave-to {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+// 从下方滑入
+.slide-bottom-enter-active,
+.slide-bottom-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-bottom-enter-from,
+.slide-bottom-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+// 从左侧滑入
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-left-enter-from,
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+// 从右侧滑入
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-right-enter-from,
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+// 缩放效果
+.zoom-enter-active,
+.zoom-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+// 内容区动画
+.fade-content-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.fade-content-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.fade-content-enter-from,
+.fade-content-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+// 从上方滑入内容
+.slide-top-content-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-top-content-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-top-content-enter-from,
+.slide-top-content-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+// 从下方滑入内容
+.slide-bottom-content-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-bottom-content-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-bottom-content-enter-from,
+.slide-bottom-content-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+// 从左侧滑入内容
+.slide-left-content-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-left-content-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-left-content-enter-from,
+.slide-left-content-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+// 从右侧滑入内容
+.slide-right-content-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-right-content-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-right-content-enter-from,
+.slide-right-content-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+// 缩放内容
+.zoom-content-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-content-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-content-enter-from,
+.zoom-content-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+} 

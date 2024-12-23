@@ -103,7 +103,7 @@ import {ref, computed, onMounted, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/game";
 import {useSaveStore} from "@/stores/save";
 import {useLanguageStore} from "@/stores/language";
-import {getCurrentLevelData} from "@/game/levels";
+// import {getCurrentLevelData} from "@/game/levels";
 import Tutorial from "./Tutorial.vue";
 import About from "./About.vue";
 import Settings from "./Settings.vue";
@@ -154,22 +154,22 @@ const toggleLoadGame = () => {
   showSaveList.value = !showSaveList.value;
 };
 
-const loadGame = (saveId: number) => {
-  if (saveStore.loadSave(saveId)) {
-    const saveData = saveStore.getSaveData(saveId);
-    if (saveData) {
-      gameStore.loadSavedGame(saveData);
-    }
-  }
-};
+// const loadGame = (saveId: number) => {
+//   if (saveStore.loadSave(saveId)) {
+//     const saveData = saveStore.getSaveData(saveId);
+//     if (saveData) {
+//       gameStore.loadSavedGame(saveData);
+//     }
+//   }
+// };
 
-const deleteSave = (saveId: number) => {
-  saveStore.deleteSave(saveId);
-};
-
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp).toLocaleString();
-};
+// const deleteSave = (saveId: number) => {
+//   saveStore.deleteSave(saveId);
+// };
+//
+// const formatDate = (timestamp: number) => {
+//   return new Date(timestamp).toLocaleString();
+// };
 
 const showTutorial = () => {
   showTutorialModal.value = true;

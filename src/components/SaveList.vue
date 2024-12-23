@@ -32,7 +32,7 @@ import { useGameStore } from '@/stores/game';
 import { getCurrentLevelData } from '@/game/levels';
 import Modal from './Modal.vue';
 
-const props = defineProps<{
+defineProps<{
   visible: boolean;
 }>();
 
