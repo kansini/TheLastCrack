@@ -84,14 +84,17 @@ export const useGameStore = defineStore('game', {
       this.currentDirectory = '~';
       this.inventory = [];
     },
+    
+    setLevel(level: number) {
+      this.currentLevel = level;
+      this.currentDirectory = "~";
+      this.completedTasks = [];
+    },
   },
   
   getters: {
     isLevelComplete: (state) => {
-      const levelData = getCurrentLevelData(state.currentLevel);
-      return levelData.requiredTasks.every(task => 
-        state.completedTasks.includes(task)
-      );
+      return state.gameStarted && state.currentLevel > 0;
     },
     currentLevelData: (state) => {
       return getCurrentLevelData(state.currentLevel);

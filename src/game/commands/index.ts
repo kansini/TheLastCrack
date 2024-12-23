@@ -1,5 +1,6 @@
 import type {Command} from "@/types/terminal";
 import { trojanCommand } from './trojan';
+import { easterCommands } from './easter';
 
 import {
     helpCommand,
@@ -43,7 +44,8 @@ import {
     netstatCommand,
     hintCommand,
     remoteCommand,
-    ssh_exploitCommand
+    ssh_exploitCommand,
+    gotoCommand
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -89,9 +91,11 @@ export const commands: { [key: string]: Command } = {
     hint: hintCommand,
     remote: remoteCommand,
     ssh_exploit: ssh_exploitCommand,
-    trojan: trojanCommand
+    trojan: trojanCommand,
+    goto: gotoCommand,
+    ...easterCommands
 };
 
 export const getCommands = () => {
     return commands;
-}; 
+};

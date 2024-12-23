@@ -34,14 +34,7 @@
 import {ref, onMounted, computed, nextTick} from "vue";
 import {useTerminalStore} from "@/stores/terminal";
 import {commands} from "@/game/commands";
-import {
-  matrixCommand,
-  helloCommand,
-  asciiCommand,
-  starwarsCommand,
-  rainbowCommand,
-  countdownCommand
-} from "@/game/commands/easter";
+
 
 import {gameEngine} from "@/game/engine/GameEngine";
 
@@ -50,13 +43,6 @@ Object.values(commands).forEach(command => {
   gameEngine.registerCommand(command);
 });
 
-// 注册彩蛋命令
-gameEngine.registerCommand(matrixCommand);
-gameEngine.registerCommand(helloCommand);
-gameEngine.registerCommand(asciiCommand);
-gameEngine.registerCommand(starwarsCommand);
-gameEngine.registerCommand(rainbowCommand);
-gameEngine.registerCommand(countdownCommand);
 
 const store = useTerminalStore();
 const inputContent = ref("");

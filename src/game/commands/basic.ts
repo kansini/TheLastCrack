@@ -621,7 +621,7 @@ const pingCommand: Command = {
 
 192.168.1.200 的 Ping 统计信息:
     数据包: 已发送 = 3，已接收 = 3，丢失 = 0 (0% 丢失)
-往返行程的估计��间(以毫秒为单位):
+往返行程的估计时间(以毫秒为单位):
     最短 = 0ms，最长 = 1ms，平均 = 0ms
 
 [提示] 服务器在线，可以尝试使用 connect 命令连接`;
@@ -1150,7 +1150,7 @@ const exitCommand: Command = {
         terminalStore.clearHistory();
         // 重置当前目录
         terminalStore.setCurrentDirectory("~");
-        // 退出游戏状态
+        // 退出游戏态
         gameStore.exitGame();
 
         return "";  // 返回空字符串，不显示任何提示
@@ -1545,7 +1545,7 @@ const mailListCommand: Command = {
         const subCommand = args[0];
 
         if (subCommand === "list") {
-            return `可用邮箱列表：
+            return `可用邮���列表：
 - alex@company.com
 - sarah@company.com
 - mike@company.com`;
@@ -1663,6 +1663,49 @@ const ssh_exploitCommand: Command = {
     }
 };
 
+const gotoCommand: Command = {
+    name: "goto",
+    description: "跳转到指定关卡（仅开发环境可用）",
+    execute: (args: string[]) => {
+        // 检查是否为开发环境
+        if (!import.meta.env.DEV) {
+            return "goto: 命令仅在开发环境下可用";
+        }
+
+        if (!args.length) {
+            return "Usage: goto <关卡编号>";
+        }
+
+        const level = parseInt(args[0]);
+        if (isNaN(level)) {
+            return "请输入有效的关卡编号";
+        }
+
+        const lastLevel = parseInt(import.meta.env.VITE_APP_LAST_LEVEL?.toString() || "15");
+        if (level < 1 || level > lastLevel) {
+            return `关卡编号必须在 1-${lastLevel} 之间`;
+        }
+
+        const gameStore = useGameStore();
+        const terminalStore = useTerminalStore();
+        
+        // 重置当前目录到根目录
+        terminalStore.setCurrentDirectory("~");
+        // 设置新关卡
+        gameStore.setLevel(level);
+        
+        const levelData = getCurrentLevelData(level);
+        return `已跳转到第${level}关：${levelData.title}
+
+${levelData.description}
+
+目标：
+${levelData.objectives.map(obj => "- " + obj).join("\n")}
+
+输入 help 查看可用命令`;
+    }
+};
+
 export {
     helpCommand,
     lsCommand,
@@ -1708,5 +1751,6 @@ export {
     hintCommand,
     mailListCommand,
     remoteCommand,
-    ssh_exploitCommand
+    ssh_exploitCommand,
+    gotoCommand
 };
