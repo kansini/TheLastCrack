@@ -1,22 +1,20 @@
 <template>
-  <Transition :name="transitionName">
-    <div v-if="visible" class="modal-overlay" @click.self="onClose">
-      <Transition :name="`${transitionName}-content`">
-        <div class="modal-content" :style="{ width }">
-          <div class="modal-header">
-            <h2>{{ title }}</h2>
-            <button @click="onClose" class="close-btn">×</button>
-          </div>
-          <div class="modal-body">
-            <slot></slot>
-          </div>
-          <div v-if="$slots.footer" class="modal-footer">
-            <slot name="footer"></slot>
-          </div>
+  <div class="modal-overlay">
+    <Transition :name="transitionName">
+      <div class="modal-content" :style="{ width }" v-if="visible">
+        <div class="modal-header">
+          <h2>{{ title }}</h2>
+          <button @click="onClose" class="close-btn">×</button>
         </div>
-      </Transition>
-    </div>
-  </Transition>
+        <div class="modal-body">
+          <slot></slot>
+        </div>
+        <div v-if="$slots.footer" class="modal-footer">
+          <slot name="footer"></slot>
+        </div>
+      </div>
+    </Transition>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -45,53 +43,57 @@ const onClose = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  pointer-events: none;
+
+  .modal-content {
+    position: relative;
+    max-height: 80vh;
+    min-width: 640px;
+    background: rgba($bg-secondary, 0.1);
+    border: 1px solid rgba($primary-color, 0.3);
+    box-shadow: inset 0 0 20px rgba($primary-color, 0.2);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba($primary-color, 0.5),
+          transparent
+      );
+      animation: glow 2s linear infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba($primary-color, 0.5),
+          transparent
+      );
+      animation: glow 2s linear infinite reverse;
+    }
+  }
 }
 
-.modal-content {
-  max-height: 80vh;
-  background: rgba($bg-secondary, 0.1);
-  border: 1px solid rgba($primary-color, 0.3);
-  box-shadow: inset 0 0 20px rgba($primary-color, 0.2);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba($primary-color, 0.5),
-        transparent
-    );
-    animation: glow 2s linear infinite;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba($primary-color, 0.5),
-        transparent
-    );
-    animation: glow 2s linear infinite reverse;
-  }
-}
 
 @keyframes glow {
   0% {
@@ -107,7 +109,7 @@ const onClose = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $spacing-md;
+  padding: 8px 16px;
   border-bottom: 1px solid rgba($primary-color, 0.3);
   position: relative;
   overflow: hidden;
@@ -129,7 +131,7 @@ const onClose = () => {
 
   h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: $primary-color;
     text-shadow: 0 0 10px rgba($primary-color, 0.5);
   }
@@ -164,7 +166,6 @@ const onClose = () => {
 
 .modal-body {
   flex: 1;
-  padding: $spacing-lg;
   overflow-y: auto;
   min-height: 0;
 

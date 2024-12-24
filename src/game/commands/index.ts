@@ -1,6 +1,6 @@
 import type {Command} from "@/types/terminal";
-import { trojanCommand } from './trojan';
-import { easterCommands } from './easter';
+import {trojanCommand} from "./trojan";
+import {easterCommands} from "./easter";
 
 import {
     helpCommand,
@@ -45,7 +45,11 @@ import {
     hintCommand,
     remoteCommand,
     ssh_exploitCommand,
-    gotoCommand
+    gotoCommand,
+    personnelCommand,
+    viewCommand,
+    verifyCommand,
+    suspectCommand
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -93,6 +97,10 @@ export const commands: { [key: string]: Command } = {
     ssh_exploit: ssh_exploitCommand,
     trojan: trojanCommand,
     goto: gotoCommand,
+    personnel: personnelCommand,
+    view: viewCommand,
+    verify: verifyCommand,
+    suspect: suspectCommand,
     ...easterCommands
 };
 

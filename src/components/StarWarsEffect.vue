@@ -39,10 +39,10 @@ class Star {
     this.x = Math.random() * width - width / 2;
     this.y = Math.random() * height - height / 2;
     this.z = Math.random() * 2000;
-    this.size = Math.random() < 0.8 ? 
-      Math.random() * 2 + 0.1 : 
-      Math.random() * 4 + 2;
-    this.speed = this.size * 1.5;
+    this.size = Math.random() < 1 ?
+      Math.random() * 0.8 + 0.1 :
+      Math.random() * 1.5 + 2;
+    this.speed = this.size * 2;
     this.brightness = Math.min(1, this.size * 0.4);
     this.color = Math.random() > 0.7 ? 'rgba(135, 206, 235, ' : 'rgba(255, 255, 255, ';
   }
@@ -120,7 +120,7 @@ onMounted(() => {
 
   // 根据屏幕大小调整星星数量
   const starCount = Math.floor((width * height) / 2000);
-  const stars = initStars(width, height, Math.max(1000, starCount));
+  const stars = initStars(width, height, Math.max(1500, starCount));
   animate(ctx, width, height, stars);
 
   // 监听窗口大小变化
@@ -178,7 +178,7 @@ onMounted(() => {
 
   .crawl {
     position: absolute;
-    top: 100%;
+    top: 80%;
     transform-origin: 50% 100%;
     animation: crawl 8s linear;
     text-align: justify;
@@ -190,7 +190,7 @@ onMounted(() => {
     .title {
       font-size: 300%;
       text-align: center;
-      margin-bottom: 8em;
+      margin-bottom: 1em;
 
       h1 {
         font-size: 250%;
@@ -211,7 +211,7 @@ onMounted(() => {
       line-height: 1.8;
       font-weight: bold;
       margin: 1em 0;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
     }
   }
 }
