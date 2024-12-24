@@ -1775,6 +1775,15 @@ interface PersonnelDataMap {
 }
 
 const personnelData: PersonnelDataMap = {
+    "P001": {
+        id: "P001",
+        name: "Paul Davis",
+        age: 45,
+        status: "未知",
+        lastSeen: "2023-12-14 23:45",
+        description: "身高180cm，黑发，经常穿黑色夹克。深夜经常在数据中心附近出现，行为异常。",
+        notes: "与多个可疑人员有接触，特别是P012。近期活动频繁，需要重点关注。"
+    },
     "P003": {
         id: "P003",
         name: "Robert Johnson",

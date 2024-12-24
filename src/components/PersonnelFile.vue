@@ -98,36 +98,37 @@ const statusClass = computed(() => {
 
 <style lang="scss" scoped>
 .personnel-file {
-  padding: 20px;
+  padding: 16px 0;
   color: #e0e0e0;
 
   .file-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #444;
   }
 
   .file-content {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 20px;
+    grid-template-columns: 248px 1fr;
+    gap: 16px;
 
     .image-section {
       .image-container {
         position: relative;
         width: 100%;
+        height: 320px;
         overflow: hidden;
         border: 1px solid #444;
         padding: 8px;
 
         img {
+          height: 100%;
           width: 100%;
-          height: auto;
           display: block;
-          filter: contrast(.8) brightness(0.8) grayscale(.8);
+          filter: contrast(.8) brightness(0.8);
         }
 
         .scan-line {
@@ -296,17 +297,14 @@ const statusClass = computed(() => {
 
 .status.danger {
   color: #ff4444;
-  border: 1px solid #ff4444;
 }
 
 .status.warning {
   color: #ffbb33;
-  border: 1px solid #ffbb33;
 }
 
 .status.unknown {
   color: #fff;
-  border: 1px solid #fff;
 }
 
 .basic-info {
@@ -314,7 +312,7 @@ const statusClass = computed(() => {
 }
 
 .details h3 {
-  margin: 15px 0 10px;
+  margin: 16px 0 8px;
   color: #4CAF50;
 }
 
@@ -471,7 +469,7 @@ const statusClass = computed(() => {
 
 .info-section {
   position: relative;
-  padding: 15px;
+  padding: 16px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   border: 1px solid rgba(76, 175, 80, 0.3);
