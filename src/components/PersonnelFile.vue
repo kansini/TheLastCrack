@@ -127,9 +127,9 @@ const statusClass = computed(() => {
 
         img {
           height: 100%;
-          width: 100%;
+          width: auto;
           display: block;
-          filter: contrast(.8) brightness(0.8);
+          filter: contrast(.8) brightness(0.8) grayscale(.9);
         }
 
         .scan-line {
