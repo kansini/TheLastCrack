@@ -18,6 +18,8 @@
 
 ![游戏玩法](screenshot/06.png)
 
+![游戏玩法](screenshot/08.png)
+
 ![游戏玩法](screenshot/07.png)
 
 ## 项目说明

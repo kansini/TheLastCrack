@@ -90,6 +90,8 @@ const statusClass = computed(() => {
       return "danger";
     case "监控中":
       return "warning";
+    case "调查中":
+      return "warning";
     default:
       return "unknown";
   }
@@ -98,7 +100,6 @@ const statusClass = computed(() => {
 
 <style lang="scss" scoped>
 .personnel-file {
-  padding: 16px 0;
   color: #e0e0e0;
 
   .file-header {

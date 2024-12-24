@@ -1913,7 +1913,7 @@ const suspectCommand: Command = {
         }
 
         const fileId = args[0].toUpperCase();
-        if (!["P012", "P003", "P007", "P015", "P009"].includes(fileId)) {
+        if (!["P001", "P012", "P003", "P007", "P015", "P009"].includes(fileId)) {
             return "无效的档案编号";
         }
 

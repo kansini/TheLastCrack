@@ -146,7 +146,7 @@ onUnmounted(() => {
     background: rgba($bg-secondary, 0.1);
     border: 1px solid rgba($primary-color, 0.3);
     box-shadow: inset 0 0 20px rgba($primary-color, 0.2);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
     pointer-events: all;
