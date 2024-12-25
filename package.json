@@ -6,7 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "node electron/dev-server.cjs",
+    "electron:build": "vite build && electron-builder",
+    "electron:preview": "cross-env NODE_ENV=production electron .",
+    "build:mac": "vite build && electron-builder --mac --universal",
+    "build:mac-intel": "vite build && electron-builder --mac --x64",
+    "build:mac-arm": "vite build && electron-builder --mac --arm64",
+    "build:win": "vite build && electron-builder --win --config electron-builder.config.js",
+    "build:win-portable": "vite build && electron-builder --win portable --config electron-builder.config.js",
+    "build:win-zip": "vite build && electron-builder --win zip --config electron-builder.config.js"
   },
   "dependencies": {
     "echarts": "^5.5.1",
@@ -17,9 +26,62 @@
   "devDependencies": {
     "@types/node": "^18.14.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-static-copy": "^2.2.0",
     "vue-tsc": "^2.0.6"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.lastcrack.app",
+    "productName": "The Last Crack",
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "public/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": "你的开发者ID"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon.ico",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "npmRebuild": false,
+    "files": [
+      "dist/**/*",
+      "electron/**/*.cjs"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.cjs"
+    },
+    "asar": true
   }
 }

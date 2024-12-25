@@ -2,6 +2,7 @@
 node_modules
 /dist
 /reference
+/release
 
 
 # local env files

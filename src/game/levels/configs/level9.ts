@@ -27,7 +27,7 @@ export const level9: LevelData = {
 
         "decoder.exe": "解码工具说明：\n在分析过程中，我们发现攻击者使用了多层加密方式：\n1. Base64 编码\n2. 可能包含混淆字符\n\n使用 decode <加密字符串> 命令进行解码",
 
-        "timeline.exe": "[工具说明]\n用于分析系统事件时间线\n使用方法：timeline <事件ID>\n\n可用的事件ID：\n- 666: 进程创建事件\n- 888: 网络连接事件",
+        "timeline.exe": "[工具说明]\n用于分析系统事件时间线\n使用方法：timeline <PID>\n\n可用的事件ID：\n- 666: 进程创建事件\n- 888: 网络连接事件",
 
         "strings.txt": "内存字符串：\n- admin:password123\n- connect 192.168.1.100\n- download secret.zip\n- delete logs\n...",
 

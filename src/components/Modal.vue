@@ -343,8 +343,8 @@ onUnmounted(() => {
 
   &:hover {
     background: rgba($primary-color, 0.1);
-    border-color: lighten($primary-color, 20%);
-    color: lighten($primary-color, 20%);
+    border-color: scale-color($primary-color, $lightness: 20%);
+    color: scale-color($primary-color, $lightness: 20%);
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba($primary-color, 0.2);
 

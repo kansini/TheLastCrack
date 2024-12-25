@@ -13,7 +13,7 @@ export const level10: LevelData = {
   requiredTasks: ['access_chat', 'find_evidence', 'decode_plan'],
   fileSystem: {
     '~': ['readme.txt', 'chat_rooms.txt', 'users.txt', 'logs'],
-    '~/logs': ['access.log', 'system.log', '.deleted']
+    '~/logs': ['access.log', 'system.log'] // , '.deleted'
   },
   fileContents: {
     'readme.txt': '聊天系统调查指南：\n1. 使用 chat <房间> 查看公共聊天\n2. 使用 private <用户> 查看私聊记录\n3. 使用 history <日期> 查看历史记录\n\n提示：查看 chat_rooms.txt 了解可用的聊天室',

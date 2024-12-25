@@ -92,3 +92,21 @@ TheLastCrack/
 ## 许可证
 
 MIT License 
+
+## 桌面应用打包
+
+本项目支持打包为桌面应用程序，使用 Electron 实现。
+
+### 开发模式
+```bash
+# 启动开发服务器
+npm run electron:dev
+```
+
+### 打包发布
+```bash
+# 打包 MacOS 应用
+npm run electron:build
+```
+
+打包后的应用程序将在 release 目录中生成。 

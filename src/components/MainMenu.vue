@@ -27,7 +27,7 @@
     <div class="menu-container">
       <div class="game-logo">
         <div class="glitch-text" data-text="THE LAST TRACK">THE LAST TRACK</div>
-        <div class="sub-title">SYSTEM INFILTRATION v1.0.1</div>
+        <div class="sub-title">SYSTEM INFILTRATION v{{ version }}</div>
       </div>
       <!-- 中央主菜单 -->
       <div class="central-menu">
@@ -154,6 +154,9 @@ const toggleLoadGame = () => {
   showSaveList.value = !showSaveList.value;
 };
 
+const version = computed(()=>{
+  return import.meta.env.VITE_APP_VERSION
+})
 // const loadGame = (saveId: number) => {
 //   if (saveStore.loadSave(saveId)) {
 //     const saveData = saveStore.getSaveData(saveId);

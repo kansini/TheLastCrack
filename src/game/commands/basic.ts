@@ -39,7 +39,7 @@ const helpCommand: Command = {
 内存分析命令：
   volatility <文件名> - 分析内存镜像
   strings <文件名> - 提取内存字符串
-  timeline <事件ID> - 分析事件时间线`;
+  timeline <PID> - 分析事件时间线`;
         }
 
         if (gameStore.currentLevel === 11) {
@@ -423,10 +423,9 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 16:
                 if (!gameStore.completedTasks.includes("find_command") ||
-                    !gameStore.completedTasks.includes("check_files") ||
-                    !gameStore.completedTasks.includes("verify_password")) {
+                    !gameStore.completedTasks.includes("check_files")) {
                     return "你需要先完成所有档案分析任务！";
-                }
+                }   //  || !gameStore.completedTasks.includes("verify_password")
                 if (password === "P003_42_RJ") {
                     gameStore.completeLevel();
                     return "";
@@ -964,8 +963,8 @@ const wiresharkCommand: Command = {
 1. 协议：TCP
 2. 源地址：10.0.0.100:31337
 3. 目标地址：10.0.0.1:31337
-4. 警告检到密码泄露���
-5. 阻止方���: iptables -A OUTPUT -d <目标地址> -j DROP`;
+4. 警告检到密码泄露
+5. 阻止方法: iptables -A OUTPUT -d <目标地址IP> -j DROP`;
         }
 
         return `wireshark: ${args[0]}: 文件不存在`;
@@ -1279,7 +1278,7 @@ const timelineCommand: Command = {
         }
 
         if (!args.length) {
-            return "Usage: timeline <事件ID>";
+            return "Usage: timeline <PID>";
         }
 
         const eventId = args[0];
