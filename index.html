@@ -3,8 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:;">
     <title>The Last Crack</title>
+    <link rel="preload" href="/fonts/ShareTechMono-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <style>
+      @font-face {
+        font-family: 'Share Tech Mono';
+        src: url('/fonts/ShareTechMono-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

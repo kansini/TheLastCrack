@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV === 'development'
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1280,
-    height: 800,
+    height: 960,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

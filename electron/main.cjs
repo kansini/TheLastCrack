@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV === 'development'
 async function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1280,
-    height: 800,
+    height: 960,
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
@@ -19,6 +19,7 @@ async function createWindow() {
     titleBarStyle: 'hidden',
     frame: false,
     resizable: true,
+    show: false,
   })
 
   if (!isDev) {
@@ -31,10 +32,12 @@ async function createWindow() {
     if (isDev) {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL)
+      mainWindow.show()
       mainWindow.webContents.openDevTools()
     } else {
       const indexPath = path.join(app.getAppPath(), 'dist', 'index.html')
-      mainWindow.loadFile(indexPath)
+      await mainWindow.loadFile(indexPath)
+      mainWindow.show()
     }
   } catch (err) {
     console.error('Failed to load URL:', err)

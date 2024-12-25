@@ -15,6 +15,17 @@ module.exports = {
     "dist/**/*",
     "electron/**/*.cjs"
   ],
+  extraResources: [
+    {
+      from: "dist",
+      to: "dist",
+      filter: ["**/*", "!**/*.map"]
+    }
+  ],
+  asar: {
+    compression: true,
+    smartUnpack: true
+  },
   mac: {
     target: [
       {
@@ -30,7 +41,22 @@ module.exports = {
     hardenedRuntime: true,
     gatekeeperAssess: false,
     entitlements: "build/entitlements.mac.plist",
-    entitlementsInherit: "build/entitlements.mac.plist"
+    entitlementsInherit: "build/entitlements.mac.plist",
+    dmg: {
+      compression: 2,
+      contents: [
+        {
+          x: 130,
+          y: 220
+        },
+        {
+          x: 410,
+          y: 220,
+          type: "link",
+          path: "/Applications"
+        }
+      ]
+    }
   },
   win: {
     target: [
