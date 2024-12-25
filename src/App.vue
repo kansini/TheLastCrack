@@ -1,7 +1,9 @@
 <template>
   <LoadingScreen v-if="isLoading"/>
   <div class="app-container" v-show="!isLoading">
-    <MainMenu v-if="!gameStore.gameStarted"/>
+    <transition name="fade">
+      <MainMenu v-if="!gameStore.gameStarted"/>
+    </transition>
     <transition name="turn-on">
       <Terminal v-if="gameStore.gameStarted"/>
     </transition>

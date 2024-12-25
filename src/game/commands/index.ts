@@ -49,7 +49,8 @@ import {
     personnelCommand,
     viewCommand,
     verifyCommand,
-    suspectCommand
+    suspectCommand,
+    voiceprintCommand
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -101,6 +102,7 @@ export const commands: { [key: string]: Command } = {
     view: viewCommand,
     verify: verifyCommand,
     suspect: suspectCommand,
+    voiceprint: voiceprintCommand,
     ...easterCommands
 };
 

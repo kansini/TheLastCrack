@@ -6,6 +6,7 @@ import {useSaveStore} from "@/stores/save";
 import {showGameComplete} from "./gameComplete";
 import {createApp, h} from "vue";
 import PersonnelFile from "@/components/PersonnelFile.vue";
+import {voiceprintCommand} from "./voiceprint";
 
 const helpCommand: Command = {
     name: "help",
@@ -49,6 +50,12 @@ const helpCommand: Command = {
   mail read <用户> - 读取用户邮件
   mail search <关键词> - 搜索邮件内容
   mail trash - 查看已删除邮件`;
+        }
+
+        if (gameStore.currentLevel === 17) {
+            baseCommands += `\n
+声纹分析命令：
+  voiceprint <目标音频> <样本音频> - 比对声纹样本`;
         }
 
         return baseCommands;
@@ -428,9 +435,21 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 }   //  || !gameStore.completedTasks.includes("verify_password")
                 if (password === "P003_42_RJ") {
                     gameStore.completeLevel();
-                    return "";
+                    return showLevelInfo();
                 }
                 break;
+
+            case 17:
+                if (!gameStore.completedTasks.includes('analyze_audio') ||
+                    !gameStore.completedTasks.includes('match_voice') ||
+                    !gameStore.completedTasks.includes('identify_suspect')) {
+                  return "需要完成所有声纹分析任务！"
+                }
+                if (password === "GHOST_D_2024") {
+                  gameStore.completeLevel()
+                  return showGameComplete()
+                }
+                break
 
             default:
                 const lastLevel = import.meta.env.VITE_APP_LAST_LEVEL
@@ -1051,7 +1070,7 @@ const searchCommand: Command = {
 3. 找到隐藏的棋盘布局文件
 
 [重要] 发现一个隐藏文件：.chess_notes
-建议使用 cat .chess_notes 查看详细信息`;
+建��使用 cat .chess_notes 查看详细信息`;
         }
 
         return "未找到相关邮件";
@@ -1979,5 +1998,6 @@ export {
     personnelCommand,
     viewCommand,
     verifyCommand,
-    suspectCommand
+    suspectCommand,
+    voiceprintCommand
 };
