@@ -8,7 +8,7 @@
         <div class="crt-noise"></div>
       </div>
       <div class="loading-content">
-        <div class="screen-header">SYSTEM BOOT</div>
+        <div class="screen-header">SYSTEM BOOTING</div>
         <div class="loading-text">
           <div class="progress-bar">
             <div class="progress" :style="{ width: `${progress}%` }"></div>
@@ -112,7 +112,7 @@ onMounted(() => {
   background: linear-gradient(
           to bottom,
           transparent 50%,
-          rgba(0, 0, 0, 0.3) 51%
+          rgba(0, 0, 0, 0.5) 50%
   );
   background-size: 100% 3px;
   animation: scanline 10s linear infinite;
@@ -150,9 +150,9 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANgpUgAAAACHRSTlMzMzMzMzMzM85JBgUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAwSURBVDjLY2AYBaNg8ANTC4Q5AlnCECYzkMkKYbIAmQxgZgKQOQzGDAyTRsFgBgDqpApNXQ6EawAAAABJRU5ErkJggg==');
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  opacity: 0.05;
+  opacity: .1;
   animation: noise 0.2s infinite;
 }
 
@@ -226,78 +226,4 @@ onMounted(() => {
   letter-spacing: 1px;
 }
 
-@keyframes scanline {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(4px);
-  }
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0.1;
-  }
-}
-
-@keyframes textGlow {
-  0%, 100% {
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
-  }
-}
-
-@keyframes progressGlow {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes noise {
-  0% {
-    transform: translate(0, 0);
-  }
-  10% {
-    transform: translate(-1%, -1%);
-  }
-  20% {
-    transform: translate(1%, 1%);
-  }
-  30% {
-    transform: translate(-2%, -2%);
-  }
-  40% {
-    transform: translate(2%, 2%);
-  }
-  50% {
-    transform: translate(-1%, 1%);
-  }
-  60% {
-    transform: translate(1%, -1%);
-  }
-  70% {
-    transform: translate(2%, -2%);
-  }
-  80% {
-    transform: translate(-2%, 2%);
-  }
-  90% {
-    transform: translate(1%, -1%);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
 </style> 

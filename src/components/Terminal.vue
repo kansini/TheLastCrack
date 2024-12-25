@@ -174,14 +174,7 @@ onMounted(() => {
     pointer-events: none;
   }
 
-  @keyframes scan {
-    from {
-      transform: translateY(-100%);
-    }
-    to {
-      transform: translateY(100vh);
-    }
-  }
+
 
   .terminal-content {
     height: 100%;
@@ -338,119 +331,5 @@ onMounted(() => {
   }
 }
 
-@keyframes flicker {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 
-@keyframes scroll {
-  0% {
-    transform: perspective(300px) rotateX(20deg) translateY(100%);
-  }
-  100% {
-    transform: perspective(300px) rotateX(20deg) translateY(-100%);
-  }
-}
-
-@keyframes rainbow {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes matrix-drop {
-  0% {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 0.7;
-  }
-}
-
-@keyframes matrix-glow {
-  0% {
-    text-shadow: 0 0 5px #00ff00;
-  }
-  50% {
-    text-shadow: 0 0 20px #00ff00;
-  }
-  100% {
-    text-shadow: 0 0 5px #00ff00;
-  }
-}
-
-@keyframes warning-flash {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes countdown-pulse {
-  0% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-}
-
-@keyframes danger-flash {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-}
-
-@keyframes safe-glow {
-  0% {
-    text-shadow: 0 0 5px #00ffff;
-  }
-  50% {
-    text-shadow: 0 0 20px #00ffff;
-  }
-  100% {
-    text-shadow: 0 0 5px #00ffff;
-  }
-}
 </style> 

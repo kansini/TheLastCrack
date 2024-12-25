@@ -11,7 +11,7 @@ function createWindow() {
       contextIsolation: false
     },
     // 设置窗口样式
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'default',
     frame: false,
     resizable: false,
   })

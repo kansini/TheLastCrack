@@ -216,14 +216,5 @@ onMounted(() => {
   }
 }
 
-@keyframes crawl {
-  0% {
-    top: 80%;
-    transform: translateX(-50%) rotateX(25deg) translateZ(0);
-  }
-  100% {
-    top: -200%;
-    transform: translateX(-50%) rotateX(25deg) translateZ(-2500px);
-  }
-}
+
 </style> 

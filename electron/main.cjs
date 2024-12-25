@@ -69,6 +69,35 @@ async function createWindow() {
       isFullScreen: mainWindow.isFullScreen()
     })
   })
+
+  // 禁用刷新快捷键
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    // 禁用 F5 和 Ctrl+R/Command+R
+    if (input.key === 'F5' || ((input.control || input.meta) && input.key === 'r')) {
+      event.preventDefault()
+    }
+    // 禁用 Ctrl+Shift+R 和 Command+Shift+R
+    if ((input.control || input.meta) && input.shift && input.key === 'r') {
+      event.preventDefault()
+    }
+  })
+
+  // 禁用右键菜单
+  mainWindow.webContents.on('context-menu', (e) => {
+    e.preventDefault()
+  })
+
+  // 禁用菜单栏快捷键
+  mainWindow.setMenu(null)
+
+  // 在 Mac 上额外禁用 Command+R
+  if (process.platform === 'darwin') {
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+      if (input.meta && input.key === 'r') {
+        event.preventDefault()
+      }
+    })
+  }
 }
 
 // 设置 CSP
