@@ -7,4 +7,5 @@ export interface LevelData {
   fileSystem: Record<string, string[]>;
   fileContents: Record<string, string>;
   hints: string[];
+  story?:string;
 } 

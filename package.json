@@ -18,9 +18,11 @@
     "build:win-zip": "vite build && electron-builder --win zip --config electron-builder.config.js"
   },
   "dependencies": {
+    "@types/three": "^0.171.0",
     "echarts": "^5.5.1",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
+    "three": "^0.171.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

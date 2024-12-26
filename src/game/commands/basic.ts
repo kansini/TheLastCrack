@@ -7,6 +7,7 @@ import {showGameComplete} from "./gameComplete";
 import {createApp, h} from "vue";
 import PersonnelFile from "@/components/PersonnelFile.vue";
 import {voiceprintCommand} from "./voiceprint";
+import {fingerprintCommand} from "./fingerprint";
 
 const helpCommand: Command = {
     name: "help",
@@ -440,14 +441,13 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 break;
 
             case 17:
-                if (!gameStore.completedTasks.includes('analyze_audio') ||
-                    !gameStore.completedTasks.includes('match_voice') ||
-                    !gameStore.completedTasks.includes('identify_suspect')) {
-                  return "需要完成所有声纹分析任务！"
+                if (!gameStore.completedTasks.includes("match_fingerprint") ||
+                    !gameStore.completedTasks.includes("match_voice")) {
+                    return "需要完成所有声纹分析任务！"
                 }
-                if (password === "GHOST_D_2024") {
-                  gameStore.completeLevel()
-                  return showGameComplete()
+                if (password === "2342_JAMES_WILSON") {
+                    gameStore.completeLevel()
+                    return showGameComplete()
                 }
                 break
 
@@ -1999,5 +1999,6 @@ export {
     viewCommand,
     verifyCommand,
     suspectCommand,
-    voiceprintCommand
+    voiceprintCommand,
+    fingerprintCommand
 };

@@ -1,6 +1,7 @@
 import type {Command} from "@/types/terminal";
 import {trojanCommand} from "./trojan";
 import {easterCommands} from "./easter";
+import { suspectsCommand } from "./suspects";
 
 import {
     helpCommand,
@@ -50,7 +51,8 @@ import {
     viewCommand,
     verifyCommand,
     suspectCommand,
-    voiceprintCommand
+    voiceprintCommand,
+    fingerprintCommand,
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -103,6 +105,8 @@ export const commands: { [key: string]: Command } = {
     verify: verifyCommand,
     suspect: suspectCommand,
     voiceprint: voiceprintCommand,
+    fingerprint: fingerprintCommand,
+    suspects: suspectsCommand,
     ...easterCommands
 };
 

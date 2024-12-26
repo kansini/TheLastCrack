@@ -2,44 +2,59 @@
   <Modal
       transitionName="zoom"
       :visible="isVisible"
-      title="声纹比对分析"
+      title="声纹分析"
       @close="handleClose"
   >
     <div class="voiceprint-analyzer">
       <div class="waveforms">
         <div class="waveform-container">
-          <div class="waveform-label">目标音频: {{ targetAudio }}</div>
-          <canvas ref="targetWaveform" class="waveform"></canvas>
+          <div class="waveform-label">
+            可疑音频: {{ targetAudio }}
+          </div>
+          <div class="waveform" ref="targetContainer"></div>
         </div>
-
         <div class="waveform-container">
-          <div class="waveform-label">样本音频: {{ sampleAudio }}</div>
-          <canvas ref="sampleWaveform" class="waveform"></canvas>
+          <div class="waveform-label">
+            样本音频: {{ sampleAudio }}
+            <span class="owner" v-if="voiceprintPatterns[sampleAudio]?.owner">
+              [{{ voiceprintPatterns[sampleAudio].owner }}]
+            </span>
+          </div>
+          <div class="waveform" ref="sampleContainer"></div>
         </div>
       </div>
 
       <div class="analysis-result" v-if="showResult">
         <div class="result-header">
           <h3>分析结果</h3>
-          <div class="similarity">总体相似度: {{ similarity }}%</div>
+          <div class="similarity">总体匹配度: {{ similarity }}%</div>
+          <div class="suspect-actions" v-if="voiceprintPatterns[sampleAudio]?.owner">
+            <button 
+              class="btn-suspect"
+              :class="{ active: isSuspect }"
+              @click="toggleSuspect"
+            >
+              {{ isSuspect ? '移出嫌疑名单' : '加入嫌疑名单' }}
+            </button>
+          </div>
         </div>
         <div class="result-content">
           <div class="match-item">
-            <span>频率匹配度:</span>
-            <div class="match-value" :class="getMatchClass(frequencyMatch)">
-              {{ frequencyMatch }}%
+            <span>音色匹配:</span>
+            <div class="match-value" :class="getMatchClass(toneMatch)">
+              {{ toneMatch }}%
             </div>
           </div>
           <div class="match-item">
-            <span>音色相似度:</span>
-            <div class="match-value" :class="getMatchClass(timbreMatch)">
-              {{ timbreMatch }}%
+            <span>语音特征:</span>
+            <div class="match-value" :class="getMatchClass(featureMatch)">
+              {{ featureMatch }}%
             </div>
           </div>
           <div class="match-item">
-            <span>语气特征匹配:</span>
-            <div class="match-value" :class="getMatchClass(patternMatch)">
-              {{ patternMatch }}%
+            <span>频谱分析:</span>
+            <div class="match-value" :class="getMatchClass(spectrumMatch)">
+              {{ spectrumMatch }}%
             </div>
           </div>
         </div>
@@ -49,8 +64,10 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, nextTick, onUnmounted} from "vue"
+import {ref, onMounted, nextTick, onUnmounted, computed} from "vue"
 import Modal from "./Modal.vue"
+import * as THREE from "three"
+import { useSuspectsStore } from '../game/store/suspects'
 
 const props = defineProps<{
   targetAudio: string
@@ -62,215 +79,540 @@ const emit = defineEmits<{
 }>()
 
 const isVisible = ref(false)
-const similarity = ref(0)
-const frequencyMatch = ref(0)
-const timbreMatch = ref(0)
-const patternMatch = ref(0)
 const showResult = ref(false)
+const similarity = ref(0)
+const toneMatch = ref(0)
+const featureMatch = ref(0)
+const spectrumMatch = ref(0)
 
-const targetWaveform = ref()
-const sampleWaveform = ref()
+const targetContainer = ref<HTMLDivElement>()
+const sampleContainer = ref<HTMLDivElement>()
 
-// 波形模式定义
-const wavePatterns:any = {
-  "meeting.wav": {
-    barCount: 100,
-    minHeight: 5,
-    maxHeight: 40,
-    color: "#00ffff",
-    variance: 0.3,
-    pattern: "normal",
-    frequency: 0.8
-  },
+let animationFrame: number
+// let scanTime = 0
+
+// 声纹模式定义
+const voiceprintPatterns: any = {
   "suspicious.wav": {
-    barCount: 100,
-    minHeight: 10,
-    maxHeight: 60,
-    color: "#00ffff",
-    variance: 0.5,
-    pattern: "distorted",
-    frequency: 1.2
+    type: "distorted",
+    pattern: "complex",
+    features: 15,
+    distortion: 0.7,
+    wavePattern: {
+      frequency: [1.5, 2.5, 0.5],
+      amplitude: [0.4, 0.25, 0.15],
+      phase: [0, Math.PI / 4, Math.PI / 2]
+    }
   },
-  "background.wav": {
-    barCount: 100,
-    minHeight: 2,
-    maxHeight: 20,
-    color: "#00ffff",
-    variance: 0.2,
-    pattern: "noise",
-    frequency: 0.5
+  "sample_1.wav": {
+    type: "normal",
+    pattern: "simple",
+    features: 12,
+    owner: "John Smith",
+    matchScore: 45,
+    wavePattern: {
+      frequency: [1.2, 2.0, 0.4],
+      amplitude: [0.3, 0.2, 0.1],
+      phase: [0, Math.PI / 6, Math.PI / 3]
+    }
   },
-  "sample_A.wav": {
-    barCount: 100,
-    minHeight: 8,
-    maxHeight: 35,
-    color: "#00ffff",
-    variance: 0.25,
-    pattern: "normal",
-    frequency: 0.7
+  "sample_2.wav": {
+    type: "normal",
+    pattern: "complex",
+    features: 14,
+    owner: "Michael Brown",
+    matchScore: 70,
+    wavePattern: {
+      frequency: [1.5, 2.5, 0.5],
+      amplitude: [0.4, 0.25, 0.15],
+      phase: [0, Math.PI / 4, Math.PI / 2]
+    }
   },
-  "sample_B.wav": {
-    barCount: 100,
-    minHeight: 5,
-    maxHeight: 40,
-    color: "#00ffff",
-    variance: 0.3,
-    pattern: "normal",
-    frequency: 0.8
+  "sample_3.wav": {
+    type: "normal",
+    pattern: "complex",
+    features: 15,
+    owner: "James Wilson",
+    matchScore: 75,
+    wavePattern: {
+      frequency: [1.5, 2.5, 0.5],
+      amplitude: [0.4, 0.25, 0.15],
+      phase: [0, Math.PI / 4, Math.PI / 2]
+    }
   },
-  "sample_C.wav": {
-    barCount: 100,
-    minHeight: 4,
-    maxHeight: 30,
-    color: "#00ffff",
-    variance: 0.2,
-    pattern: "normal",
-    frequency: 0.6
-  },
-  "sample_D.wav": {
-    barCount: 100,
-    minHeight: 10,
-    maxHeight: 60,
-    color: "#00ffff",
-    variance: 0.5,
-    pattern: "distorted",
-    frequency: 1.2
+  "sample_4.wav": {
+    type: "normal",
+    pattern: "simple",
+    features: 10,
+    owner: "David Miller",
+    matchScore: 42,
+    wavePattern: {
+      frequency: [1.2, 2.0, 0.4],
+      amplitude: [0.3, 0.2, 0.1],
+      phase: [0, Math.PI / 6, Math.PI / 3]
+    }
   }
 }
 
-// 绘制波形
-const drawWaveform = (canvas: HTMLCanvasElement, pattern: any, time: number) => {
-  const ctx = canvas.getContext("2d")
-  if (!ctx) return
+// 获取文件名（不含路径）
+const getFileName = (path: string) => path.split("/").pop() || path
 
-  // 设置画布尺寸
-  canvas.width = canvas.offsetWidth * window.devicePixelRatio
-  canvas.height = canvas.offsetHeight * window.devicePixelRatio
-  ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+// 根据匹配度返回对应的样式类
+const getMatchClass = (value: number) => {
+  if (value >= 85) return "match-high"
+  if (value >= 70) return "match-medium"
+  if (value >= 50) return "match-low"
+  return "match-poor"
+}
 
-  // 清空画布
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+interface WaveScene {
+  scene: THREE.Scene
+  camera: THREE.PerspectiveCamera
+  renderer: THREE.WebGLRenderer
+  waves: THREE.Line[]
+  time: number
+  id: string
+  animationParams: any
+}
+interface IHarmonic {
+  frequency: number
+  amplitude: number
+}
+const scenes: { [key: string]: WaveScene } = {}
 
-  // 计算参数
-  const width = canvas.width / window.devicePixelRatio
-  const height = canvas.height / window.devicePixelRatio
-  const centerY = height / 2
-  const barWidth = width / pattern.barCount
-  const spacing = 0
+// 创建声波场景
+const createWaveScene = (container: HTMLElement, pattern: any, isTarget: boolean) => {
+  const scene = new THREE.Scene()
 
-  // 绘制网格背景
-  ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)'
-  ctx.lineWidth = 0.5
+  // 设置相机
+  const camera = new THREE.PerspectiveCamera(
+      75,
+      container.clientWidth / container.clientHeight,
+      0.1,
+      1000
+  )
+  camera.position.z = 2.0
 
-  // 横线
-  for (let y = 0; y < height; y += 10) {
-    ctx.beginPath()
-    ctx.moveTo(0, y)
-    ctx.lineTo(width, y)
-    ctx.stroke()
-  }
+  // 创建渲染器
+  const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
+  renderer.setSize(container.clientWidth, container.clientHeight)
+  renderer.setClearColor(0x000000, 0)
+  container.appendChild(renderer.domElement)
 
-  // 竖线
-  for (let x = 0; x < width; x += 10) {
-    ctx.beginPath()
-    ctx.moveTo(x, 0)
-    ctx.lineTo(x, height)
-    ctx.stroke()
-  }
+  let scanGroup = null
+  let particles = null
 
-  // 设置绘图样式
-  ctx.fillStyle = pattern.color
-  ctx.strokeStyle = pattern.color
-  ctx.lineWidth = 1
+  // 只为样本音频添加背景网格和扫描效果
+  if (!isTarget) {
+    const gridHelper = new THREE.Group()
 
-  // 创建渐变
-  const gradient = ctx.createLinearGradient(0, centerY - 50, 0, centerY + 50)
-  gradient.addColorStop(0, 'rgba(0, 255, 255, 0.1)')
-  gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.4)')
-  gradient.addColorStop(1, 'rgba(0, 255, 255, 0.1)')
-  ctx.fillStyle = gradient
+    // 创建背景网格着色器材质
+    const gridMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        time: {value: 0},
+        color: {value: new THREE.Color(0x004455)},
+        opacity: {value: 0.5}
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float time;
+        uniform vec3 color;
+        uniform float opacity;
+        varying vec2 vUv;
+        
+        void main() {
+          // 添加流动效果
+          float flow = sin(vUv.y * 10.0 + time) * 0.5 + 0.5;
+          // 添加呼吸效果
+          float breath = sin(time * 0.5) * 0.2 + 0.8;
+          gl_FragColor = vec4(color, opacity * flow * breath);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending
+    })
 
-  // 计算滚动偏移量
-  const scrollOffset = (time * 100) % (barWidth + spacing)
-
-  // 绘制波形
-  for (let i = -1; i < pattern.barCount + 1; i++) {
-    const progress = i / pattern.barCount
-    let barHeight = 0
-
-    // 计算动态振幅因子
-    const amplitudeFactor = 0.7 + Math.sin(time * pattern.frequency * Math.PI + i * 0.1) * 0.3
-
-    switch (pattern.pattern) {
-      case "distorted":
-        // 扭曲的波形
-        const distortion = Math.sin(time * 8 + i * 0.4) * pattern.variance
-        const glitch = Math.random() > 0.95 ? Math.random() * 20 : 0
-        barHeight = pattern.minHeight +
-                   (pattern.maxHeight - pattern.minHeight) *
-                   (0.5 + Math.sin(progress * Math.PI * 2) * 0.5) *
-                   (1 + distortion) * amplitudeFactor + glitch
-        break
-
-      case "noise":
-        // 噪声波形
-        const noiseBase = pattern.minHeight + Math.random() * pattern.maxHeight * 0.5
-        barHeight = noiseBase * amplitudeFactor
-        break
-
-      case "normal":
-      default:
-        // 正常波形
-        const smooth = Math.sin(time * 5 + i * 0.2) * pattern.variance
-        barHeight = pattern.minHeight +
-                   (pattern.maxHeight - pattern.minHeight) *
-                   (0.5 + Math.sin(progress * Math.PI) * 0.5) *
-                   (1 + smooth) * amplitudeFactor
+    // 水平线
+    for (let i = -2; i <= 2; i += 0.15) {  // 增加网格密度
+      const geometry = new THREE.BufferGeometry()
+      const points = [
+        new THREE.Vector3(-4, i, -0.5),  // 扩大网格范围
+        new THREE.Vector3(4, i, -0.5)
+      ]
+      geometry.setFromPoints(points)
+      const material = gridMaterial.clone()
+      const line = new THREE.Line(geometry, material)
+      gridHelper.add(line)
     }
 
-    const x = i * (barWidth + spacing) - scrollOffset
+    // 垂直线
+    for (let i = -4; i <= 4; i += 0.3) {  // 增加网格密度
+      const geometry = new THREE.BufferGeometry()
+      const points = [
+        new THREE.Vector3(i, -2, -0.5),  // 扩大网格范围
+        new THREE.Vector3(i, 2, -0.5)
+      ]
+      geometry.setFromPoints(points)
+      const material = gridMaterial.clone()
+      const line = new THREE.Line(geometry, material)
+      gridHelper.add(line)
+    }
 
-    // 只绘制可见区域
-    if (x < -barWidth || x > width) continue
+    // 添加网格动画更新函数
+    gridHelper.userData.update = (time: number) => {
+      gridHelper.children.forEach((line) => {
+        const lineObj = line as THREE.Line
+        if (lineObj.material instanceof THREE.ShaderMaterial) {
+          lineObj.material.uniforms.time.value = time
+        }
+      })
+    }
 
-    // 添加微小的随机抖动
-    const jitter = Math.random() * 2 - 1
-    barHeight += jitter
+    scene.add(gridHelper)
 
-    // 绘制波形条
-    ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight)
+    // 创建扫描效果（仅对样本）
+    scanGroup = new THREE.Group()
 
-    // 添加发光效果
-    ctx.shadowColor = pattern.color
-    ctx.shadowBlur = 0
+    // 主扫描线
+    const scanLineGeometry = new THREE.PlaneGeometry(0.05, 4)
+    const scanLineMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        color: {value: new THREE.Color(0x00ffff)}
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        varying vec2 vUv;
+        void main() {
+          float intensity = pow(1.0 - abs(vUv.x - 0.5) * 2.0, 2.0);
+          gl_FragColor = vec4(color, intensity * 0.6);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending
+    })
 
-    // 绘制顶部和底部的亮点
-    // ctx.beginPath()
-    // ctx.arc(x + barWidth / 2, centerY - barHeight / 2, 1, 0, Math.PI * 2)
-    // ctx.arc(x + barWidth / 2, centerY + barHeight / 2, 1, 0, Math.PI * 2)
-    // ctx.fill()
+    const scanLine = new THREE.Mesh(scanLineGeometry, scanLineMaterial)
+    scanGroup.add(scanLine)
+
+    // 扫描光束效果
+    const beamGeometry = new THREE.PlaneGeometry(1, 4)
+    const beamMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        color: {value: new THREE.Color(0x00ffff)}
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        varying vec2 vUv;
+        void main() {
+          float beam = exp(-pow(vUv.x * 2.0 - 1.0, 2.0) * 4.0);
+          gl_FragColor = vec4(color, beam * 0.15);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending
+    })
+
+    const beam = new THREE.Mesh(beamGeometry, beamMaterial)
+    scanGroup.add(beam)
+
+    // 添加扫描数据点效果
+    const particleCount = 50
+    const particleGeometry = new THREE.BufferGeometry()
+    const particlePositions = new Float32Array(particleCount * 3)
+    const particleSizes = new Float32Array(particleCount)
+
+    for (let i = 0; i < particleCount; i++) {
+      particlePositions[i * 3] = (Math.random() - 0.5) * 0.5
+      particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 3
+      particlePositions[i * 3 + 2] = 0
+      particleSizes[i] = Math.random() * 0.03 + 0.01
+    }
+
+    particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3))
+    particleGeometry.setAttribute("size", new THREE.BufferAttribute(particleSizes, 1))
+
+    const particleMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        color: {value: new THREE.Color(0x00ffff)},
+        time: {value: 0}
+      },
+      vertexShader: `
+        attribute float size;
+        uniform float time;
+        varying float vAlpha;
+        void main() {
+          vAlpha = 0.5 + 0.5 * sin(time * 5.0 + position.x * 10.0);
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        varying float vAlpha;
+        void main() {
+          float r = length(gl_PointCoord - vec2(0.5));
+          if (r > 0.5) discard;
+          float intensity = 1.0 - pow(r * 2.0, 2.0);
+          gl_FragColor = vec4(color, intensity * vAlpha);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+
+    particles = new THREE.Points(particleGeometry, particleMaterial)
+    scanGroup.add(particles)
+
+    scene.add(scanGroup)
   }
 
-  // 添加扫描线效果
-  ctx.fillStyle = 'rgba(0, 255, 255, 0.1)'
-  const scanLineY = (time * 100) % height
-  ctx.fillRect(0, scanLineY, width, 2)
+  // 创建多层声波
+  const waves: THREE.Line[] = []
+  const waveCount = 30
+  const matchScore = pattern.matchScore || 100
+
+  for (let i = 0; i < waveCount; i++) {
+    const points: THREE.Vector3[] = []
+    const segmentCount = 200
+
+    for (let j = 0; j <= segmentCount; j++) {
+      points.push(new THREE.Vector3(
+          (j - segmentCount / 2) * 0.015,
+          0,
+          0
+      ))
+    }
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points)
+
+    // 根据匹配度调整颜色
+    const baseHue = isTarget ? 0.6 : 0.55
+    const hueRange = 0.1
+    const hue = baseHue + (i / waveCount) * hueRange
+
+    const color = new THREE.Color().setHSL(
+        hue,
+        isTarget ? 0.8 : (0.6 * matchScore / 100),
+        isTarget ? 0.6 : (0.4 + (matchScore / 100) * 0.3)
+    )
+
+    const material = new THREE.LineBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: (0.7 - (i * 0.015)) * (isTarget ? 1 : matchScore / 100),
+      linewidth: 1
+    })
+
+    const wave = new THREE.Line(geometry, material)
+    wave.position.z = -i * 0.05
+    const scale = isTarget ? 3 : 2 + (matchScore / 100)
+    wave.scale.set(scale, 1.5, 1)
+    scene.add(wave)
+    waves.push(wave)
+  }
+
+  // 动画参数
+  const wavePattern = pattern.wavePattern
+  const animationParams = {
+    baseAmplitude: isTarget ? 0.4 : 0.3 * (matchScore / 100),
+    frequencies: wavePattern.frequency.map((f: number) => f * 1.5),
+    phases: wavePattern.phase,
+    harmonics: [1, 2, 3, 4].map((h): IHarmonic => ({
+      frequency: h * 0.5,
+      amplitude: 1 / (h * 2)
+    }))
+  }
+
+  return {
+    scene,
+    camera,
+    renderer,
+    waves,
+    scanGroup: scanGroup || null,
+    particles: particles || null,
+    time: 0,
+    id: Math.random().toString(36).substr(2, 9),
+    animationParams
+  }
 }
 
 // 动画循环
-let animationFrame: number
-const animate = (targetCanvas: HTMLCanvasElement, sampleCanvas: HTMLCanvasElement) => {
-  let time = 0
+const animate = () => {
+  Object.values(scenes).forEach((sceneObj: any) => {
+    const {scene, camera, renderer, waves, scanGroup, particles, time, id, animationParams} = sceneObj
 
-  const loop = () => {
-    time += 0.01 // 降低滚动速度
-    drawWaveform(targetCanvas, wavePatterns[props.targetAudio], time)
-    drawWaveform(sampleCanvas, wavePatterns[props.sampleAudio], time)
-    animationFrame = requestAnimationFrame(loop)
+    // 更新网格动画
+    scene.children.forEach((child: any) => {
+      if (child.userData.update) {
+        child.userData.update(time)
+      }
+    })
+
+    // 波形动画
+    waves.forEach((wave: any, index: number) => {
+      const positions = wave.geometry.attributes.position.array as Float32Array
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = positions[i]
+        // 更复杂的波形合成
+        let y = 0
+        // 基础波形
+        animationParams.frequencies.forEach((freq: any, idx: any) => {
+          y += Math.sin(x * freq + time + animationParams.phases[idx]) *
+              animationParams.baseAmplitude * (1 - index * 0.2)
+        })
+        // 添加谐波
+        animationParams.harmonics.forEach(({frequency, amplitude}:IHarmonic) => {
+          y += Math.sin(x * frequency + time) * amplitude *
+              animationParams.baseAmplitude * 0.3
+        })
+        // 添加噪声
+        y += (Math.random() - 0.5) * 0.02
+        positions[i + 1] = y * (1 - index * 0.03)  // 随层数逐渐减小振幅
+      }
+      wave.geometry.attributes.position.needsUpdate = true
+    })
+
+    // 只对有扫描效果的场景更新扫描动画
+    if (scanGroup && particles) {
+      // 更新扫描效果
+      scanGroup.position.x = ((time * 0.5) % 6) - 3
+
+      if (particles.material instanceof THREE.ShaderMaterial) {
+        particles.material.uniforms.time.value = time
+      }
+
+      // 更新粒子位置
+      const positions = particles.geometry.attributes.position.array as Float32Array
+      for (let i = 0; i < positions.length; i += 3) {
+        positions[i] += (Math.random() - 0.5) * 0.02
+        positions[i + 1] += (Math.random() - 0.5) * 0.02
+
+        // 保持粒子在扫描区域内
+        if (Math.abs(positions[i]) > 0.25) {
+          positions[i] *= -0.9
+        }
+        if (Math.abs(positions[i + 1]) > 1.5) {
+          positions[i + 1] *= -0.9
+        }
+      }
+      particles.geometry.attributes.position.needsUpdate = true
+    }
+
+    renderer.render(scene, camera)
+    scenes[id].time += 0.01
+  })
+
+  animationFrame = requestAnimationFrame(animate)
+}
+
+// 计算匹配度
+const calculateMatches = () => {
+  const sampleName = getFileName(props.sampleAudio)
+
+  if (sampleName === "sample_2.wav") {
+    toneMatch.value = 78
+    featureMatch.value = 82
+    spectrumMatch.value = 74
+    similarity.value = 78
+  } else if (sampleName === "sample_3.wav") {
+    toneMatch.value = 72
+    featureMatch.value = 85
+    spectrumMatch.value = 68
+    similarity.value = 75
+  } else {
+    // 固定的低匹配度
+    toneMatch.value = 45
+    featureMatch.value = 42
+    spectrumMatch.value = 38
+    similarity.value = 42
+  }
+}
+
+const suspectsStore = useSuspectsStore()
+
+const isSuspect = computed(() => {
+  const sampleName = getFileName(props.sampleAudio)
+  const owner = voiceprintPatterns[sampleName]?.owner
+  if (!owner) return false
+  
+  return suspectsStore.getSuspectsByType('voiceprint')
+    .some(s => s.name === owner)
+})
+
+const toggleSuspect = () => {
+  const sampleName = getFileName(props.sampleAudio)
+  const owner = voiceprintPatterns[sampleName]?.owner
+  if (!owner) return
+  
+  if (isSuspect.value) {
+    suspectsStore.removeSuspect(owner, 'voiceprint')
+  } else {
+    suspectsStore.addSuspect({
+      id: Math.random().toString(36).substr(2, 9),
+      name: owner,
+      type: 'voiceprint',
+      matchScore: similarity.value,
+      audioFile: sampleName
+    })
+  }
+}
+
+onMounted(async () => {
+  isVisible.value = true
+  await nextTick()
+
+  if (targetContainer.value && sampleContainer.value) {
+    const targetName = getFileName(props.targetAudio)
+    const sampleName = getFileName(props.sampleAudio)
+
+    const targetScene = createWaveScene(targetContainer.value, voiceprintPatterns[targetName], true)
+    const sampleScene = createWaveScene(sampleContainer.value, voiceprintPatterns[sampleName], false)
+
+    scenes[targetScene.id] = targetScene
+    scenes[sampleScene.id] = sampleScene
+
+    animate()
+
+    // 延迟显示结果
+    setTimeout(() => {
+      calculateMatches()
+      showResult.value = true
+    }, 1000)
+  }
+})
+
+onUnmounted(() => {
+  if (animationFrame) {
+    cancelAnimationFrame(animationFrame)
   }
 
-  loop()
-}
+  // 清理 Three.js 资源
+  Object.values(scenes).forEach(({renderer}) => {
+    renderer.dispose()
+  })
+})
 
 const handleClose = () => {
   isVisible.value = false
@@ -279,100 +621,73 @@ const handleClose = () => {
   }, 300)
 }
 
-// 计算相似度
-const calculateSimilarity = (target: string, sample: string) => {
-  const targetData = wavePatterns[target]
-  const sampleData = wavePatterns[sample]
 
-  if (!targetData || !sampleData) {
-    return {
-      frequency: 0,
-      timbre: 0,
-      pattern: 0,
-      total: 0
-    }
-  }
-
-  // 计算各项匹配度
-  const heightMatch = Math.min(100, 100 - Math.abs(targetData.maxHeight - sampleData.maxHeight) * 2)
-  const varianceMatch = Math.min(100, 100 - Math.abs(targetData.variance - sampleData.variance) * 200)
-  const patternMatch = Math.min(100, heightMatch * 0.7 + varianceMatch * 0.3)
-
-  return {
-    frequency: heightMatch,
-    timbre: varianceMatch,
-    pattern: patternMatch,
-    total: Math.round((heightMatch + varianceMatch + patternMatch) / 3)
-  }
-}
-
-// 根据匹配度返回对应的样式类
-const getMatchClass = (value: number) => {
-  if (value >= 85) return 'match-high'
-  if (value >= 70) return 'match-medium'
-  if (value >= 50) return 'match-low'
-  return 'match-poor'
-}
-
-onMounted(async () => {
-  isVisible.value = true
-  await nextTick()
-
-  const targetCanvas = targetWaveform.value as HTMLCanvasElement
-  const sampleCanvas = sampleWaveform.value as HTMLCanvasElement
-
-  if (targetCanvas && sampleCanvas) {
-    animate(targetCanvas, sampleCanvas)
-
-    // 计算实际的匹配结果
-    setTimeout(() => {
-      const result = calculateSimilarity(props.targetAudio, props.sampleAudio)
-      similarity.value = result.total
-      frequencyMatch.value = result.frequency
-      timbreMatch.value = result.timbre
-      patternMatch.value = result.pattern
-      showResult.value = true
-    }, 2000)
-  }
-})
-
-onUnmounted(() => {
-  if (animationFrame) {
-    cancelAnimationFrame(animationFrame)
-  }
-})
 </script>
 
 <style scoped lang="scss">
 .voiceprint-analyzer {
   color: #e0e0e0;
-  min-width: 600px;
 
   .waveforms {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    gap: 16px;
     margin-bottom: 24px;
 
     .waveform-container {
+      flex: 1;
+
       .waveform-label {
-        margin-bottom: 10px;
-        font-size: 16px;
+        margin-bottom: 8px;
+        font-size: 14px;
         color: #00ffff;
+
+        .owner {
+          color: $primary-color-dark;
+        }
+
+        .suspect-actions {
+          .btn-suspect {
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #00ffff;
+            background: transparent;
+            border: 1px solid #00ffff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            
+            &:hover {
+              background: rgba(0, 255, 255, 0.1);
+            }
+            
+            &.active {
+              background: #00ffff;
+              color: #000;
+            }
+          }
+        }
       }
 
       .waveform {
-        height: 100px;
+        height: 128px;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(0, 255, 255, 0.3);
         border-radius: 4px;
-        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 1),
+                rgba(0, 10, 20, 1),
+                rgba(0, 0, 0, 1)
+        );
       }
     }
   }
 
   .analysis-result {
-    padding: 15px;
+    padding: 12px;
     background: rgba(0, 255, 255, 0.1);
     border-radius: 4px;
     border: 1px solid rgba(0, 255, 255, 0.2);
@@ -382,25 +697,50 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(0, 255, 255, 0.2);
 
       h3 {
         margin: 0;
         color: #00ffff;
+        font-size: 16px;
       }
 
       .similarity {
-        font-size: 18px;
+        font-size: 16px;
         color: #00ffff;
+      }
+
+      .suspect-actions {
+        margin-left: 16px;
+        
+        .btn-suspect {
+          padding: 4px 8px;
+          font-size: 12px;
+          color: #00ffff;
+          background: transparent;
+          border: 1px solid #00ffff;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background: rgba(0, 255, 255, 0.1);
+          }
+          
+          &.active {
+            background: #00ffff;
+            color: #000;
+          }
+        }
       }
     }
 
     .result-content {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 12px;
 
       .match-item {
         text-align: center;
@@ -413,36 +753,36 @@ onUnmounted(() => {
         }
 
         .match-value {
-          font-size: 24px;
+          font-size: 20px;
           transition: all 0.3s ease;
 
-          // 差(0-49)
           &.match-poor {
             color: #ff4444;
-            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
           }
 
-          // 低(50-69)
           &.match-low {
             color: #ffaa00;
-            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
           }
 
-          // 中(70-84)
           &.match-medium {
             color: #ffff00;
-            text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
           }
 
-          // 高(85-100)
           &.match-high {
             color: #00ff00;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            animation: pulse 2s infinite;
           }
         }
       }
     }
+  }
+}
+
+@keyframes scan {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
   }
 }
 
@@ -454,18 +794,6 @@ onUnmounted(() => {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-  }
-  100% {
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
   }
 }
 </style> 

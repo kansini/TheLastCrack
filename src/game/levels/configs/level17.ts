@@ -1,83 +1,142 @@
-import type { LevelData } from '@/types/game';
+import type {LevelData} from "@/types/game";
 
 export const level17: LevelData = {
     id: 17,
-    title: "声纹追踪",
-    description: "【第17关】在一次秘密会议的录音中，发现了一段可疑的声音片段。你需要通过声纹分析找出说话人的身份。",
+    title: "双重验证",
+    description: "通过声纹和指纹双重比对，确认嫌疑人身份",
+
     objectives: [
-        "分析录音文件",
-        "比对声纹样本",
-        "确认可疑人员",
-        "找出隐藏信息"
+        "阅读 readme.txt 了解分析系统",
+        "分析可疑声音录音",
+        "比对现场指纹",
+        "确认嫌疑人身份",
+        "提交正确的通关密码"
     ],
-    requiredTasks: ["analyze_audio", "match_voice", "identify_suspect"],
+
+    requiredTasks: [
+        "match_fingerprints",
+        "match_voice"
+    ],
+
     fileSystem: {
-        "~": ["readme.txt", "audio", "samples", "analysis"],
-        "~/audio": ["meeting.wav", "suspicious.wav", "background.wav"],
-        "~/samples": ["sample_A.wav", "sample_B.wav", "sample_C.wav", "sample_D.wav"],
-        "~/analysis": ["voice_patterns.txt", "meeting_notes.txt", "suspects.txt"]
+        "~": ["readme.txt", "audio", "fingerprints", "analysis.txt", "tools"],
+        "~/tools": ["voiceprint.exe", "fingerprint.exe","suspects.exe"],
+        "~/audio": ["suspicious.wav", "samples"],
+        "~/audio/samples": ["sample_1.wav", "sample_2.wav", "sample_3.wav", "sample_4.wav"],
+        "~/fingerprints": ["scene.fpt", "keyboard.fpt", "door.fpt", "samples"],
+        "~/fingerprints/samples": ["sample_1.fpt", "sample_2.fpt", "sample_3.fpt", "sample_4.fpt"]
     },
+
     fileContents: {
-        "readme.txt": `声纹分析任务：
+        "readme.txt": `任务简报：
+在一起数据中心入侵事件中，我们发现了以下关键证据：
+1. 可疑的会议录音片段
+2. 三处现场指纹
+3. 四名嫌疑人的声纹和指纹样本
 
-我们截获了一段秘密会议的录音，其中有一段可疑的声音需要分析。
-使用 voiceprint <音频文件> <样本文件> 命令来比对声纹。
+任务目标：
+1. 分析可疑录音内容
+2. 比对嫌疑人声纹样本
+3. 分析现场遗留指纹
+4. 确认嫌疑人身份
+        
+注意事项：
+- 嫌疑人使用了变声器
+- 重点关注高质量的指纹样本
+- 仔细核对时间线信息`,
+        "analysis.txt": `现场分析报告
+---------------------------
+时间：
+23:35 - 监控系统被关闭
+23:40 - 数据中心入口处发现指纹 (scene.fpt)
+23:42 - 主机键盘上发现完整指纹 (keyboard.fpt)
+        同时监测到可疑对话 (suspicious.wav)
+23:44 - 紧急出口门把手发现指纹 (door.fpt)
+23:45 - 备用监控恢复，但未拍到嫌疑人
+        
+物证分析：
+1. 声音分析
+- 可疑对话内容："...计划已经开始执行，所有证据都被清理干净了..."
+- 使用了变声器，但语音习惯和说话方式仍可分析
+- 说话方式显示对系统非常熟悉
+        
+2. 指纹分析
+- scene.fpt：部分指纹，质量中等，方向完整
+- keyboard.fpt：完整指纹，质量优良，细节清晰
+- door.fpt：模糊指纹，但纹路特征可辨识
+        
+结论：
+1. 所有物证都指向同一时间段：23:40-23:44
+2. 嫌疑人熟悉系统，提前关闭了监控
+3. 建议重点对比 keyboard.fpt 的指纹
++4. 交叉比对声纹和指纹的结果，找出共同嫌疑人
+        
+[重要提示]
+- 确定嫌疑人后，请按以下格式提交结果：
+  时间_嫌疑人名_姓（全大写）
+  例如：2345_JOHN_SMITH`,
 
-已知信息：
-1. 嫌疑人使用了变声器
-2. 背景音中可能隐藏了重要信息
-3. 需要找出真实说话人
+        "suspicious.wav": `[会议录音片段 - 23:42]
+[背景音：键盘敲击声]
+未知人士：(使用变声器) "...计划已经开始执行，所有证据都被清理干净了..."
+[背景音：设备运行声]
+未知人士：(继续) "...主机已经被重置，数据无法恢复..."
+[背景音：脚步声]
+[录音结束]
+        
+[系统分析]
+- 说话人使用了高级变声器
+- 背景噪音显示位于数据中心
+- 对话时间：23:42:15`,
 
-[提示] 使用 analyze 命令查看音频文件的基本信息`,
+        "voiceprint.exe": `[声纹分析工具]
+使用方法: voiceprint <可疑音频> <样本音频>
+示例：voiceprint suspicious.wav sample_1.wav
+        
+注意：即使使用了变声器，语音习惯和说话方式仍可分析
+      建议找出匹配度较高的2-3名嫌疑人`,
 
-        "voice_patterns.txt": `声纹特征分析：
-
-Sample_A: 男性，年龄45-50，无口音
-Sample_B: 男性，年龄30-35，轻微南方口音
-Sample_C: 女性，年龄40-45，标准口音
-Sample_D: 男性，年龄35-40，带有电子处理痕迹
-
-[注意] 留意声音的频率特征和语气习惯`,
-
-        "meeting_notes.txt": `会议记录：
-
-时间：2024-03-15 23:30
-地点：未知
-参与人数：4人
-
-关键时间点：
-23:35 - 讨论项目进展
-23:42 - [可疑声音片段]
-23:47 - 提到密码箱
-23:55 - 会议结束
-
-[重要] 23:42的声音与Sample_D极其相似`,
-
-        "suspects.txt": `嫌疑人档案：
-
-代号A - "教授"
-特征：声音浑厚，语速较慢
-身份：前声学专家
-
-代号B - "工程师"
-特征：说话干脆，语气急促
-身份：系统架构师
-
-代号C - "分析师"
-特征：声音清晰，逻辑性强
-身份：数据专家
-
-代号D - "幽灵"
-特征：声音经过处理，难以识别
-身份：未知
-
-[分析] 所有样本都可能经过伪装，需要用声纹比对找出真实身份`
+        "fingerprint.exe": `
+[指纹比对工具]
+使用方法: fingerprint <目标指纹> <样本指纹>
+        
+分析结果包括：
+- 纹路匹配度
+- 特征点匹配
+- 细节相似度
+- 总体相似度
+示例：fingerprint keyboard.fpt sample_1.fpt
+注意：相似度超过85%表示高度匹配`,
+        "suspects.exe":`
+ [查看嫌疑列表工具]
+ 使用方法: 执行命令 suspects 即可查看你添加的所有嫌疑人信息
+ `
     },
+    story: `
+        调查进展到了关键时刻。在一次秘密会议的录音中，发现了一段可疑的声音。
+        同时，现场还发现了三处指纹:
+        - 现场遗留的部分指纹 (scene.fpt)
+        - 主机键盘上的完整指纹 (keyboard.fpt)
+        - 门把手上的模糊指纹 (door.fpt)
+
+        警方数据库中有四名嫌疑人的声纹和指纹样本:
+        - John Smith (sample_1.wav / sample_1.fpt)
+        - Michael Brown (sample_2.wav / sample_2.fpt)
+        - James Wilson (sample_3.wav / sample_3.fpt)
+        - David Miller (sample_4.wav / sample_4.fpt)
+
+        需要通过声纹和指纹的双重比对，确认嫌疑人身份。
+        注意：
+        1. 即使使用了变声器，声纹分析仍能缩小嫌疑人范围
+        2. 指纹是无法伪装的物证
+        3. 根据现场时间推断，嫌疑人在23:42留下了这些证据`,
+
+    // 更新提示
     hints: [
-        "使用 voiceprint 命令比对可疑声音与样本",
-        "注意观察声波的频率特征",
-        "相似度达到85%以上可认为是同一个人",
-        "背景音中可能包含摩斯密码",
-        "最终密码与说话人身份有关"
-    ]
-}; 
+        "先用 voiceprint 命令分析可疑声音，但要注意结果可能被变声器干扰",
+        "使用 fingerprint 命令分析指纹，格式: fingerprint <目标指纹> <样本指纹>",
+        "仔细阅读分析报告中的时间信息",
+        "特别关注键盘上的完整指纹，它的匹配结果最可靠",
+        "通关密码格式：时间_名_姓 (例如：23:40_JOHN_SMITH)"
+    ],
+} 
