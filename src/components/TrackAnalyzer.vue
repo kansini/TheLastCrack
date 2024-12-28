@@ -8,7 +8,20 @@
   >
     <div class="track-analyzer">
       <div class="map-container">
+        <!-- 加载遮罩 -->
+        <div class="loading-overlay" v-if="isLoading">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">正在加载地图数据...</div>
+        </div>
+
         <div class="map">
+          <img
+              ref="mapImageRef"
+              src="../assets/img/map.jpg"
+              alt="城市地图"
+              @load="handleImageLoad"
+              style="width: 100%; height: 100%; object-fit: cover;"
+          />
           <!-- 监控点位标记 -->
           <div v-for="camera in cameras"
                :key="camera.id"
@@ -209,6 +222,16 @@ const handleClose = () => {
   }, 300)
 }
 
+const isLoading = ref(true);
+const mapImageRef = ref<HTMLImageElement | null>(null);
+
+const handleImageLoad = () => {
+  // 添加一个短暂延迟以确保图片完全渲染
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 500);
+};
+
 onMounted(() => {
   isVisible.value = true
 })
@@ -222,13 +245,38 @@ onMounted(() => {
 
   .map-container {
     width: 100%;
-    aspect-ratio: 20/9;
-    position: relative;
-    border: 1px solid rgba(0, 255, 255, 0.3);
+    height: 400px;
+    border: 1px solid rgba($primary-color, 0.3);
     border-radius: 4px;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.3);
-    margin-bottom: 16px;
+    margin-bottom: $spacing-lg;
+
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba($bg-primary, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba($primary-color, 0.3);
+        border-top-color: $primary-color;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+
+      .loading-text {
+        color: $primary-color;
+        font-size: 14px;
+        text-shadow: 0 0 8px rgba($primary-color, 0.5);
+      }
+    }
 
     .map {
       position: relative;
@@ -236,6 +284,11 @@ onMounted(() => {
       height: 100%;
       background: url("../assets/img/map.jpg") no-repeat center;
       background-size: cover;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
 
     }
 
@@ -446,6 +499,12 @@ onMounted(() => {
 @keyframes dash {
   to {
     stroke-dashoffset: -40;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style> 
