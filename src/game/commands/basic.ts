@@ -8,6 +8,8 @@ import {createApp, h} from "vue";
 import PersonnelFile from "@/components/PersonnelFile.vue";
 import {voiceprintCommand} from "./voiceprint";
 import {fingerprintCommand} from "./fingerprint";
+import TrackAnalyzer from "@/components/TrackAnalyzer.vue";
+import CCTVViewer from "@/components/CCTVViewer.vue";
 
 const helpCommand: Command = {
     name: "help",
@@ -1923,7 +1925,7 @@ const suspectCommand: Command = {
     execute: (args: string[]) => {
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 16) {
-            return "suspect: 命令不可用";
+            return "suspect: 命令不���用";
         }
 
         if (args.length === 0) {
@@ -1947,6 +1949,86 @@ const suspectCommand: Command = {
         return `${fileId} 的可疑程度较低，建议继续调查其他人员。`;
     }
 };
+
+const trackCommand: Command = {
+  name: "track",
+  description: "在地图上追踪和分析逃犯路线",
+  execute: () => {
+    const gameStore = useGameStore()
+    
+    if (gameStore.currentLevel !== 18) {
+      return "track: 命令不可用"
+    }
+
+    // 创建分析窗口
+    const container = document.createElement("div")
+    container.style.position = "fixed"
+    container.style.top = "50%"
+    container.style.left = "50%"
+    container.style.transform = "translate(-50%, -50%)"
+    container.style.zIndex = "9999"
+    document.body.appendChild(container)
+
+    const app = createApp({
+      render() {
+        return h(TrackAnalyzer, {
+          onClose: () => {
+            app.unmount()
+            document.body.removeChild(container)
+          }
+        })
+      }
+    })
+
+    app.mount(container)
+    return "正在打开路线分析器..."
+  }
+}
+
+const cctvCommand: Command = {
+  name: "cctv",
+  description: "查看监控录像记录",
+  execute: (args: string[]) => {
+    const gameStore = useGameStore()
+    
+    if (gameStore.currentLevel !== 18) {
+      return "cctv: 命令不可用"
+    }
+
+    if (args.length !== 1) {
+      return "用法: cctv <摄像头编号>"
+    }
+
+    const cameraId = args[0]
+    if (!['01', '02', '03', '04'].includes(cameraId)) {
+      return "无效的摄像头编号"
+    }
+
+    // 创建查看窗口
+    const container = document.createElement("div")
+    container.style.position = "fixed"
+    container.style.top = "50%"
+    container.style.left = "50%"
+    container.style.transform = "translate(-50%, -50%)"
+    container.style.zIndex = "9999"
+    document.body.appendChild(container)
+
+    const app = createApp({
+      render() {
+        return h(CCTVViewer, {
+          cameraId,
+          onClose: () => {
+            app.unmount()
+            document.body.removeChild(container)
+          }
+        })
+      }
+    })
+
+    app.mount(container)
+    return `正在查看摄像头 ${cameraId} 的录像...`
+  }
+}
 
 export {
     helpCommand,
@@ -2000,5 +2082,7 @@ export {
     verifyCommand,
     suspectCommand,
     voiceprintCommand,
-    fingerprintCommand
+    fingerprintCommand,
+    trackCommand,
+    cctvCommand
 };

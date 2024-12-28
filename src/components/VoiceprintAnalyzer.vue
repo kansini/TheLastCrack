@@ -67,7 +67,7 @@
 import {ref, onMounted, nextTick, onUnmounted, computed} from "vue"
 import Modal from "./Modal.vue"
 import * as THREE from "three"
-import { useSuspectsStore } from '../game/store/suspects'
+import { useSuspectsStore } from '@/stores/game'
 
 const props = defineProps<{
   targetAudio: string
@@ -626,6 +626,7 @@ const handleClose = () => {
 
 <style scoped lang="scss">
 .voiceprint-analyzer {
+  width: 640px;
   color: #e0e0e0;
 
   .waveforms {
@@ -688,7 +689,7 @@ const handleClose = () => {
 
   .analysis-result {
     padding: 12px;
-    background: rgba(0, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     border: 1px solid rgba(0, 255, 255, 0.2);
     animation: fadeIn 0.5s ease;

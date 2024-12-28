@@ -57,10 +57,10 @@
 
 @keyframes textGlow {
   0%, 100% {
-    text-shadow: 0 0 4px rgba(0, 255, 255, 0.1);
+    text-shadow: 0 0 4px rgba($primary-color, .1);
   }
   50% {
-    text-shadow: 0 0 16px rgba(0, 255, 255, 1);
+    text-shadow: 0 0 16px rgba($primary-color, .8);
   }
 }
 
@@ -128,7 +128,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(8);
   }
   100% {
     transform: scale(1);

@@ -160,7 +160,7 @@ onMounted(() => {
   position: relative;
   z-index: 1;
   text-align: center;
-  color: #0ff;
+  color: $primary-color;
   font-family: 'Share Tech Mono', monospace;
   padding: 40px;
   display: flex;
@@ -168,7 +168,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   height: 100%;
-  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  //text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
 
   .screen-header {
     font-size: 32px;
@@ -184,18 +184,18 @@ onMounted(() => {
     .progress-bar {
       width: 240px;
       height: 4px;
-      background: rgba(0, 255, 255, 0.2);
+      background: rgba($primary-color, 0.2);
       margin: 20px auto;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      //box-shadow: 0 0 10px rgba($primary-color, 0.3);
 
       .progress {
         height: 100%;
-        background: #0ff;
+        background: $primary-color;
         transition: width 0.3s ease;
         position: relative;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        box-shadow: 0 0 15px rgba($primary-color, 0.5);
 
         &::after {
           content: '';
@@ -207,7 +207,7 @@ onMounted(() => {
           background: linear-gradient(
                   90deg,
                   transparent,
-                  rgba(255, 255, 255, 0.4),
+                  rgba($primary-color, 0.1),
                   transparent
           );
           animation: progressGlow 2s linear infinite;

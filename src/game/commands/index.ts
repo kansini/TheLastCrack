@@ -53,6 +53,8 @@ import {
     suspectCommand,
     voiceprintCommand,
     fingerprintCommand,
+    trackCommand,
+    cctvCommand
 } from "./basic";
 
 export const commands: { [key: string]: Command } = {
@@ -107,6 +109,8 @@ export const commands: { [key: string]: Command } = {
     voiceprint: voiceprintCommand,
     fingerprint: fingerprintCommand,
     suspects: suspectsCommand,
+    track: trackCommand,
+    cctv: cctvCommand,
     ...easterCommands
 };
 

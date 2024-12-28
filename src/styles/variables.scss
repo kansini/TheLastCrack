@@ -1,10 +1,10 @@
 // 主题色
-$primary-color: #36c2ff; // #00ff00
+$primary-color: #01fcb2; // #00ff00
 $primary-color-light: rgba(51, 255, 59, 0.7);
 $primary-color-dark: scale-color($primary-color, $lightness: -20%);
 $primary-green: #00ff00;
 $primary-orange: #ff6b00;
-$dark-bg: #1a1a1a;
+$dark-bg: #02090c;
 $darker-bg: #000000;
 $highlight-color: #ffffff;
 
@@ -14,6 +14,8 @@ $bg-secondary: #001622;
 $bg-tertiary: #002433;
 $bg-scrollbar: #003344;
 
+$border-color: rgba($primary-color, 0.2);
+$border-color-light: rgba($primary-color, 0.1);
 // 文字颜色
 $text-primary: #33ff3b;
 $text-secondary: $primary-color-light;
@@ -30,7 +32,7 @@ $spacing-lg: 2rem;
 $spacing-xl: 4rem;
 
 // 圆角
-$border-radius: 2px;
+$border-radius: 8px;
 
 // 动画
 $transition-duration: 0.3s;

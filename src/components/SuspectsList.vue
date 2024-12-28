@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import Modal from "./Modal.vue"
-import { useSuspectsStore } from '../game/store/suspects'
+import { useSuspectsStore } from '@/stores/game'
 
 const suspectsStore = useSuspectsStore()
 const isVisible = ref(false)
@@ -77,6 +77,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .suspects-list {
   color: #e0e0e0;
+  min-width: 560px;
   
   .list-header {
     display: flex;

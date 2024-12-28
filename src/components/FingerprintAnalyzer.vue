@@ -92,7 +92,7 @@
 import {ref, onMounted, nextTick, onUnmounted, computed} from "vue"
 import Modal from "./Modal.vue"
 import fingerprintSvg from '@/assets/img/fingerprint.svg'
-import { useSuspectsStore } from '../game/store/suspects'
+import { useSuspectsStore } from '@/stores/game'
 
 const props = defineProps<{
   targetPrint: string
@@ -524,6 +524,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .fingerprint-analyzer {
   color: #e0e0e0;
+  width: 640px;
 
   .fingerprints {
     display: flex;
@@ -591,7 +592,7 @@ onUnmounted(() => {
 
   .analysis-result {
     padding: 12px;
-    background: rgba(0, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     border: 1px solid rgba(0, 255, 255, 0.2);
     animation: fadeIn 0.5s ease;

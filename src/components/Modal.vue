@@ -1,12 +1,13 @@
 <template>
-  <div class="modal-overlay" :style="{zIndex: currentZIndex }">
-    <Transition :name="transitionName">
+  <Transition :name="transitionName">
+    <div class="modal-overlay" :style="{zIndex: currentZIndex }" v-if="visible">
+
       <div class="modal-content"
            :style="{ 
-             width, 
+             width:width,
              transform: `translate(${position.x}px, ${position.y}px)`,
               }"
-           v-if="visible"
+
            ref="modalRef"
            @click="handleModalClick"
            @mousedown="handleModalClick">
@@ -23,8 +24,9 @@
           <slot name="footer"></slot>
         </div>
       </div>
-    </Transition>
-  </div>
+
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -142,10 +144,9 @@ onUnmounted(() => {
   .modal-content {
     position: relative;
     max-height: 80vh;
-    min-width: 640px;
-    background: rgba($bg-secondary, 0.1);
-    border: 1px solid rgba($primary-color, 0.3);
-    box-shadow: inset 0 0 20px rgba($primary-color, 0.2);
+    background: rgba($bg-primary, 0.1);
+    border: 1px solid $border-color;
+    box-shadow: inset 0 0 20px rgba($bg-primary, 0.2);
     backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
@@ -189,9 +190,9 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
+  height: 48px;
   padding: 0 16px;
-  border-bottom: 1px solid rgba($primary-color, 0.3);
+  border-bottom: 1px solid $border-color;
   position: relative;
   overflow: hidden;
   pointer-events: all;
@@ -206,10 +207,10 @@ onUnmounted(() => {
     top: 0;
     background: none;
     border: none;
-    color: $primary-color;
+    color: $text-color;
     font-size: 1.5rem;
     cursor: pointer;
-    width: 40px;
+    width: 48px;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -230,20 +231,13 @@ onUnmounted(() => {
     left: -100%;
     width: 200%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba($primary-color, 0.1),
-        transparent
-    );
     animation: headerGlow 3s linear infinite;
   }
 
 
   h2 {
-    margin: 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: $primary-color;
-    text-shadow: 0 0 10px rgba($primary-color, 0.5);
   }
 
 
@@ -345,7 +339,6 @@ onUnmounted(() => {
     background: rgba($primary-color, 0.1);
     border-color: scale-color($primary-color, $lightness: 20%);
     color: scale-color($primary-color, $lightness: 20%);
-    transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba($primary-color, 0.2);
 
     &::before {
