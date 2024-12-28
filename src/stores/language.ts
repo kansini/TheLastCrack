@@ -243,6 +243,34 @@ const translations: Translation = {
   cancel: {
     zh: '取消',
     en: 'Cancel'
+  },
+  saveSettings: {
+    zh: '保存设置',
+    en: 'Save'
+  },
+  terminalColors: {
+    zh: '颜色设置',
+    en: 'Colors'
+  },
+  terminalStyle: {
+    zh: '字体设置',
+    en: 'Font'
+  },
+  promptStyle: {
+    zh: '提示符',
+    en: 'Prompt'
+  },
+  scrollbarStyle: {
+    zh: '滚动条',
+    en: 'Scrollbar'
+  },
+  opacity: {
+    zh: '背景透明度',
+    en: 'Background Opacity'
+  },
+  outputFontSize: {
+    zh: '输出字体大小',
+    en: 'Output Font Size'
   }
 };
 

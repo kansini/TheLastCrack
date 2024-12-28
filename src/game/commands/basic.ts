@@ -449,7 +449,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 }
                 if (password === "2342_JAMES_WILSON") {
                     gameStore.completeLevel()
-                    return showGameComplete()
+                    return showLevelInfo()
                 }
                 break
 

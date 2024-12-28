@@ -2,7 +2,6 @@
   <Modal
       :visible="visible"
       :title="t('aboutTitle')"
-      width="800px"
       @close="$emit('close')"
   >
     <div class="about-content">
@@ -22,7 +21,7 @@
         <div class="version-info">
           <div class="info-item">
             <span class="label">{{ t("currentVersion") }}</span>
-            <span class="value">1.0.0</span>
+            <span class="value">{{ version }}</span>
           </div>
           <div class="info-item">
             <span class="label">{{ t("developer") }}</span>
@@ -41,17 +40,24 @@
 <script setup lang="ts">
 import {useLanguageStore} from "@/stores/language";
 import Modal from "./Modal.vue";
+import {computed} from "vue";
 
 defineProps<{
-  visible: boolean;
+  visible: boolean
 }>();
 
-const {t} = useLanguageStore();
+
+const languageStore = useLanguageStore();
+const t = computed(() => languageStore.t);
+
+const version = computed(() => import.meta.env.VITE_APP_VERSION || "1.0.0");
+
+
 </script>
 
 <style lang="scss" scoped>
 .about-content {
-  padding: 16px 24px;
+  color: $text-color;
 
   .description {
     margin-bottom: $spacing-lg;
@@ -99,7 +105,7 @@ const {t} = useLanguageStore();
         }
 
         .value {
-          color: lighten($primary-color, 10%);
+          color: $text-color;
           margin-left: $spacing-md;
         }
       }

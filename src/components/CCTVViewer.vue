@@ -74,6 +74,7 @@
                  v-model="currentFrame"
                  :min="0"
                  :max="totalFrames"
+                 :style="{ '--range-progress': `${(currentFrame / totalFrames) * 100}%` }"
                  @input="updateFrame"/>
         </div>
         <div class="buttons">
@@ -201,7 +202,13 @@ const updateFrame = () => {
   }
 
   if (videoRef.value) {
-    videoRef.value.currentTime = videoTime.value
+    const progress = currentFrame.value / totalFrames.value;
+    videoRef.value.currentTime = progress * (videoRef.value.duration || 0);
+    // 更新进度条颜色
+    const input = document.querySelector(".time-slider input[type=\"range\"]") as HTMLInputElement;
+    if (input) {
+      input.style.setProperty("--range-progress", `${progress * 100}%`);
+    }
   }
 }
 
@@ -365,7 +372,47 @@ onUnmounted(() => {
 
       input[type="range"] {
         width: 100%;
-        background: rgba(0, 255, 255, 0.1);
+        height: 16px;
+        background: rgba($primary-color, 0);
+        border-radius: 2px;
+        -webkit-appearance: none;
+
+        &::-webkit-slider-runnable-track {
+          height: 4px;
+          background: linear-gradient(to right,
+              $primary-color 0%,
+              $primary-color var(--range-progress, 0%),
+              rgba($primary-color, 0.2) var(--range-progress, 0%)
+          );
+          border-radius: 2px;
+        }
+
+        &::-moz-range-progress {
+          height: 4px;
+          background: $primary-color;
+          border-radius: 2px;
+        }
+
+        &::-ms-fill-lower {
+          height: 4px;
+          background: $primary-color;
+          border-radius: 2px;
+        }
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          margin-top: -6px;
+          background: $primary-color;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
       }
     }
 

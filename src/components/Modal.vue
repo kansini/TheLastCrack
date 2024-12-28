@@ -11,6 +11,10 @@
            ref="modalRef"
            @click="handleModalClick"
            @mousedown="handleModalClick">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
         <div class="modal-header"
              :class="{ draggable }"
              @mousedown="handleHeaderMouseDown">
@@ -153,6 +157,34 @@ onUnmounted(() => {
     pointer-events: all;
     user-select: none;
 
+    .corner-decoration {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: rgba($primary-color, .6);
+      z-index: 1;
+
+      &.top-left {
+        top: -4px;
+        left: -4px;
+      }
+
+      &.top-right {
+        top: -4px;
+        right: -4px;
+      }
+
+      &.bottom-left {
+        bottom: -4px;
+        left: -4px;
+      }
+
+      &.bottom-right {
+        bottom: -4px;
+        right: -4px;
+      }
+    }
+
   }
 }
 
@@ -178,7 +210,7 @@ onUnmounted(() => {
     top: 0;
     background: none;
     border: none;
-    color: $text-color;
+    color: rgba($primary-color-dark, .6);
     font-size: 1.5rem;
     cursor: pointer;
     width: 48px;
@@ -187,11 +219,10 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     line-height: 1;
-    opacity: 0.8;
-    transition: opacity 0.2s;
+    transition: all 0.2s;
 
     &:hover {
-      opacity: 1;
+      color: rgba($primary-color-dark, 1);
     }
   }
 
@@ -396,6 +427,80 @@ onUnmounted(() => {
       border-color: lighten($primary-orange, 20%);
       color: lighten($primary-orange, 20%);
       box-shadow: 0 2px 8px rgba($primary-orange, 0.2);
+    }
+  }
+}
+
+// 添加全局滑块样式
+:deep(input[type="range"]) {
+  height: 16px;
+  background: rgba($primary-color, 0);
+  border-radius: 2px;
+  -webkit-appearance: none;
+  flex: 2;
+
+  &::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(to right, 
+      $primary-color 0%, 
+      $primary-color var(--range-progress, 50%), 
+      rgba($primary-color, 0.2) var(--range-progress, 50%)
+    );
+    border-radius: 2px;
+  }
+
+  &::-moz-range-progress {
+    height: 4px;
+    background: $primary-color;
+    border-radius: 2px;
+  }
+
+  &::-ms-fill-lower {
+    height: 4px;
+    background: $primary-color;
+    border-radius: 2px;
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    background: $primary-color;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: $primary-color;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-ms-thumb {
+    width: 16px;
+    height: 16px;
+    background: $primary-color;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
     }
   }
 }

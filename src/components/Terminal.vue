@@ -239,6 +239,7 @@ onMounted(() => {
 
   .output {
     color: var(--terminal-output-text, $text-secondary);
+    font-size: var(--terminal-output-font-size, 16px);
 
     // Matrix 效果
     &[class*="matrix-rain-"] {

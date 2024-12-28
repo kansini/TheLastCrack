@@ -85,9 +85,9 @@ const {t} = useLanguageStore();
 
 <style lang="scss" scoped>
 .tutorial-content {
-  padding: 16px 24px;
 
   .description {
+    color: $text-color;
     margin-bottom: $spacing-lg;
     line-height: 1.6;
   }
@@ -120,7 +120,7 @@ const {t} = useLanguageStore();
         }
 
         span {
-          color: rgba($primary-color, 0.8);
+          color: $text-color;
         }
       }
     }
@@ -129,6 +129,7 @@ const {t} = useLanguageStore();
       list-style: none;
       padding: 0;
       margin: 0;
+      color: $text-color;
 
       li {
         margin-bottom: $spacing-sm;
