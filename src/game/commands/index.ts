@@ -1,7 +1,12 @@
 import type {Command} from "@/types/terminal";
 import {trojanCommand} from "./trojan";
 import {easterCommands} from "./easter";
-import { suspectsCommand } from "./suspects";
+import {suspectsCommand} from "./suspects";
+import {
+    saveCommand,
+    loadCommand,
+    deleteSaveCommand
+} from "./save"
 
 import {
     helpCommand,
@@ -11,9 +16,6 @@ import {
     clearCommand,
     unlockCommand,
     decodeCommand,
-    saveCommand,
-    loadCommand,
-    deleteSaveCommand,
     scanCommand,
     repairCommand,
     pingCommand,

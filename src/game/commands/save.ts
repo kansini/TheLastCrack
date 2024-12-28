@@ -1,6 +1,7 @@
-import type { Command } from "@/types/terminal";
-import { useSaveStore } from "@/stores/save";
-import { getCurrentLevelData } from "@/game/levels";
+import type {Command} from "@/types/terminal";
+import {useSaveStore} from "@/stores/save";
+import {getCurrentLevelData} from "@/game/levels";
+import {useGameStore} from "@/stores/game";
 
 export const saveCommand: Command = {
     name: "save",
@@ -40,10 +41,14 @@ export const loadCommand: Command = {
         }
 
         const saveStore = useSaveStore();
+
+        const gameStore = useGameStore();
+
         if (saveStore.loadSave(saveId)) {
             const saveData = saveStore.getSaveData(saveId);
             if (saveData) {
                 const levelData = getCurrentLevelData(saveData.currentLevel);
+                gameStore.loadSavedGame(saveData);
                 return `存档读取成功！\n当前位于第${saveData.currentLevel}关 - ${levelData.title}`;
             }
             return "存档读取成功！";
