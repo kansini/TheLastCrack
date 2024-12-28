@@ -328,8 +328,7 @@ onMounted(() => {
     height: 240px;
     display: flex;
     gap: 16px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 255, 255, 0.2);
+    border: 1px solid rgba($primary-color, 0.2);
     border-radius: 4px;
     padding: 16px;
     overflow: hidden;
@@ -380,10 +379,10 @@ onMounted(() => {
           align-items: center;
 
           .type {
-            color: #ffff00;
+            color: $primary-color-dark;
             font-size: 14px;
             padding: 2px 6px;
-            background: rgba(255, 255, 0, 0.1);
+            background: rgba($primary-color-dark, 0.2);
             border-radius: 4px;
           }
 
@@ -393,7 +392,7 @@ onMounted(() => {
           }
 
           .time {
-            color: #00ffff;
+            color: $primary-color-dark;
             font-size: 14px;
           }
         }
@@ -414,9 +413,11 @@ onMounted(() => {
         }
 
         .time {
-          color: #00ffff;
+          color: $primary-color-dark;
           font-size: 14px;
-          min-width: 60px;
+          padding: 2px 6px;
+          background: rgba($primary-color-dark, 0.2);
+          border-radius: 4px;
         }
 
         .desc {

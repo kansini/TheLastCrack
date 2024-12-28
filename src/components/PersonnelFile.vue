@@ -285,7 +285,6 @@ const statusClass = computed(() => {
 .info-section {
   position: relative;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   border: 1px solid rgba(76, 175, 80, 0.3);
 }
@@ -471,9 +470,8 @@ const statusClass = computed(() => {
 .info-section {
   position: relative;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  border: 1px solid rgba($primary-color, 0.3);
 }
 
 .basic-info p, .details p, .details h3 {
