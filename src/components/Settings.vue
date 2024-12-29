@@ -76,7 +76,7 @@
           </div>
 
           <div class="settings-section">
-            <h3>{{ t('scrollbarStyle') }}</h3>
+            <h3>{{ t('others') }}</h3>
             <div class="setting-item">
               <label>{{ t('scrollbarColor') }}</label>
               <input type="color" v-model="settings.scrollbarColor"/>

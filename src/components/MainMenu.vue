@@ -95,6 +95,15 @@
     <!--    </div>-->
     <div class="noise-overlay"></div>
     <div class="scan-lines"></div>
+
+    <!-- 添加音乐控制按钮 -->
+    <button 
+      @click="toggleBgm" 
+      class="bgm-btn"
+      :class="{ playing: bgmPlaying }"
+    >
+      <span class="icon">{{ bgmPlaying ? '🔊' : '🔈' }}</span>
+    </button>
   </div>
 </template>
 
@@ -130,6 +139,10 @@ let uptimeInterval: number;
 const buttonSound = new URL("../assets/audio/button.wav", import.meta.url).href;
 const buttonSoundRef = ref<HTMLAudioElement>();
 
+// 添加音频相关的 ref
+const bgmRef = ref<HTMLAudioElement>();
+const bgmPlaying = ref(true);
+
 onMounted(() => {
   // 初始化音频
   buttonSoundRef.value = new Audio(buttonSound);
@@ -140,10 +153,26 @@ onMounted(() => {
   uptimeInterval = window.setInterval(() => {
     uptimeSeconds.value++;
   }, 1000);
+
+  // 初始化背景音乐
+  const bgmUrl = new URL("../assets/audio/bgm.mp3", import.meta.url).href;
+  bgmRef.value = new Audio(bgmUrl);
+  if (bgmRef.value) {
+    bgmRef.value.volume = 0.3;
+    bgmRef.value.loop = true;
+    bgmRef.value.play().catch(() => {
+      bgmPlaying.value = false;
+      document.addEventListener('click', startBgm, { once: true });
+    });
+  }
 });
 
 onUnmounted(() => {
   clearInterval(uptimeInterval);
+  if (bgmRef.value) {
+    bgmRef.value.pause();
+    bgmRef.value = undefined;
+  }
 });
 
 const startNewGame = () => {
@@ -209,6 +238,34 @@ const toggleSettings = () => {
 
 const closeSettings = () => {
   showSettingsModal.value = false;
+};
+
+// 开始播放背景音乐
+const startBgm = () => {
+  if (bgmRef.value && !bgmPlaying.value) {
+    bgmRef.value.play()
+      .then(() => {
+        bgmPlaying.value = true;
+      })
+      .catch(err => {
+        console.error('Failed to play BGM:', err);
+      });
+  }
+};
+
+// 切换背景音乐播放状态
+const toggleBgm = () => {
+  if (!bgmRef.value) return;
+  
+  if (bgmPlaying.value) {
+    bgmRef.value.pause();
+    bgmPlaying.value = false;
+  } else {
+    bgmRef.value.play()
+      .then(() => {
+        bgmPlaying.value = true;
+      });
+  }
 };
 </script>
 
@@ -914,6 +971,51 @@ const closeSettings = () => {
   animation: noise 0.2s infinite;
   pointer-events: none;
   z-index: 1;
+}
+
+.bgm-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba($bg-primary, 0.2);
+  border: 1px solid rgba($primary-color, 0.3);
+  color: $primary-color;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  &:hover {
+    background: rgba($bg-primary, 0.4);
+    border-color: rgba($primary-color, 0.6);
+  }
+
+  &.playing {
+    animation: pulse 2s infinite;
+    border-color: rgba($primary-color, 0.8);
+  }
+
+  .icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba($primary-color, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0);
+  }
 }
 
 

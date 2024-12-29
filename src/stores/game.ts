@@ -89,6 +89,17 @@ export const useGameStore = defineStore("game", {
             const levelCompleted = `level_${this.currentLevel}_completed`;
             this.completedTasks.push(levelCompleted);
 
+            try {
+                const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}');
+                const sound = new Audio(new URL("../assets/audio/success.mp3", import.meta.url).href);
+                sound.volume = settings.soundVolume ?? 0.3;
+                sound.play().catch(err => {
+                    console.debug('Success sound play prevented:', err);
+                });
+            } catch (error) {
+                console.debug('Error playing success sound:', error);
+            }
+
             this.currentLevel += 1;
             this.currentDirectory = "~";
             this.loadLevel(this.currentLevel);
@@ -112,7 +123,7 @@ export const useGameStore = defineStore("game", {
             this.currentLevel = level;
             this.currentDirectory = "~";
             this.completedTasks = [];
-        },
+        }
     },
 
     getters: {

@@ -264,6 +264,10 @@ const translations: Translation = {
     zh: '滚动条',
     en: 'Scrollbar'
   },
+  others: {
+    zh: '其它设置',
+    en: 'other setting'
+  },
   opacity: {
     zh: '背景透明度',
     en: 'Background Opacity'

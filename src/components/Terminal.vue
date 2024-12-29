@@ -18,6 +18,7 @@
         <input
             ref="inputRef"
             v-model="inputContent"
+            @input="handleInput"
             @keydown.enter="handleCommand"
             @keydown.up.prevent="navigateHistory('up')"
             @keydown.down.prevent="navigateHistory('down')"
@@ -31,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, computed, nextTick} from "vue";
+import {ref, onMounted, computed, nextTick, onUnmounted} from "vue";
 import {useTerminalStore} from "@/stores/terminal";
 import {commands} from "@/game/commands";
 
@@ -140,8 +141,57 @@ const scrollToBottom = () => {
   }
 };
 
+// 添加打字音效
+const typingSound = new URL("../assets/audio/typing.mp3", import.meta.url).href;
+const typingSoundRef = ref<HTMLAudioElement | null>(null);
+
+// 添加音效播放函数
+const playTypingSound = () => {
+  try {
+    const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}');
+    // if (!settings.soundEnabled) return;
+
+    // 每次创建新的音频实例以确保可以快速重复播放
+    const sound = new Audio(typingSound);
+    sound.volume = settings.soundVolume ?? 0.2;
+    sound.play().catch(err => {
+      console.debug('Typing sound play prevented:', err);
+    });
+  } catch (error) {
+    console.debug('Error playing typing sound:', error);
+  }
+};
+
+// 修改输入处理函数
+const handleInput = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const oldLength = inputContent.value.length;
+  const newLength = target.value.length;
+  // 只在添加字符时播放音效，删除时不播放
+  if (newLength > oldLength - 1 ) {
+    playTypingSound();
+  }
+  
+  inputContent.value = target.value;
+};
+
 onMounted(() => {
   inputRef.value?.focus();
+  
+  // 预加载音频
+  typingSoundRef.value = new Audio(typingSound);
+  if (typingSoundRef.value) {
+    typingSoundRef.value.preload = 'auto';
+    typingSoundRef.value.volume = 0.2;
+  }
+});
+
+onUnmounted(() => {
+  // 清理音频资源
+  if (typingSoundRef.value) {
+    typingSoundRef.value.pause();
+    typingSoundRef.value = null;
+  }
 });
 
 // 确保输入框始终获得焦点
