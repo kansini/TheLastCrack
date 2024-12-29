@@ -159,29 +159,52 @@ onUnmounted(() => {
 
     .corner-decoration {
       position: absolute;
-      width: 8px;
-      height: 8px;
-      background-color: rgba($primary-color, .6);
-      z-index: 1;
+      width: 12px;
+      height: 12px;
+      border: 2px solid $primary-color;
+      animation: cornerPulse 2s ease-in-out infinite;
 
       &.top-left {
-        top: -4px;
-        left: -4px;
+        top: -2px;
+        left: -2px;
+        border-right: none;
+        border-bottom: none;
       }
 
       &.top-right {
-        top: -4px;
-        right: -4px;
+        top: -2px;
+        right: -2px;
+        border-left: none;
+        border-bottom: none;
       }
 
       &.bottom-left {
-        bottom: -4px;
-        left: -4px;
+        bottom: -2px;
+        left: -2px;
+        border-right: none;
+        border-top: none;
       }
 
       &.bottom-right {
-        bottom: -4px;
-        right: -4px;
+        bottom: -2px;
+        right: -2px;
+        border-left: none;
+        border-top: none;
+      }
+    }
+
+    @keyframes cornerPulse {
+      0% {
+        border-color: rgba($primary-color, 0.4);
+        //box-shadow: 0 0 5px rgba($primary-color, 0.2);
+      }
+      50% {
+        border-color: rgba($primary-color, 1);
+        //box-shadow: 0 0 10px rgba($primary-color, 0.6);
+      }
+      100% {
+        border-color: rgba($primary-color, 0.4);
+        //box-shadow: 0 0 5px rgba($primary-color, 0.2);
       }
     }
 
