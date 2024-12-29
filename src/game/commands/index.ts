@@ -1,7 +1,16 @@
 import type {Command} from "@/types/terminal";
 import {trojanCommand} from "./trojan";
 import {easterCommands} from "./easter";
-import {suspectsCommand} from "./suspects";
+import {level4Commands} from "./level/level4";
+import {level6Commands} from "./level/level6";
+import {level7Commands} from "./level/level7";
+import {level8Commands} from "./level/level8";
+import {level9Commands} from "./level/level9";
+import {level10Commands} from "./level/level10";
+import {level11Commands} from "./level/level11";
+import {level12Commands} from "./level/level12";
+import {level16Commands} from "./level/level16";
+import {level17Commands} from "./level/level17";
 import {
     saveCommand,
     loadCommand,
@@ -16,45 +25,15 @@ import {
     clearCommand,
     unlockCommand,
     decodeCommand,
-    scanCommand,
-    repairCommand,
     pingCommand,
     connectCommand,
     downloadCommand,
-    psCommand,
-    topCommand,
-    analyzeCommand,
-    killCommand,
-    restoreCommand,
-    whoamiCommand,
-    sudoCommand,
-    chmodCommand,
-    tcpdumpCommand,
-    wiresharkCommand,
-    iptablesCommand,
-    mailListCommand,
-    chatCommand,
-    privateCommand,
-    historyCommand,
     exitCommand,
-    loganalyzerCommand,
-    timelineCommand,
-    traceCommand,
-    memdumpCommand,
-    stringsCommand,
-    volatilityCommand,
     levelCommand,
-    netstatCommand,
     hintCommand,
     remoteCommand,
     ssh_exploitCommand,
     gotoCommand,
-    personnelCommand,
-    viewCommand,
-    verifyCommand,
-    suspectCommand,
-    voiceprintCommand,
-    fingerprintCommand,
     trackCommand,
     cctvCommand
 } from "./basic";
@@ -70,50 +49,29 @@ export const commands: { [key: string]: Command } = {
     save: saveCommand,
     load: loadCommand,
     deletesave: deleteSaveCommand,
-    scan: scanCommand,
-    repair: repairCommand,
     ping: pingCommand,
     connect: connectCommand,
     download: downloadCommand,
-    ps: psCommand,
-    top: topCommand,
-    analyze: analyzeCommand,
-    kill: killCommand,
-    restore: restoreCommand,
-    whoami: whoamiCommand,
-    sudo: sudoCommand,
-    chmod: chmodCommand,
-    tcpdump: tcpdumpCommand,
-    wireshark: wiresharkCommand,
-    iptables: iptablesCommand,
-    mail: mailListCommand,
-    chat: chatCommand,
-    private: privateCommand,
-    history: historyCommand,
     exit: exitCommand,
-    loganalyzer: loganalyzerCommand,
-    timeline: timelineCommand,
-    trace: traceCommand,
-    memdump: memdumpCommand,
-    strings: stringsCommand,
-    volatility: volatilityCommand,
     level: levelCommand,
-    netstat: netstatCommand,
     hint: hintCommand,
     remote: remoteCommand,
     ssh_exploit: ssh_exploitCommand,
     trojan: trojanCommand,
     goto: gotoCommand,
-    personnel: personnelCommand,
-    view: viewCommand,
-    verify: verifyCommand,
-    suspect: suspectCommand,
-    voiceprint: voiceprintCommand,
-    fingerprint: fingerprintCommand,
-    suspects: suspectsCommand,
     track: trackCommand,
     cctv: cctvCommand,
-    ...easterCommands
+    ...easterCommands,
+    ...level4Commands,
+    ...level6Commands,
+    ...level7Commands,
+    ...level8Commands,
+    ...level9Commands,
+    ...level10Commands,
+    ...level11Commands,
+    ...level12Commands,
+    ...level16Commands,
+    ...level17Commands
 };
 
 export const getCommands = () => {
