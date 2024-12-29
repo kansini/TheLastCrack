@@ -2,6 +2,7 @@ import type {Command} from "@/types/terminal";
 import {useGameStore} from "@/stores/game";
 import {getCurrentLevelData} from "@/game/levels";
 import {useTerminalStore} from "@/stores/terminal";
+import {useLanguageStore} from "@/stores/language";
 import {showGameComplete} from "./gameComplete";
 import {createApp, h} from "vue";
 import PersonnelFile from "@/components/PersonnelFile.vue";
@@ -14,50 +15,52 @@ const helpCommand: Command = {
     name: "help",
     description: "显示所有可用命令",
     execute: () => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
-        let baseCommands = `可用命令：
-  help - 显示此帮助信息
-  ls - 列出当前目录文件
-  cd <目录> - 切换目录
-  cat <文件> - 查看文件内容
-  clear - 清除终端屏幕
-  decode <text> - 解密文本
-  unlock <密码> - 使用密码解锁下一关
-  save <名称> - 保存游戏进度
-  load [ID] - 查看或加载存档
-  deletesave <ID> - 删除存档
-  level - 显示当前关卡信息
-  exit - 返回主菜单`;
+        let baseCommands = `${t('availableCommands')}
+  help - ${t('helpDesc')}
+  ls - ${t('lsDesc')}
+  cd <${t('directory')}> - ${t('cdDesc')}
+  cat <${t('file')}> - ${t('catDesc')}
+  clear - ${t('clearDesc')}
+  decode <text> - ${t('decodeDesc')}
+  unlock <${t('password')}> - ${t('unlockDesc')}
+  save <${t('saveName')}> - ${t('saveDesc')}
+  load [ID] - ${t('loadDesc')}
+  deletesave <ID> - ${t('deleteDesc')}
+  level - ${t('levelDesc')}
+  exit - ${t('exitDesc')}`;
 
         // 根据当前关卡添加特定命令
         if (gameStore.currentLevel === 6) {
             baseCommands += `\n
-网络分析命令：
-  tcpdump <过滤器> - 捕获网络数据包
-  analyze <文件名> - 分析数据包内容`;
+- ${t('networkAnalysis')}：
+  tcpdump <${t('filter')}> - ${t('tcpdumpDesc')}
+  analyze <${t('file')}> - ${t('analyzeDesc')}`;
         }
 
         if (gameStore.currentLevel === 9) {
             baseCommands += `\n
-内存分析命令：
-  volatility <文件名> - 分析内存镜像
-  strings <文件名> - 提取内存字符串
-  timeline <PID> - 分析事件时间线`;
+- ${t('memoryAnalysis')}：
+  volatility <${t('file')}> - ${t('volatilityDesc')}
+  strings <${t('file')}> - ${t('stringsDesc')}
+  timeline <PID> - ${t('timelineDesc')}`;
         }
 
         if (gameStore.currentLevel === 11) {
             baseCommands += `\n
-邮件分析命令：
-  mail list - 列出所有邮箱用户
-  mail read <用户> - 读取用户邮件
-  mail search <关键词> - 搜索邮件内容
-  mail trash - 查看已删除邮件`;
+- ${t('mailAnalysis')}：
+  mail list - ${t('mailListDesc')}
+  mail read <${t('user')}> - ${t('mailReadDesc')}
+  mail search <${t('keyword')}> - ${t('mailSearchDesc')}
+  mail trash - ${t('mailTrashDesc')}`;
         }
 
         if (gameStore.currentLevel === 17) {
             baseCommands += `\n
-声纹分析命令：
-  voiceprint <目标音频> <样本音频> - 比对声纹样本`;
+- ${t('voiceprintAnalysis')}：
+  voiceprint <${t('targetAudio')}> <${t('sampleAudio')}> - ${t('voiceprintDesc')}`;
         }
 
         return baseCommands;
@@ -68,6 +71,8 @@ const lsCommand: Command = {
     name: "ls",
     description: "列出当前目录文件",
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
         const levelData = getCurrentLevelData(gameStore.currentLevel);
         const currentDir = gameStore.currentDirectory;
@@ -75,7 +80,7 @@ const lsCommand: Command = {
         // 确保目录存在
         const dirToCheck = currentDir === "~" ? "~" : `${currentDir}`;
         if (!levelData.fileSystem[dirToCheck]) {
-            return `ls: 无法访问 '${currentDir}': 目录不存在`;
+            return `ls: ${t('directoryNotFound')} '${currentDir}'`;
         }
 
         const files = levelData.fileSystem[dirToCheck];
@@ -104,6 +109,8 @@ const cdCommand: Command = {
     name: "cd",
     description: "切换目录",
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
         const path = args[0] || "~";
         const currentDir = gameStore.currentDirectory;
@@ -113,7 +120,7 @@ const cdCommand: Command = {
         if ((path === "root" || path === "/root" || path.includes("/root/")) &&
             gameStore.currentLevel === 15 &&
             !gameStore.completedTasks.includes("get_root")) {
-            return "cd: root: 权限不足，需要root权限";
+            return `cd: root: ${t('permissionDenied')}`;
         }
 
         // 处理特殊路径
@@ -124,7 +131,7 @@ const cdCommand: Command = {
 
         if (path === "..") {
             if (currentDir === "~") {
-                return "已经在根目录了";
+                return t('alreadyInRoot');
             }
             // 移除最后一个目录
             const parts = currentDir.split("/").filter(p => p && p !== "~");
@@ -164,7 +171,7 @@ const cdCommand: Command = {
             return "";
         }
 
-        return `cd: ${path}: 目录不存在`;
+        return `cd: ${path}: ${t('directoryNotFound')}`;
     }
 };
 
@@ -172,8 +179,10 @@ const catCommand: Command = {
     name: "cat",
     description: "查看文件内容",
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         if (!args.length) {
-            return "Usage: cat <filename>";
+            return `${t('invalidUsage')}: cat <${t('file')}>`;
         }
 
         const gameStore = useGameStore();
@@ -185,18 +194,18 @@ const catCommand: Command = {
         if ((filename.startsWith("/root/") || currentDir.includes("/root/")) &&
             gameStore.currentLevel === 15 &&
             !gameStore.completedTasks.includes("get_root")) {
-            return "cat: 权限不足，需要root权限";
+            return `cat: ${t('permissionDenied')}`;
         }
 
         // 检查是否是目录
         const fullPath = currentDir === "~" ? `~/${filename}` : `${currentDir}/${filename}`;
         if (levelData.fileSystem[fullPath] !== undefined) {
-            return `cat: ${filename}: 是一个目录`;
+            return `cat: ${filename}: ${t('isDirectory')}`;
         }
 
         const fileContent = levelData.fileContents[filename];
         if (!fileContent) {
-            return `cat: ${filename}: 文件不存在`;
+            return `cat: ${filename}: ${t('fileNotExist')}`;
         }
 
         // 如果查看的是 .secret 文件，标记任务完成
@@ -472,9 +481,10 @@ const hintCommand: Command = {
         const gameStore = useGameStore();
         const level = gameStore.currentLevel;
         const levelData = getCurrentLevelData(level);
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
 
-        // 直接返回当前关卡的提示信息
-        return `提示：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join("\n")}`;
+        return `${t('hints')}：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join("\n")}`;
     }
 };
 
@@ -482,8 +492,10 @@ const decodeCommand: Command = {
     name: "decode",
     description: "解密文本",
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         if (!args.length) {
-            return "Usage: decode <text>";
+            return `${t('invalidUsage')}: decode <text>`;
         }
 
         const gameStore = useGameStore();
@@ -502,10 +514,10 @@ const decodeCommand: Command = {
         // 如果解密的是目标文本，标记任务完成
         if (text === "Pme!Gmppe!") {
             gameStore.completeTask("decode_text");
-            return `解密成功！解密结果：${decrypted}\n恭喜你发了密码`;
+            return `${t('decryptSuccess')}：${decrypted}\n${t('foundPassword')}`;
         }
 
-        return `解密结果：${decrypted}`;
+        return `${t('decryptResult')}：${decrypted}`;
     }
 };
 
@@ -515,8 +527,10 @@ const scanCommand: Command = {
     name: "scan",
     description: "扫描分析文件",
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         if (!args.length) {
-            return "Usage: scan <filename>";
+            return `${t('invalidUsage')}: scan <${t('file')}>`;
         }
 
         const gameStore = useGameStore();
@@ -524,20 +538,20 @@ const scanCommand: Command = {
         const filename = args[0];
 
         if (!levelData.fileContents[filename]) {
-            return `scan: ${filename}: 件不存在`;
+            return `scan: ${filename}: ${t('scanFileNotExist')}`;
         }
 
         if (filename === "corrupted_data.db") {
             gameStore.completeTask("analyze_corrupt");
-            return `扫描结果：
-1. 文件状态：已损坏
-2. 损坏时间：2024-04-01 23:59:59
-3. 损坏部分：字符替换
-4. 建议操作：使用正确的备份文件修复
-5. 备份时间：在损坏发生之前`;
+            return `${t('scanResults')}：
+1. ${t('fileStatus')}：${t('corrupted')}
+2. ${t('damageTime')}：2024-04-01 23:59:59
+3. ${t('damagePart')}：${t('charReplacement')}
+4. ${t('suggestedAction')}：${t('useBackup')}
+5. ${t('backupTime')}：${t('beforeDamage')}`;
         }
 
-        return `扫描结果：文件完整，无需修复`;
+        return `${t('scanResults')}：${t('fileIntact')}`;
     }
 };
 
@@ -830,51 +844,55 @@ guest:$6$def$hash:19000:0:99999:7:::
 
 const chmodCommand: Command = {
     name: "chmod",
-    description: "修改文件权限",
+    description: "修改文件权限",  // 保持静态描述
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 7) {
-            return "chmod: 命令不可用";
+            return `chmod: ${t('invalidCommand')}`;
         }
 
         if (args.length !== 2) {
-            return "Usage: chmod <权限> <文件>";
+            return `${t('invalidUsage')}: chmod <${t('permissions')}> <${t('file')}>`;
         }
 
-        return "权限不足：需 root 权限";
+        return `${t('permissionDenied')}: ${t('needRoot')}`;
     }
 };
 
 const tcpdumpCommand: Command = {
     name: "tcpdump",
-    description: "捕获网络数据包",
+    description: "捕获网络数据包",  // 保持静态描述
     execute: (args: string[]) => {
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 6 && gameStore.currentLevel !== 8) {
-            return "tcpdump: 命令不可用";
+            return `tcpdump: ${t('invalidCommand')}`;
         }
 
         if (!args.length) {
-            return "Usage: tcpdump <过滤器>";
+            return `${t('invalidUsage')}: tcpdump <${t('filter')}>`;
         }
 
         if (gameStore.currentLevel === 6) {
             if (args.includes("SYN")) {
                 gameStore.completeTask("analyze_traffic");
-                return `开始捕获数据包...
+                return `${t('captureStart')}
 
 [21:00:01] TCP 192.168.1.100:12345 > 10.0.0.1:80 SYN
 [21:00:02] TCP 192.168.1.100:12346 > 10.0.0.1:443 SYN
 [21:00:03] TCP 192.168.1.100:12347 > 10.0.0.1:22 SYN
 
-[分析] 发现可疑的扫描行为：
-1. 源IP: 192.168.1.100
-2. 目标端口: 80, 443, 22
-3. 攻击类型: SYN扫描
+[${t('analysis')}] ${t('suspiciousScan')}：
+1. ${t('sourceIP')}: 192.168.1.100
+2. ${t('targetPorts')}: 80, 443, 22
+3. ${t('attackType')}: ${t('synScan')}
 
-[提示] 使用 analyze network.pcap 分析完整的攻击数据`;
+[${t('hints')}] ${t('analyzeHint')}`;
             }
-            return "提示：使用 SYN 作为过滤器来捕获可疑的扫描包";
+            return t('filterHint');
         }
 
         // 第八关的逻辑保持不变
@@ -1920,19 +1938,21 @@ const cctvCommand: Command = {
   name: "cctv",
   description: "查看监控录像记录",
   execute: (args: string[]) => {
-    const gameStore = useGameStore()
+    const languageStore = useLanguageStore();
+    const t = languageStore.t;
+    const gameStore = useGameStore();
     
     if (gameStore.currentLevel !== 18) {
-      return "cctv: 命令不可用"
+      return `cctv: ${t('invalidCommand')}`;
     }
 
     if (args.length !== 1) {
-      return "用法: cctv <摄像头编号>"
+      return `${t('invalidUsage')}: cctv <${t('cameraId')}>`;
     }
 
-    const cameraId = args[0]
+    const cameraId = args[0];
     if (!['01', '02', '03', '04'].includes(cameraId)) {
-      return "无效的摄像头编号"
+      return t('invalidCamera');
     }
 
     // 创建查看窗口
@@ -1957,7 +1977,7 @@ const cctvCommand: Command = {
     })
 
     app.mount(container)
-    return `正在查看摄像头 ${cameraId} 的录像...`
+    return `${t('viewingCamera')} ${cameraId}...`
   }
 }
 

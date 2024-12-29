@@ -1,5 +1,6 @@
 import type { Command } from '@/types/terminal';
 import { useGameStore } from '@/stores/game';
+import { useLanguageStore } from '@/stores/language';
 
 export class GameEngine {
   private commands: Map<string, Command> = new Map();
@@ -12,8 +13,11 @@ export class GameEngine {
     const [commandName, ...args] = commandLine.trim().split(/\s+/);
     const command = this.commands.get(commandName);
     
+    const languageStore = useLanguageStore();
+    const t = languageStore.t;
+    
     if (!command) {
-      return `命令未找到: ${commandName}`;
+      return `${t('commandNotFound')}: ${commandName}`;
     }
 
     try {
@@ -23,7 +27,9 @@ export class GameEngine {
 
       // 检查命令是否可用
       const output = await command.execute(args);
-      if (output === "ps: 命令不可用" || output === "kill: 命令不可用" || output === "top: 命令不可用") {
+      if (output === `ps: ${t('invalidCommand')}` || 
+          output === `kill: ${t('invalidCommand')}` || 
+          output === `top: ${t('invalidCommand')}`) {
         // 如果是第4关，这些命令应该可用
         if (currentLevel === 4) {
           return await command.execute(args);
@@ -31,7 +37,7 @@ export class GameEngine {
       }
       return output;
     } catch (error) {
-      return ` ${error}`; // 执行命令出错:
+      return `${t('commandError')}: ${error}`;
     }
   }
 }

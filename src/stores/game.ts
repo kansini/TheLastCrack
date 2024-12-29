@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {useTerminalStore} from "./terminal";
 import {getCurrentLevelData} from "@/game/levels";
+import {useLanguageStore} from "./language";
 
 interface GameState {
     gameStarted: boolean;
@@ -45,9 +46,31 @@ export const useGameStore = defineStore("game", {
         },
 
         loadLevel(level: number) {
-            getCurrentLevelData(level);
+            const levelData = getCurrentLevelData(level);
+            if (!levelData) {
+                console.error(`Invalid level: ${level}`);
+                return;
+            }
+
             this.currentLevel = level;
             this.currentDirectory = "~";
+            
+            const terminalStore = useTerminalStore();
+            const languageStore = useLanguageStore();
+            const t = languageStore.t;
+
+            if (!this.gameStarted) {
+                terminalStore.clearHistory();
+            }
+            
+            terminalStore.addLine("output", `【${t('level')}${level}】${levelData.title}`);
+            terminalStore.addLine("output", levelData.description);
+            if (levelData.objectives) {
+                terminalStore.addLine("output", `\n${t('objectives')}`);
+                levelData.objectives.forEach(obj => {
+                    terminalStore.addLine("output", `- ${obj}`);
+                });
+            }
         },
 
         completeTask(taskId: string) {
