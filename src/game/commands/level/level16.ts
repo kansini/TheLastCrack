@@ -1,7 +1,7 @@
 import {createApp, h} from "vue";
 import type {Command} from "@/types/terminal";
 import {useGameStore} from "@/stores/game";
-import PersonnelFile from "@/components/PersonnelFile.vue";
+import PersonnelFile from "@/components/level16/PersonnelFile.vue";
 
 
 const personnelCommand: Command = {
@@ -42,7 +42,7 @@ const personnelCommand: Command = {
 备注: 频繁出入机房
 `;
     }
-}; // level 16
+}; // level16 16
 
 interface PersonnelData {
     id: string;

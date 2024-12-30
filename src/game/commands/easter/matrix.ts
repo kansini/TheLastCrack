@@ -1,7 +1,7 @@
 import type { Command } from '@/types/terminal';
 import { useTerminalStore } from '@/stores/terminal';
 import { createApp, h } from 'vue';
-import MatrixEffect from '@/components/MatrixEffect.vue';
+import MatrixEffect from '@/components/easter/MatrixEffect.vue';
 
 // Matrix 效果命令
 export const matrixCommand: Command = {

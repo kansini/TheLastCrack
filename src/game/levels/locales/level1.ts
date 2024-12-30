@@ -26,7 +26,7 @@ export const level1Locales: LevelLocales = {
   },
   en: {
     title: 'Terminal Basics',
-    description: 'Welcome to the Hacker Simulator. In this level, you will learn basic terminal commands.',
+    description: 'Welcome to the Hacker Simulator. In this level16, you will learn basic terminal commands.',
     objectives: [
       'Use ls command to view files in current directory',
       'Use cat command to read welcome.txt',
@@ -44,7 +44,7 @@ export const level1Locales: LevelLocales = {
       'day1.txt': 'Today is my first day, still getting used to this system.\nMentor said to pay special attention to hidden files...',
       'reminder.txt': 'Notes:\n1. Check all possible locations\n2. Look for special hints in files\n3. Record found passwords',
       'basic_commands.md': '# Basic Command Usage\n\nls: list files and directories\n  -a: show all files (including hidden)\n  -l: show detailed info\n\ncd: change directory\n  cd ..: go to parent directory\n  cd ~: go to home directory',
-      'tips.txt': 'Tips:\n- Commands are case sensitive\n- Use Tab key to auto-complete commands and filenames\n- Use arrow keys to view command history\n- Use unlock <password> to unlock next level'
+      'tips.txt': 'Tips:\n- Commands are case sensitive\n- Use Tab key to auto-complete commands and filenames\n- Use arrow keys to view command history\n- Use unlock <password> to unlock next level16'
     }
   }
 }; 

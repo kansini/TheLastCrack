@@ -65,9 +65,9 @@
 
 <script setup lang="ts">
 import {ref, onMounted, nextTick, onUnmounted, computed} from "vue"
-import Modal from "./Modal.vue"
+import Modal from "../kits/Modal.vue"
 import * as THREE from "three"
-import { useSuspectsStore } from '@/stores/game'
+import { useSuspectsStore } from '@/stores/game.js'
 
 const props = defineProps<{
   targetAudio: string

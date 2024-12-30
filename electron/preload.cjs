@@ -6,4 +6,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   close: () => ipcRenderer.send('window-close'),
   toggleFullscreen: () => ipcRenderer.send('toggle-fullscreen'),
   onWindowResize: (callback) => ipcRenderer.on('window-resize', callback)
+})
+
+contextBridge.exposeInMainWorld('systemAPI', {
+  getSystemVolume: () => ipcRenderer.invoke('get-system-volume'),
+  setSystemVolume: (volume) => ipcRenderer.send('set-system-volume', volume)
 }) 

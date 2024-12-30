@@ -1,7 +1,7 @@
 import { useTerminalStore } from "@/stores/terminal";
 import { useGameStore } from "@/stores/game";
 import { createApp, h } from 'vue';
-import ConfettiEffect from '@/components/ConfettiEffect.vue';
+import ConfettiEffect from '@/components/easter/ConfettiEffect.vue';
 
 // 打字机效果
 const typewriterEffect = async (terminalStore: any, text: string, delay: number = 50) => {

@@ -26,11 +26,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useLanguageStore } from '@/stores/language';
-import { useSaveStore } from '@/stores/save';
-import { useGameStore } from '@/stores/game';
+import { useLanguageStore } from '@/stores/language.ts';
+import { useSaveStore } from '@/stores/save.ts';
+import { useGameStore } from '@/stores/game.ts';
 import { getCurrentLevelData } from '@/game/levels';
-import Modal from './Modal.vue';
+import Modal from '../kits/Modal.vue';
 
 defineProps<{
   visible: boolean;

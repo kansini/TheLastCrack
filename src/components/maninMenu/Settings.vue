@@ -81,6 +81,29 @@
               <label>{{ t('scrollbarColor') }}</label>
               <input type="color" v-model="settings.scrollbarColor"/>
             </div>
+            <div class="setting-item">
+              <label>{{ t('audio') }}</label>
+              <div class="toggle">
+                <input 
+                  type="checkbox"
+                  :checked="settings.soundEnabled"
+                />
+                <span class="slider" @click="toggleSound"></span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label>{{ t('volume') }}</label>
+              <input 
+                type="range"
+                :value="settings.soundVolume"
+                min="0"
+                max="1"
+                step="0.1"
+                @input="handleVolumeChange"
+                :style="{ '--range-progress': `${(settings.soundVolume || 0) * 100}%` }"
+              />
+              <span class="value">{{ Math.round((settings.soundVolume || 0) * 100) }}%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -95,8 +118,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useLanguageStore } from '@/stores/language';
-import Modal from './Modal.vue';
+import { useLanguageStore } from '@/stores/language.ts';
+import Modal from '../kits/Modal.vue';
 
 const props = defineProps<{
   visible: boolean
@@ -109,7 +132,7 @@ const emit = defineEmits<{
 const languageStore = useLanguageStore();
 const t = computed(() => languageStore.t);
 
-// 恢复原来的默认设置
+// 修改默认设置中的音量值
 const defaultSettings = {
   backgroundColor: '#000000',
   opacity: 1,
@@ -119,7 +142,9 @@ const defaultSettings = {
   caretColor: '#33ff3b',
   scrollbarColor: '#003344',
   fontSize: 14,
-  outputFontSize: 16
+  outputFontSize: 16,
+  soundEnabled: true,
+  soundVolume: 1.0
 };
 
 const settings = ref({ ...defaultSettings });
@@ -143,15 +168,44 @@ watch(() => props.visible, (newVisible) => {
 
 // 更新设置到 DOM
 const updateSettings = () => {
-  const bgColor = settings.value.backgroundColor + Math.round(settings.value.opacity * 255).toString(16).padStart(2, '0');
-  document.documentElement.style.setProperty('--terminal-bg', bgColor);
-  document.documentElement.style.setProperty('--terminal-text', settings.value.textColor);
-  document.documentElement.style.setProperty('--terminal-output-text', settings.value.outputTextColor);
-  document.documentElement.style.setProperty('--terminal-prompt-color', settings.value.promptColor);
-  document.documentElement.style.setProperty('--terminal-caret-color', settings.value.caretColor);
-  document.documentElement.style.setProperty('--terminal-scrollbar-color', settings.value.scrollbarColor);
-  document.documentElement.style.setProperty('--terminal-font-size', `${settings.value.fontSize}px`);
-  document.documentElement.style.setProperty('--terminal-output-font-size', `${settings.value.outputFontSize}px`);
+  try {
+    const currentSettings = settings.value;
+    
+    // 背景颜色和透明度
+    const opacity = Math.max(0, Math.min(1, currentSettings.opacity || defaultSettings.opacity));
+    const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, '0');
+    const bgColor = `${currentSettings.backgroundColor || defaultSettings.backgroundColor}${opacityHex}`;
+
+    // 更新基本设置
+    document.documentElement.style.setProperty('--terminal-bg', bgColor);
+    document.documentElement.style.setProperty('--terminal-text', currentSettings.textColor || defaultSettings.textColor);
+    document.documentElement.style.setProperty('--terminal-output-text', currentSettings.outputTextColor || defaultSettings.outputTextColor);
+    document.documentElement.style.setProperty('--terminal-prompt-color', currentSettings.promptColor || defaultSettings.promptColor);
+    document.documentElement.style.setProperty('--terminal-caret-color', currentSettings.caretColor || defaultSettings.caretColor);
+    document.documentElement.style.setProperty('--terminal-scrollbar-color', currentSettings.scrollbarColor || defaultSettings.scrollbarColor);
+    document.documentElement.style.setProperty('--terminal-font-size', `${currentSettings.fontSize || defaultSettings.fontSize}px`);
+    document.documentElement.style.setProperty('--terminal-output-font-size', `${currentSettings.outputFontSize || defaultSettings.outputFontSize}px`);
+
+    // 更新音效设置
+    const soundEnabled = currentSettings.soundEnabled ?? defaultSettings.soundEnabled;
+    const soundVolume = currentSettings.soundVolume ?? defaultSettings.soundVolume;
+    
+    document.documentElement.style.setProperty('--sound-enabled', soundEnabled ? '1' : '0');
+    document.documentElement.style.setProperty('--sound-volume', soundVolume.toString());
+
+    // 更新所有音频元素
+    const audioElements = document.getElementsByTagName('audio');
+    Array.from(audioElements).forEach(audio => {
+      if (audio) {
+        audio.volume = soundVolume;
+        if (!soundEnabled) {
+          audio.pause();
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error updating settings:', error);
+  }
 };
 
 const closeModal = () => {
@@ -183,6 +237,33 @@ const updateRangeProgress = (e: Event) => {
   const val = parseFloat(input.value);
   const percentage = ((val - min) / (max - min)) * 100;
   input.style.setProperty('--range-progress', `${percentage}%`);
+};
+
+// 修改音效开关处理函数
+const toggleSound = (e: Event) => {
+  e.preventDefault(); // 阻止默认行为
+  const target = e.target as HTMLInputElement;
+  const newValue = !settings.value.soundEnabled; // 直接取反当前值
+  
+  settings.value = {
+    ...settings.value,
+    soundEnabled: newValue
+  };
+  
+  updateSettings();
+  localStorage.setItem('terminalSettings', JSON.stringify(settings.value));
+};
+
+// 添加音量变化处理函数
+const handleVolumeChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const newVolume = parseFloat(target.value);
+  settings.value = {
+    ...settings.value,
+    soundVolume: newVolume
+  };
+  updateSettings();
+  updateRangeProgress(e);
 };
 
 onMounted(() => {
@@ -297,8 +378,8 @@ onMounted(() => {
 
       .toggle {
         position: relative;
-        width: 48px;
-        height: 24px;
+        width: 40px;
+        height: 20px;
 
         input {
           opacity: 0;
@@ -309,7 +390,7 @@ onMounted(() => {
             background: $primary-color;
 
             &:before {
-              transform: translateX(24px);
+              transform: translateX(20px);
             }
           }
         }
@@ -323,13 +404,13 @@ onMounted(() => {
           bottom: 0;
           background: rgba($primary-color, 0.2);
           transition: 0.3s;
-          border-radius: 24px;
+          border-radius: 20px;
 
           &:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 16px;
+            width: 16px;
             left: 2px;
             bottom: 2px;
             background: white;

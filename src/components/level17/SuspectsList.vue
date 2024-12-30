@@ -45,8 +45,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import Modal from "./Modal.vue"
-import { useSuspectsStore } from '@/stores/game'
+import Modal from "../kits/Modal.vue"
+import { useSuspectsStore } from '@/stores/game.ts'
 
 const suspectsStore = useSuspectsStore()
 const isVisible = ref(false)

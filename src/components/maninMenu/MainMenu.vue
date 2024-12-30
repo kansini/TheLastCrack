@@ -109,9 +109,9 @@
 
 <script setup lang="ts">
 import {ref, computed, onMounted, onUnmounted} from "vue";
-import {useGameStore} from "@/stores/game";
-import {useSaveStore} from "@/stores/save";
-import {useLanguageStore} from "@/stores/language";
+import {useGameStore} from "@/stores/game.ts";
+import {useSaveStore} from "@/stores/save.ts";
+import {useLanguageStore} from "@/stores/language.ts";
 // import {getCurrentLevelData} from "@/game/levels";
 import Tutorial from "./Tutorial.vue";
 import About from "./About.vue";
@@ -136,7 +136,7 @@ const t = computed(() => languageStore.t);
 let uptimeInterval: number;
 
 // 添加音效相关代码
-const buttonSound = new URL("../assets/audio/button.wav", import.meta.url).href;
+const buttonSound = new URL("../../assets/audio/button.wav", import.meta.url).href;
 const buttonSoundRef = ref<HTMLAudioElement>();
 
 // 添加音频相关的 ref
@@ -155,7 +155,7 @@ onMounted(() => {
   }, 1000);
 
   // 初始化背景音乐
-  const bgmUrl = new URL("../assets/audio/bgm.mp3", import.meta.url).href;
+  const bgmUrl = new URL("../../assets/audio/bgm.mp3", import.meta.url).href;
   bgmRef.value = new Audio(bgmUrl);
   if (bgmRef.value) {
     bgmRef.value.volume = 0.3;

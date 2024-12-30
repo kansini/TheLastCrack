@@ -41,8 +41,8 @@ class Star {
     this.z = Math.random() * 2000;
     this.size = Math.random() < 1 ?
       Math.random() * 0.8 + 0.1 :
-      Math.random() * 1.5 + 2;
-    this.speed = this.size * 2;
+      Math.random() * 1.2 + 2;
+    this.speed = this.size * 2.5;
     this.brightness = Math.min(1, this.size * 0.4);
     this.color = Math.random() > 0.7 ? 'rgba(135, 206, 235, ' : 'rgba(255, 255, 255, ';
   }
@@ -73,7 +73,7 @@ class Star {
 
     ctx.beginPath();
     ctx.fillStyle = gradient;
-    ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+    ctx.arc(x, y, size * 2, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.beginPath();
@@ -120,7 +120,7 @@ onMounted(() => {
 
   // 根据屏幕大小调整星星数量
   const starCount = Math.floor((width * height) / 2000);
-  const stars = initStars(width, height, Math.max(1500, starCount));
+  const stars = initStars(width, height, Math.max(6000, starCount));
   animate(ctx, width, height, stars);
 
   // 监听窗口大小变化

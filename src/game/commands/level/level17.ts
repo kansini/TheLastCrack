@@ -1,9 +1,9 @@
 import {Command} from "@/types/terminal";
 import {useGameStore} from "@/stores/game";
 import {createApp, h} from "vue";
-import VoiceprintAnalyzer from "@/components/VoiceprintAnalyzer.vue";
-import FingerprintAnalyzer from "@/components/FingerprintAnalyzer.vue";
-import SuspectsList from "@/components/SuspectsList.vue";
+import VoiceprintAnalyzer from "@/components/level17/VoiceprintAnalyzer.vue";
+import FingerprintAnalyzer from "@/components/level17/FingerprintAnalyzer.vue";
+import SuspectsList from "@/components/level17/SuspectsList.vue";
 
 const voiceprintCommand: Command = {
     name: "voiceprint",

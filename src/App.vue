@@ -15,7 +15,7 @@ import {ref, onMounted} from "vue";
 import {useGameStore} from "@/stores/game";
 import {useSaveStore} from "@/stores/save";
 import Terminal from "@/components/Terminal.vue";
-import MainMenu from "@/components/MainMenu.vue";
+import MainMenu from "@/components/maninMenu/MainMenu.vue";
 import LoadingScreen from "@/components/LoadingScreen.vue";
 
 const gameStore = useGameStore();

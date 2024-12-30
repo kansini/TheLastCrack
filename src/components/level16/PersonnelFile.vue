@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import Modal from "./Modal.vue";
+import Modal from "../kits/Modal.vue";
 import {computed, ref, onMounted} from "vue"
 
 interface PersonnelData {

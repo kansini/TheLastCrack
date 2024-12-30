@@ -17,7 +17,7 @@
         <div class="map">
           <img
               ref="mapImageRef"
-              src="../assets/img/map.jpg"
+              src="../../assets/img/map.jpg"
               alt="城市地图"
               @load="handleImageLoad"
               style="width: 100%; height: 100%; object-fit: cover;"
@@ -100,8 +100,8 @@
 
 <script setup lang="ts">
 import {ref, computed, onMounted} from "vue"
-import Modal from "./Modal.vue"
-import {useGameStore} from "@/stores/game"
+import Modal from "../kits/Modal.vue"
+import {useGameStore} from "@/stores/game.js"
 
 const props = defineProps<{
   onClose: () => void
@@ -282,7 +282,7 @@ onMounted(() => {
       position: relative;
       width: 100%;
       height: 100%;
-      background: url("../assets/img/map.jpg") no-repeat center;
+      background: url("../../assets/img/map.jpg") no-repeat center;
       background-size: cover;
 
       img {

@@ -31,7 +31,7 @@ export const level3Locales: LevelLocales = {
   },
   en: {
     title: 'Permission Key',
-    description: 'In this level, you will learn how to handle file permissions and find hidden keys. The system administrator has left clues in different directories.',
+    description: 'In this level16, you will learn how to handle file permissions and find hidden keys. The system administrator has left clues in different directories.',
     objectives: [
       'Explore system directory structure',
       'Collect scattered clues',
@@ -48,7 +48,7 @@ export const level3Locales: LevelLocales = {
       'Combine key in XXXX-XXXX format (HACK-0401)'
     ],
     fileContents: {
-      'readme.txt': 'System security level has been increased.\nAll important files require proper_key to access.\nHints:\n1. Check system logs for key format\n2. Read personal notes for key content\n3. Pay attention to hidden files',
+      'readme.txt': 'System security level16 has been increased.\nAll important files require proper_key to access.\nHints:\n1. Check system logs for key format\n2. Read personal notes for key content\n3. Pay attention to hidden files',
       'permissions.md': 'File permissions explanation:\n- r: read permission\n- w: write permission\n- x: execute permission\n\nImportant note:\n1. First part of the key is a common hacker term\n2. Use ls -a command to view hidden files',
       'access_log.txt': 'Access records:\n[WARNING] Unauthorized access attempt\n[HINT] Key format: XXXX-XXXX\n[HINT] Second part is a 4-digit number, looks like a date\n[LOG] System installation date: 04/01',
       'protected_data.enc': 'File encrypted.\nNeeds complete key to access.\nHint: The two parts of the key represent:\n1. A hacker action (mentioned in diary)\n2. System installation date (in logs)',

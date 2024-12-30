@@ -78,11 +78,11 @@ const translations: Translation = {
   },
   commandLevel: {
     zh: '显示当前关卡信息',
-    en: 'Display current level information'
+    en: 'Display current level16 information'
   },
   commandUnlock: {
     zh: '使用密码解锁下一关',
-    en: 'Use password to unlock next level'
+    en: 'Use password to unlock next level16'
   },
   gameProgress: {
     zh: '游戏进度',
@@ -106,7 +106,7 @@ const translations: Translation = {
   },
   tip1: {
     zh: '仔细阅读每一关的说明和提示',
-    en: 'Read carefully the instructions and hints for each level'
+    en: 'Read carefully the instructions and hints for each level16'
   },
   tip2: {
     zh: '注意观察文件和目录的命名特征',
@@ -268,6 +268,14 @@ const translations: Translation = {
     zh: '其它设置',
     en: 'other setting'
   },
+  audio: {
+    zh: '启用音效',
+    en: 'Enable Sound'
+  },
+  volume: {
+    zh: '音量',
+    en: 'Volume'
+  },
   opacity: {
     zh: '背景透明度',
     en: 'Background Opacity'
@@ -310,7 +318,7 @@ const translations: Translation = {
   },
   currentLevel: {
     zh: '当前位于第',
-    en: 'Current level:'
+    en: 'Current level16:'
   },
   level: {
     zh: '关',
@@ -366,7 +374,7 @@ const translations: Translation = {
   },
   unlockDesc: {
     zh: '使用密码解锁下一关',
-    en: 'Use password to unlock next level'
+    en: 'Use password to unlock next level16'
   },
   saveDesc: {
     zh: '保存游戏进度',
@@ -382,7 +390,7 @@ const translations: Translation = {
   },
   levelDesc: {
     zh: '显示当前关卡信息',
-    en: 'Show current level info'
+    en: 'Show current level16 info'
   },
   exitDesc: {
     zh: '返回主菜单',

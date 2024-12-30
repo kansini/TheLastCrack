@@ -26,7 +26,7 @@ export const level2Locales: LevelLocales = {
   },
   en: {
     title: 'Password Cracking',
-    description: 'In this level, you need to learn how to crack simple encrypted messages.',
+    description: 'In this level16, you need to learn how to crack simple encrypted messages.',
     objectives: [
       'Find the encrypted message',
       'Use decryption tool to crack the password',
@@ -38,7 +38,7 @@ export const level2Locales: LevelLocales = {
       'The password is in the encrypted text'
     ],
     fileContents: {
-      'encrypted.txt': 'Pme!Gmppe!\nThis text has been simply encrypted, each letter shifted by one position...\nDecrypt this text and use the result as password to unlock next level.',
+      'encrypted.txt': 'Pme!Gmppe!\nThis text has been simply encrypted, each letter shifted by one position...\nDecrypt this text and use the result as password to unlock next level16.',
       'readme.md': 'Decryption tool instructions:\nUse decode <text> command to try decrypting text',
       'examples.txt': 'Encryption examples:\nHello -> Ifmmp\nWorld -> Xpsme\n\nSee the pattern?',
       'crypto_basics.txt': 'Caesar cipher is one of the most basic encryption methods,\nit shifts each letter by a fixed number of positions.\nFor example: shift each letter forward by 1 position.',

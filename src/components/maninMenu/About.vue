@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import {useLanguageStore} from "@/stores/language";
-import Modal from "./Modal.vue";
+import {useLanguageStore} from "@/stores/language.ts";
+import Modal from "../kits/Modal.vue";
 import {computed} from "vue";
 
 defineProps<{

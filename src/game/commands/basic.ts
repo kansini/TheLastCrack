@@ -5,8 +5,8 @@ import {useTerminalStore} from "@/stores/terminal";
 import {useLanguageStore} from "@/stores/language";
 import {showGameComplete} from "./gameComplete";
 import {createApp, h} from "vue";
-import TrackAnalyzer from "@/components/TrackAnalyzer.vue";
-import CCTVViewer from "@/components/CCTVViewer.vue";
+import TrackAnalyzer from "@/components/level18/TrackAnalyzer.vue";
+import CCTVViewer from "@/components/level18/CCTVViewer.vue";
 
 const helpCommand: Command = {
     name: "help",
@@ -454,7 +454,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 }
                 if (password === "2342_JAMES_WILSON") {
                     gameStore.completeLevel()
-                    return showLevelInfo()
+                    return showGameComplete()
                 }
                 break
 
@@ -464,7 +464,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                     await showGameComplete();
                     return "";
                 }
-            // return "关卡 " + level + " 正在紧张开发中...";
+            // return "关卡 " + level16 + " 正在紧张开发中...";
         }
 
         return "密码错误，请继续寻找线索。";

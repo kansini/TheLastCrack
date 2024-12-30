@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
+const loudness = require('loudness')
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -126,4 +127,22 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
-}) 
+})
+
+ipcMain.handle('get-system-volume', async () => {
+  try {
+    const volume = await loudness.getVolume();
+    return volume / 100;  // 转换为 0-1 范围
+  } catch (error) {
+    console.error('Failed to get system volume:', error);
+    return 1;
+  }
+});
+
+ipcMain.on('set-system-volume', async (_, volume) => {
+  try {
+    await loudness.setVolume(Math.round(volume * 100));
+  } catch (error) {
+    console.error('Failed to set system volume:', error);
+  }
+}); 

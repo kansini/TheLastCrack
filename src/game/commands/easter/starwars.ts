@@ -1,7 +1,7 @@
 import type { Command } from '@/types/terminal';
 import { useTerminalStore } from '@/stores/terminal';
 import { createApp, h } from 'vue';
-import StarWarsEffect from '@/components/StarWarsEffect.vue';
+import StarWarsEffect from '@/components/easter/StarWarsEffect.vue';
 
 // Star Wars 效果命令
 export const starwarsCommand: Command = {

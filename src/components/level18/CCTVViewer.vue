@@ -93,8 +93,8 @@
 
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted, computed} from "vue"
-import Modal from "./Modal.vue"
-import {useGameStore} from "@/stores/game"
+import Modal from "../kits/Modal.vue"
+import {useGameStore} from "@/stores/game.js"
 
 const props = defineProps<{
   cameraId: string
@@ -138,13 +138,13 @@ const videoRef = ref<HTMLVideoElement | null>(null)
 const getSceneVideo = computed(() => {
   switch (props.cameraId) {
     case "01":
-      return new URL("../assets/video/station.mp4", import.meta.url).href
+      return new URL("../../assets/video/station.mp4", import.meta.url).href
     case "02":
-      return new URL("../assets/video/mall.mp4", import.meta.url).href
+      return new URL("../../assets/video/mall.mp4", import.meta.url).href
     case "03":
-      return new URL("../assets/video/park.mp4", import.meta.url).href
+      return new URL("../../assets/video/park.mp4", import.meta.url).href
     case "04":
-      return new URL("../assets/video/residential.mp4", import.meta.url).href
+      return new URL("../../assets/video/residential.mp4", import.meta.url).href
     default:
       return ""
   }
