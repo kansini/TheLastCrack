@@ -242,7 +242,7 @@ const updateRangeProgress = (e: Event) => {
 // 修改音效开关处理函数
 const toggleSound = (e: Event) => {
   e.preventDefault(); // 阻止默认行为
-  const target = e.target as HTMLInputElement;
+  // const target = e.target as HTMLInputElement;
   const newValue = !settings.value.soundEnabled; // 直接取反当前值
   
   settings.value = {

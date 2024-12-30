@@ -57,7 +57,6 @@ export class GameEngine {
       if (output === `ps: ${t('invalidCommand')}` || 
           output === `kill: ${t('invalidCommand')}` || 
           output === `top: ${t('invalidCommand')}`) {
-        // 如果是第4关，这些命令应该可用
         if (currentLevel === 4) {
           return await command.execute(args);
         }
@@ -68,10 +67,10 @@ export class GameEngine {
     }
   }
 
-  getAvailableCommands(): string[] {
-    const gameStore = useGameStore();
-    return Object.keys(getAvailableCommands(gameStore.currentLevel));
-  }
+  // getAvailableCommands(): string[] {
+  //   const gameStore = useGameStore();
+  //   return Object.keys(getAvailableCommands(gameStore.currentLevel));
+  // }
 }
 
 export const gameEngine = new GameEngine(); 

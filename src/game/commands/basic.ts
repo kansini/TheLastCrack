@@ -3,75 +3,43 @@ import {useGameStore} from "@/stores/game";
 import {getCurrentLevelData} from "@/game/levels";
 import {useTerminalStore} from "@/stores/terminal";
 import {useLanguageStore} from "@/stores/language";
+import {basicLocales} from "./locales/basic";
 import {showGameComplete} from "./gameComplete";
 
 const helpCommand: Command = {
     name: "help",
     description: "显示所有可用命令",
     execute: () => {
-        const languageStore = useLanguageStore();
-        const t = languageStore.t;
-        const gameStore = useGameStore();
-        let baseCommands = `${t("availableCommands")}
-  help - ${t("helpDesc")}
-  ls - ${t("lsDesc")}
-  cd <${t("directory")}> - ${t("cdDesc")}
-  cat <${t("file")}> - ${t("catDesc")}
-  clear - ${t("clearDesc")}
-  decode <text> - ${t("decodeDesc")}
-  unlock <${t("password")}> - ${t("unlockDesc")}
-  save <${t("saveName")}> - ${t("saveDesc")}
-  load [ID] - ${t("loadDesc")}
-  deletesave <ID> - ${t("deleteDesc")}
-  level - ${t("levelDesc")}
-  exit - ${t("exitDesc")}`;
-
-        // 根据当前关卡添加特定命令
-        if (gameStore.currentLevel === 6) {
-            baseCommands += `\n
-- ${t("networkAnalysis")}：
-  tcpdump <${t("filter")}> - ${t("tcpdumpDesc")}
-  analyze <${t("file")}> - ${t("analyzeDesc")}`;
-        }
-
-        if (gameStore.currentLevel === 9) {
-            baseCommands += `\n
-- ${t("memoryAnalysis")}：
-  volatility <${t("file")}> - ${t("volatilityDesc")}
-  strings <${t("file")}> - ${t("stringsDesc")}
-  timeline <PID> - ${t("timelineDesc")}`;
-        }
-
-        if (gameStore.currentLevel === 11) {
-            baseCommands += `\n
-- ${t("mailAnalysis")}：
-  mail list - ${t("mailListDesc")}
-  mail read <${t("user")}> - ${t("mailReadDesc")}
-  mail search <${t("keyword")}> - ${t("mailSearchDesc")}
-  mail trash - ${t("mailTrashDesc")}`;
-        }
-
-        if (gameStore.currentLevel === 17) {
-            baseCommands += `\n
-- ${t("voiceprintAnalysis")}：
-  voiceprint <${t("targetAudio")}> <${t("sampleAudio")}> - ${t("voiceprintDesc")}`;
-        }
-
-        return baseCommands;
+        const {currentLanguage} = useLanguageStore();
+        const t = basicLocales[currentLanguage].help;
+        // const gameStore = useGameStore();
+        return `${t.availableCommands}
+  help - ${t.helpDesc}
+  ls - ${t.lsDesc}
+  cd <${t.directory}> - ${t.cdDesc}
+  cat <${t.file}> - ${t.catDesc}
+  clear - ${t.clearDesc}
+  decode <text> - ${t.decodeDesc}
+  unlock <${t.password}> - ${t.unlockDesc}
+  save <${t.saveName}> - ${t.saveDesc}
+  load [ID] - ${t.loadDesc}
+  deletesave <ID> - ${t.deleteDesc}`;
     }
 };
+
 const clearCommand: Command = {
     name: "clear",
-    description: "清除终端屏幕",
+    description: basicLocales.zh.clear.description,
     execute: () => {
         const store = useTerminalStore();
         store.clearHistory();
         return "";
     }
 };
+
 const unlockCommand: Command = {
     name: "unlock",
-    description: "使用密码解锁下一关",
+    description: basicLocales.zh.unlock.description,
     execute: async (args: string[]) => {
         if (!args.length) {
             return "Usage: unlock <password>";
@@ -79,29 +47,28 @@ const unlockCommand: Command = {
 
         const gameStore = useGameStore();
         const terminalStore = useTerminalStore();
+        const { currentLanguage } = useLanguageStore();
+        const t = basicLocales[currentLanguage].unlock;
         const level = gameStore.currentLevel;
         const password = args.join(" ");
 
         const showLevelInfo = () => {
             const nextLevel = level + 1;
             const levelData = getCurrentLevelData(nextLevel);
-            // 重置当前目录到根目录
             terminalStore.setCurrentDirectory("~");
-            return `密码正确！欢迎进入下一关...
+            return `${t.welcome}
 
-【第${nextLevel}关】${levelData.title}
+${t.level.replace('%s', nextLevel.toString())}${levelData.title}
 ${levelData.description}
 
-目标：
-${levelData.objectives.map(obj => "- " + obj).join("\n")}
-
-输入 help 查看可用命令`;
+${t.objectives}
+${levelData.objectives.map(obj => "- " + obj).join("\n")}`;
         };
 
         switch (level) {
             case 1:
                 if (!gameStore.completedTasks.includes("find_secret")) {
-                    return "你还没有找到必要的线索！";
+                    return t.needClue;
                 }
                 if (password.toUpperCase() === "MOON_LIGHT") {
                     gameStore.completeLevel();
@@ -111,7 +78,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 2:
                 if (!gameStore.completedTasks.includes("decode_text")) {
-                    return "你需要先使用 decode 命令解密文本！";
+                    return t.needDecode;
                 }
                 if (password === "Old Flood") {
                     gameStore.completeLevel();
@@ -151,7 +118,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 6:
                 if (!gameStore.completedTasks.includes("system_restore")) {
-                    return "你需要先恢复系统状态！";
+                    return t.needRestore;
                 }
                 if (password === "OlDHong_2077") {
                     gameStore.completeLevel();
@@ -161,7 +128,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 7:
                 if (!gameStore.completedTasks.includes("read_shadow")) {
-                    return "你需要先获取 shadow 文件中的密码！";
+                    return t.needShadow;
                 }
                 if (password === "Pr1v1l3ge_2024") {
                     gameStore.completeLevel();
@@ -171,7 +138,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 8:
                 if (!gameStore.completedTasks.includes("block_leak")) {
-                    return "你需要先阻止数据泄露！";
+                    return t.needBlockLeak;
                 }
                 if (password === "5CHaJ1_2024") {
                     gameStore.completeLevel();
@@ -181,7 +148,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 9:
                 if (!gameStore.completedTasks.includes("find_secret")) {
-                    return "需要先找到隐藏在件中的秘密";
+                    return t.needFindSecret;
                 }
                 if (password === "PjECR0QOS1IeLi@xM@==@2024-12-19") {
                     gameStore.completeLevel();
@@ -191,7 +158,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 10:
                 if (!gameStore.completedTasks.includes("decode_plan")) {
-                    return "你需要先破解加密的信息！";
+                    return t.needDecodePlan;
                 }
                 if (password === "WUCHAJI_2024") {
                     gameStore.completeLevel();
@@ -201,7 +168,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 11:
                 if (!gameStore.completedTasks.includes("decode_secret")) {
-                    return "你需要先破解隐藏的信息！";
+                    return t.needDecodeSecret;
                 }
                 if (password === "KING_ROOK_2024") {
                     gameStore.completeLevel();
@@ -211,7 +178,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
 
             case 12:
                 if (!gameStore.completedTasks.includes("find_data")) {
-                    return "你需要先找到被窃取的数据！";
+                    return t.needFindData;
                 }
                 if (password === "L0G_H4CK_2024") {
                     gameStore.completeLevel();
@@ -220,7 +187,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 break;
             case 13:
                 if (!gameStore.completedTasks.includes("trojan_planted")) {
-                    return "你需要先植入木马程序！";
+                    return t.needTrojan;
                 }
                 if (password === "TheLastCrack") {
                     gameStore.completeLevel();
@@ -231,7 +198,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                 if (!gameStore.completedTasks.includes("find_person") ||
                     !gameStore.completedTasks.includes("check_meeting") ||
                     !gameStore.completedTasks.includes("read_mail")) {
-                    return "你需要先完成所有调查任务！";
+                    return t.needInvestigation;
                 }
                 if (password === "PHOENIX_LQ_1005") {
                     gameStore.completeLevel();
@@ -244,7 +211,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
                     !gameStore.completedTasks.includes("check_service") ||
                     !gameStore.completedTasks.includes("exploit_vuln") ||
                     !gameStore.completedTasks.includes("get_root")) {
-                    return "你需要先完成所有漏洞利用任务！";
+                    return t.needExploit;
                 }
                 if (password === "CVE-2024-9999_20.04.3_22") {
                     gameStore.completeLevel();
@@ -255,8 +222,8 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
             case 16:
                 if (!gameStore.completedTasks.includes("find_command") ||
                     !gameStore.completedTasks.includes("check_files")) {
-                    return "你需要先完成所有档案分析任务！";
-                }   //  || !gameStore.completedTasks.includes("verify_password")
+                    return t.needAnalysis;
+                }
                 if (password === "P003_42_RJ") {
                     gameStore.completeLevel();
                     return showLevelInfo();
@@ -266,7 +233,7 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
             case 17:
                 if (!gameStore.completedTasks.includes("match_fingerprint") ||
                     !gameStore.completedTasks.includes("match_voice")) {
-                    return "需要完成所有声纹分析任务！"
+                    return t.needVoiceprint;
                 }
                 if (password === "2342_JAMES_WILSON") {
                     gameStore.completeLevel()
@@ -283,32 +250,33 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}
             // return "关卡 " + level16 + " 正在紧张开发中...";
         }
 
-        return "密码错误，请继续寻找线索。";
+        return t.wrongPassword;
     }
 };
+
 const hintCommand: Command = {
     name: "hint",
-    description: "获取当前关卡的提示（隐藏命令）",
+    description: basicLocales.zh.hint.description,
     execute: () => {
         const gameStore = useGameStore();
-        const level = gameStore.currentLevel;
-        const levelData = getCurrentLevelData(level);
-        const languageStore = useLanguageStore();
-        const t = languageStore.t;
+        const { currentLanguage } = useLanguageStore();
+        const t = basicLocales[currentLanguage].hint;
+        const levelData = getCurrentLevelData(gameStore.currentLevel);
 
-        return `${t("hints")}：\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join("\n")}`;
+        return `${t.available}\n${levelData.hints.map((hint, index) => `${index + 1}. ${hint}`).join("\n")}`;
     }
 };
+
 const decodeCommand: Command = {
     name: "decode",
-    description: "解密文本",
+    description: basicLocales.zh.decode.description,
     execute: (args: string[]) => {
-        const languageStore = useLanguageStore();
-        const t = languageStore.t;
         if (!args.length) {
-            return `${t("invalidUsage")}: decode <text>`;
+            return "Usage: decode <text>";
         }
 
+        const languageStore = useLanguageStore();
+        const t = languageStore.t;
         const gameStore = useGameStore();
         const text = args.join(" ");
 
@@ -331,9 +299,10 @@ const decodeCommand: Command = {
         return `${t("decryptResult")}：${decrypted}`;
     }
 };
+
 const exitCommand: Command = {
     name: "exit",
-    description: "返回主菜单",
+    description: basicLocales.zh.exit.description,
     execute: () => {
         const gameStore = useGameStore();
         const terminalStore = useTerminalStore();
@@ -348,25 +317,27 @@ const exitCommand: Command = {
         return "";  // 返回空字符串，不显示任何提示
     }
 };
+
 const levelCommand: Command = {
     name: "level",
-    description: "显示当前关卡信息",
+    description: basicLocales.zh.level.description,
     execute: () => {
         const gameStore = useGameStore();
+        const { currentLanguage } = useLanguageStore();
+        const t = basicLocales[currentLanguage].level;
         const levelData = getCurrentLevelData(gameStore.currentLevel);
 
-        return `【第${gameStore.currentLevel}关】${levelData.title}
+        return `${t.currentLevel}${gameStore.currentLevel}】${levelData.title}
 ${levelData.description}
 
-目标：
-${levelData.objectives.map(obj => "- " + obj).join("\n")}
-
-输入 help 查看可用命令`;
+${t.objectives}
+${levelData.objectives.map(obj => "- " + obj).join("\n")}`;
     }
 };
+
 const gotoCommand: Command = {
     name: "goto",
-    description: "跳转到指定关卡（仅开发环境可用）",
+    description: basicLocales.zh.goto.description,
     execute: (args: string[]) => {
         // 检查是否为开发环境
         if (!import.meta.env.DEV) {
@@ -395,15 +366,16 @@ const gotoCommand: Command = {
         // 设置新关卡
         gameStore.setLevel(level);
 
+        const { currentLanguage } = useLanguageStore();
+        const t = basicLocales[currentLanguage].goto;
         const levelData = getCurrentLevelData(level);
-        return `已跳转到第${level}关：${levelData.title}
+
+        return `${t.jumpedTo.replace('%s', level.toString())}${levelData.title}
 
 ${levelData.description}
 
-目标：
-${levelData.objectives.map(obj => "- " + obj).join("\n")}
-
-输入 help 查看可用命令`;
+${t.objectives}
+${levelData.objectives.map(obj => "- " + obj).join("\n")}`;
     }
 };
 
