@@ -604,10 +604,10 @@ onUnmounted(() => {
   min-width: 0;
   padding: 0 4px;
   font-size: 12px;
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid rgba(0, 255, 0, 0.2);
+  background: rgba(20, 20, 20, 0.1);
+  border: 1px solid rgba($primary-color, 0.2);
   border-radius: 6px;
-  color: #00ff00;
+  color: $primary-color;
   cursor: pointer;
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -794,9 +794,6 @@ onUnmounted(() => {
   text-transform: lowercase;
   font-size: 12px;
   border-radius: 6px;
-  background: #2c2c2c;
-  border: 1px solid #444;
-
   &.esc {
     background: #1c1c1c;
   }
