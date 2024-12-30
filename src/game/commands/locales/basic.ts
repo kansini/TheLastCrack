@@ -68,6 +68,10 @@ export const basicLocales: Record<Language, {
     jumpedTo: string;
     objectives: string;
   };
+  keyboard: {
+    description: string;
+    opened: string;
+  };
 }> = {
   zh: {
     help: {
@@ -136,6 +140,10 @@ export const basicLocales: Record<Language, {
       description: "跳转到指定关卡",
       jumpedTo: "已跳转到第%s关：",
       objectives: "目标："
+    },
+    keyboard: {
+      description: "打开虚拟键盘",
+      opened: "虚拟键盘已打开"
     }
   },
   en: {
@@ -205,6 +213,10 @@ export const basicLocales: Record<Language, {
       description: "Jump to specified level",
       jumpedTo: "Jumped to level %s:",
       objectives: "Objectives:"
+    },
+    keyboard: {
+      description: "Open virtual keyboard",
+      opened: "Virtual keyboard opened"
     }
   }
 }; 

@@ -302,11 +302,16 @@ const decodeCommand: Command = {
 
 const exitCommand: Command = {
     name: "exit",
-    description: basicLocales.zh.exit.description,
-    execute: () => {
+    description: "Exit the terminal",
+    // usage: "exit",
+    execute: async () => {
         const gameStore = useGameStore();
         const terminalStore = useTerminalStore();
 
+        // 关闭虚拟键盘并保存状态
+        terminalStore.showKeyboard = false;
+        localStorage.setItem('terminalSettings', JSON.stringify({ showKeyboard: false }));
+        
         // 清空终端历史
         terminalStore.clearHistory();
         // 重置当前目录
@@ -314,7 +319,7 @@ const exitCommand: Command = {
         // 退出游戏态
         gameStore.exitGame();
 
-        return "";  // 返回空字符串，不显示任何提示
+        return "Exiting terminal...";
     }
 };
 
@@ -379,6 +384,19 @@ ${levelData.objectives.map(obj => "- " + obj).join("\n")}`;
     }
 };
 
+const keyboardCommand: Command = {
+    name: "keyboard",
+    description: basicLocales.zh.keyboard.description,
+    execute: () => {
+        const terminalStore = useTerminalStore();
+        terminalStore.showKeyboard = true;
+        
+        const { currentLanguage } = useLanguageStore();
+        const t = basicLocales[currentLanguage].keyboard;
+        return t.opened;
+    }
+};
+
 export const basicCommands: { [key: string]: Command } = {
     help: helpCommand,
     clear: clearCommand,
@@ -388,4 +406,5 @@ export const basicCommands: { [key: string]: Command } = {
     level : levelCommand,
     hint : hintCommand,
     goto : gotoCommand,
+    keyboard: keyboardCommand,
 };

@@ -1,58 +1,58 @@
 <template>
   <Modal
-    transitionName="zoom"
-    :visible="visible"
-    :title="t('settingsTitle')"
-    @close="closeModal"
+      transitionName="zoom"
+      :visible="visible"
+      :title="t('settingsTitle')"
+      @close="closeModal"
   >
     <div class="settings">
       <div class="settings-container">
         <!-- 左侧列 -->
         <div class="settings-column">
           <div class="settings-section">
-            <h3>{{ t('terminalColors') }}</h3>
+            <h3>{{ t("terminalColors") }}</h3>
             <div class="setting-item">
-              <label>{{ t('backgroundColor') }}</label>
+              <label>{{ t("backgroundColor") }}</label>
               <input type="color" v-model="settings.backgroundColor"/>
             </div>
             <div class="setting-item">
-              <label>{{ t('textColor') }}</label>
+              <label>{{ t("textColor") }}</label>
               <input type="color" v-model="settings.textColor"/>
             </div>
             <div class="setting-item">
-              <label>{{ t('outputTextColor') }}</label>
+              <label>{{ t("outputTextColor") }}</label>
               <input type="color" v-model="settings.outputTextColor"/>
             </div>
           </div>
 
           <div class="settings-section">
-            <h3>{{ t('terminalStyle') }}</h3>
+            <h3>{{ t("terminalStyle") }}</h3>
             <div class="setting-item">
-              <label>{{ t('fontSize') }}</label>
-              <input type="range" 
-                     v-model="settings.fontSize" 
-                     min="12" 
+              <label>{{ t("fontSize") }}</label>
+              <input type="range"
+                     v-model="settings.fontSize"
+                     min="12"
                      max="24"
                      @input="updateRangeProgress"
                      :style="{ '--range-progress': `${((settings.fontSize - 12) / 12) * 100}%` }"/>
               <span class="value">{{ settings.fontSize }}px</span>
             </div>
             <div class="setting-item">
-              <label>{{ t('outputFontSize') }}</label>
-              <input type="range" 
-                     v-model="settings.outputFontSize" 
-                     min="12" 
+              <label>{{ t("outputFontSize") }}</label>
+              <input type="range"
+                     v-model="settings.outputFontSize"
+                     min="12"
                      max="24"
                      @input="updateRangeProgress"
                      :style="{ '--range-progress': `${((settings.outputFontSize - 12) / 12) * 100}%` }"/>
               <span class="value">{{ settings.outputFontSize }}px</span>
             </div>
             <div class="setting-item">
-              <label>{{ t('opacity') }}</label>
-              <input type="range" 
-                     v-model="settings.opacity" 
-                     min="0" 
-                     max="1" 
+              <label>{{ t("opacity") }}</label>
+              <input type="range"
+                     v-model="settings.opacity"
+                     min="0"
+                     max="1"
                      step="0.1"
                      @input="updateRangeProgress"
                      :style="{ '--range-progress': `${settings.opacity * 100}%` }"/>
@@ -64,103 +64,112 @@
         <!-- 右侧列 -->
         <div class="settings-column">
           <div class="settings-section">
-            <h3>{{ t('promptStyle') }}</h3>
+            <h3>{{ t("promptStyle") }}</h3>
             <div class="setting-item">
-              <label>{{ t('promptColor') }}</label>
+              <label>{{ t("promptColor") }}</label>
               <input type="color" v-model="settings.promptColor"/>
             </div>
             <div class="setting-item">
-              <label>{{ t('caretColor') }}</label>
+              <label>{{ t("caretColor") }}</label>
               <input type="color" v-model="settings.caretColor"/>
             </div>
           </div>
 
           <div class="settings-section">
-            <h3>{{ t('others') }}</h3>
+            <h3>{{ t("others") }}</h3>
             <div class="setting-item">
-              <label>{{ t('scrollbarColor') }}</label>
+              <label>{{ t("scrollbarColor") }}</label>
               <input type="color" v-model="settings.scrollbarColor"/>
             </div>
             <div class="setting-item">
-              <label>{{ t('audio') }}</label>
+              <label>{{ t("audio") }}</label>
               <div class="toggle">
-                <input 
-                  type="checkbox"
-                  :checked="settings.soundEnabled"
+                <input
+                    type="checkbox"
+                    :checked="settings.soundEnabled"
                 />
                 <span class="slider" @click="toggleSound"></span>
               </div>
             </div>
             <div class="setting-item">
-              <label>{{ t('volume') }}</label>
-              <input 
-                type="range"
-                :value="settings.soundVolume"
-                min="0"
-                max="1"
-                step="0.1"
-                @input="handleVolumeChange"
-                :style="{ '--range-progress': `${(settings.soundVolume || 0) * 100}%` }"
-              />
-              <span class="value">{{ Math.round((settings.soundVolume || 0) * 100) }}%</span>
+              <label>{{ t("bgm") }}</label>
+              <div class="toggle">
+                <input
+                    type="checkbox"
+                    :checked="bgmEnable"
+                />
+                <span class="slider" @click="toggleBgm"></span>
+              </div>
             </div>
+            <!--            <div class="setting-item">-->
+            <!--              <label>{{ t('volume') }}</label>-->
+            <!--              <input -->
+            <!--                type="range"-->
+            <!--                :value="settings.soundVolume"-->
+            <!--                min="0"-->
+            <!--                max="1"-->
+            <!--                step="0.1"-->
+            <!--                @input="handleVolumeChange"-->
+            <!--                :style="{ '&#45;&#45;range-progress': `${(settings.soundVolume || 0) * 100}%` }"-->
+            <!--              />-->
+            <!--              <span class="value">{{ Math.round((settings.soundVolume || 0) * 100) }}%</span>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
 
       <div class="settings-footer">
-        <button class="btn-reset" @click="resetSettings">{{ t('resetSettings') }}</button>
-        <button class="btn-save" @click="saveSettings">{{ t('saveSettings') }}</button>
+        <button class="btn-reset" @click="resetSettings">{{ t("resetSettings") }}</button>
+        <button class="btn-save" @click="saveSettings">{{ t("saveSettings") }}</button>
       </div>
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { useLanguageStore } from '@/stores/language.ts';
-import Modal from '../kits/Modal.vue';
+import {ref, computed, onMounted, watch} from "vue";
+import {useLanguageStore} from "@/stores/language.ts";
+import Modal from "../kits/Modal.vue";
 
 const props = defineProps<{
   visible: boolean
 }>();
 
-const emit = defineEmits<{
-  (e: 'close'): void
-}>();
+const emit = defineEmits(["close", "toggleBgm"]);
 
 const languageStore = useLanguageStore();
 const t = computed(() => languageStore.t);
 
 // 修改默认设置中的音量值
 const defaultSettings = {
-  backgroundColor: '#000000',
+  backgroundColor: "#000000",
   opacity: 1,
-  textColor: '#33ff3b',
-  outputTextColor: '#36c2ff',
-  promptColor: '#33ff3b',
-  caretColor: '#33ff3b',
-  scrollbarColor: '#003344',
+  textColor: "#33ff3b",
+  outputTextColor: "#36c2ff",
+  promptColor: "#33ff3b",
+  caretColor: "#33ff3b",
+  scrollbarColor: "#003344",
   fontSize: 14,
   outputFontSize: 16,
   soundEnabled: true,
+  bgm: true,
   soundVolume: 1.0
 };
 
-const settings = ref({ ...defaultSettings });
-const originalSettings = ref({ ...defaultSettings });
+const settings = ref({...defaultSettings});
+const originalSettings = ref({...defaultSettings});
 
 // 监听 visible 变化
 watch(() => props.visible, (newVisible) => {
   if (newVisible) {
-    const savedSettings = localStorage.getItem('terminalSettings');
+    const savedSettings = localStorage.getItem("terminalSettings");
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
-      settings.value = { ...parsedSettings };
-      originalSettings.value = { ...parsedSettings };
+      settings.value = {...parsedSettings};
+      originalSettings.value = {...parsedSettings};
     } else {
-      settings.value = { ...defaultSettings };
-      originalSettings.value = { ...defaultSettings };
+      settings.value = {...defaultSettings};
+      originalSettings.value = {...defaultSettings};
     }
     updateSettings();
   }
@@ -170,31 +179,31 @@ watch(() => props.visible, (newVisible) => {
 const updateSettings = () => {
   try {
     const currentSettings = settings.value;
-    
+
     // 背景颜色和透明度
     const opacity = Math.max(0, Math.min(1, currentSettings.opacity || defaultSettings.opacity));
-    const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, '0');
+    const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, "0");
     const bgColor = `${currentSettings.backgroundColor || defaultSettings.backgroundColor}${opacityHex}`;
 
     // 更新基本设置
-    document.documentElement.style.setProperty('--terminal-bg', bgColor);
-    document.documentElement.style.setProperty('--terminal-text', currentSettings.textColor || defaultSettings.textColor);
-    document.documentElement.style.setProperty('--terminal-output-text', currentSettings.outputTextColor || defaultSettings.outputTextColor);
-    document.documentElement.style.setProperty('--terminal-prompt-color', currentSettings.promptColor || defaultSettings.promptColor);
-    document.documentElement.style.setProperty('--terminal-caret-color', currentSettings.caretColor || defaultSettings.caretColor);
-    document.documentElement.style.setProperty('--terminal-scrollbar-color', currentSettings.scrollbarColor || defaultSettings.scrollbarColor);
-    document.documentElement.style.setProperty('--terminal-font-size', `${currentSettings.fontSize || defaultSettings.fontSize}px`);
-    document.documentElement.style.setProperty('--terminal-output-font-size', `${currentSettings.outputFontSize || defaultSettings.outputFontSize}px`);
+    document.documentElement.style.setProperty("--terminal-bg", bgColor);
+    document.documentElement.style.setProperty("--terminal-text", currentSettings.textColor || defaultSettings.textColor);
+    document.documentElement.style.setProperty("--terminal-output-text", currentSettings.outputTextColor || defaultSettings.outputTextColor);
+    document.documentElement.style.setProperty("--terminal-prompt-color", currentSettings.promptColor || defaultSettings.promptColor);
+    document.documentElement.style.setProperty("--terminal-caret-color", currentSettings.caretColor || defaultSettings.caretColor);
+    document.documentElement.style.setProperty("--terminal-scrollbar-color", currentSettings.scrollbarColor || defaultSettings.scrollbarColor);
+    document.documentElement.style.setProperty("--terminal-font-size", `${currentSettings.fontSize || defaultSettings.fontSize}px`);
+    document.documentElement.style.setProperty("--terminal-output-font-size", `${currentSettings.outputFontSize || defaultSettings.outputFontSize}px`);
 
     // 更新音效设置
     const soundEnabled = currentSettings.soundEnabled ?? defaultSettings.soundEnabled;
     const soundVolume = currentSettings.soundVolume ?? defaultSettings.soundVolume;
-    
-    document.documentElement.style.setProperty('--sound-enabled', soundEnabled ? '1' : '0');
-    document.documentElement.style.setProperty('--sound-volume', soundVolume.toString());
+
+    document.documentElement.style.setProperty("--sound-enabled", soundEnabled ? "1" : "0");
+    document.documentElement.style.setProperty("--sound-volume", soundVolume.toString());
 
     // 更新所有音频元素
-    const audioElements = document.getElementsByTagName('audio');
+    const audioElements = document.getElementsByTagName("audio");
     Array.from(audioElements).forEach(audio => {
       if (audio) {
         audio.volume = soundVolume;
@@ -204,29 +213,29 @@ const updateSettings = () => {
       }
     });
   } catch (error) {
-    console.error('Error updating settings:', error);
+    console.error("Error updating settings:", error);
   }
 };
 
 const closeModal = () => {
-  settings.value = { ...originalSettings.value };
+  settings.value = {...originalSettings.value};
   updateSettings();
-  emit('close');
+  emit("close");
 };
 
 const resetSettings = () => {
-  settings.value = { ...defaultSettings };
+  settings.value = {...defaultSettings};
   updateSettings();
-  localStorage.setItem('terminalSettings', JSON.stringify(defaultSettings));
-  originalSettings.value = { ...defaultSettings };
+  localStorage.setItem("terminalSettings", JSON.stringify(defaultSettings));
+  originalSettings.value = {...defaultSettings};
   // emit('close');
 };
 
 const saveSettings = () => {
   updateSettings();
-  localStorage.setItem('terminalSettings', JSON.stringify(settings.value));
-  originalSettings.value = { ...settings.value };
-  emit('close');
+  localStorage.setItem("terminalSettings", JSON.stringify(settings.value));
+  originalSettings.value = {...settings.value};
+  emit("close");
 };
 
 // 更新滑块进度
@@ -236,7 +245,7 @@ const updateRangeProgress = (e: Event) => {
   const max = parseFloat(input.max);
   const val = parseFloat(input.value);
   const percentage = ((val - min) / (max - min)) * 100;
-  input.style.setProperty('--range-progress', `${percentage}%`);
+  input.style.setProperty("--range-progress", `${percentage}%`);
 };
 
 // 修改音效开关处理函数
@@ -244,34 +253,40 @@ const toggleSound = (e: Event) => {
   e.preventDefault(); // 阻止默认行为
   // const target = e.target as HTMLInputElement;
   const newValue = !settings.value.soundEnabled; // 直接取反当前值
-  
+
   settings.value = {
     ...settings.value,
     soundEnabled: newValue
   };
-  
+
   updateSettings();
-  localStorage.setItem('terminalSettings', JSON.stringify(settings.value));
+  localStorage.setItem("terminalSettings", JSON.stringify(settings.value));
 };
+
+const bgmEnable = ref(true)
+const toggleBgm = () => {
+  bgmEnable.value = !bgmEnable.value;
+  emit("toggleBgm", bgmEnable.value);
+}
 
 // 添加音量变化处理函数
-const handleVolumeChange = (e: Event) => {
-  const target = e.target as HTMLInputElement;
-  const newVolume = parseFloat(target.value);
-  settings.value = {
-    ...settings.value,
-    soundVolume: newVolume
-  };
-  updateSettings();
-  updateRangeProgress(e);
-};
+// const handleVolumeChange = (e: Event) => {
+//   const target = e.target as HTMLInputElement;
+//   const newVolume = parseFloat(target.value);
+//   settings.value = {
+//     ...settings.value,
+//     soundVolume: newVolume
+//   };
+//   updateSettings();
+//   updateRangeProgress(e);
+// };
 
 onMounted(() => {
-  const savedSettings = localStorage.getItem('terminalSettings');
+  const savedSettings = localStorage.getItem("terminalSettings");
   if (savedSettings) {
     const parsedSettings = JSON.parse(savedSettings);
-    settings.value = { ...parsedSettings };
-    originalSettings.value = { ...parsedSettings };
+    settings.value = {...parsedSettings};
+    originalSettings.value = {...parsedSettings};
   }
   updateSettings();
 });
@@ -334,16 +349,16 @@ onMounted(() => {
         cursor: pointer;
         padding: 0;
         overflow: hidden;
-        
+
         &::-webkit-color-swatch-wrapper {
           padding: 0;
         }
-        
+
         &::-webkit-color-swatch {
           border: none;
           border-radius: 4px;
         }
-        
+
         &::-moz-color-swatch {
           border: none;
           border-radius: 4px;

@@ -17,6 +17,7 @@ import {level15Commands} from "./level/level15";
 import {level16Commands} from "./level/level16";
 import {level17Commands} from "./level/level17";
 import {level18Commands} from "./level/level18";
+import {level19Commands} from "./level/level19";
 
 export const commands: { [key: string]: Command } = {
     ...saveCommands,  // 存档命令
@@ -37,4 +38,5 @@ export const commands: { [key: string]: Command } = {
     ...level16Commands,
     ...level17Commands,
     ...level18Commands,
+    ...level19Commands,
 };

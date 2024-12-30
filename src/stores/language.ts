@@ -269,8 +269,12 @@ const translations: Translation = {
     en: 'other setting'
   },
   audio: {
-    zh: '启用音效',
+    zh: '音效',
     en: 'Enable Sound'
+  },
+  bgm: {
+    zh: '背景音乐',
+    en: 'BGM'
   },
   volume: {
     zh: '音量',

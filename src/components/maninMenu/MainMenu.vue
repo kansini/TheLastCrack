@@ -86,7 +86,11 @@
     <!-- 教程和关于页面 -->
     <Tutorial :visible="showTutorialModal" @close="closeTutorial"/>
     <About :visible="showAboutModal" @close="closeAbout"/>
-    <Settings :visible="showSettingsModal" @close="closeSettings"/>
+    <Settings
+        :visible="showSettingsModal"
+        @close="closeSettings"
+        @toggle-bgm="toggleBgm"
+    />
 
     <!--    <div class="glitch-effects">-->
     <!--      <div class="glitch-line"></div>-->
@@ -97,13 +101,13 @@
     <div class="scan-lines"></div>
 
     <!-- 添加音乐控制按钮 -->
-    <button 
-      @click="toggleBgm" 
-      class="bgm-btn"
-      :class="{ playing: bgmPlaying }"
-    >
-      <span class="icon">{{ bgmPlaying ? '🔊' : '🔈' }}</span>
-    </button>
+<!--    <button-->
+<!--        @click="toggleBgm"-->
+<!--        class="bgm-btn"-->
+<!--        :class="{ playing: bgmPlaying }"-->
+<!--    >-->
+<!--      <span class="icon">{{ bgmPlaying ? "🔊" : "🔈" }}</span>-->
+<!--    </button>-->
   </div>
 </template>
 
@@ -162,7 +166,7 @@ onMounted(() => {
     bgmRef.value.loop = true;
     bgmRef.value.play().catch(() => {
       bgmPlaying.value = false;
-      document.addEventListener('click', startBgm, { once: true });
+      document.addEventListener("click", startBgm, {once: true});
     });
   }
 });
@@ -183,7 +187,7 @@ const toggleLoadGame = () => {
   showSaveList.value = !showSaveList.value;
 };
 
-const version = computed(()=>{
+const version = computed(() => {
   return import.meta.env.VITE_APP_VERSION
 })
 // const loadGame = (saveId: number) => {
@@ -244,27 +248,24 @@ const closeSettings = () => {
 const startBgm = () => {
   if (bgmRef.value && !bgmPlaying.value) {
     bgmRef.value.play()
-      .then(() => {
-        bgmPlaying.value = true;
-      })
-      .catch(err => {
-        console.error('Failed to play BGM:', err);
-      });
+        .then(() => {
+          bgmPlaying.value = true;
+        })
+        .catch(err => {
+          console.error("Failed to play BGM:", err);
+        });
   }
 };
 
 // 切换背景音乐播放状态
-const toggleBgm = () => {
+const toggleBgm = (val: boolean) => {
   if (!bgmRef.value) return;
-  
+  bgmPlaying.value = val
   if (bgmPlaying.value) {
     bgmRef.value.pause();
-    bgmPlaying.value = false;
+
   } else {
     bgmRef.value.play()
-      .then(() => {
-        bgmPlaying.value = true;
-      });
   }
 };
 </script>
@@ -900,7 +901,6 @@ const toggleBgm = () => {
 }
 
 
-
 .central-menu {
   position: relative;
   display: flex;
@@ -1019,5 +1019,4 @@ const toggleBgm = () => {
 }
 
 
-
-</style> 
+</style>

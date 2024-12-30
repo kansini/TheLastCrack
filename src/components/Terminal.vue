@@ -28,16 +28,25 @@
         >
       </div>
     </div>
+
+    <VirtualKeyboard 
+      :visible="terminalStore.showKeyboard"
+      @input="onKeyboardInput"
+      @close="terminalStore.toggleKeyboard(false)"
+      @mousedown.prevent
+      @touchstart.prevent
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, computed, nextTick, onUnmounted} from "vue";
+import {ref, onMounted, computed, nextTick, onUnmounted, watch} from "vue";
 import {useTerminalStore} from "@/stores/terminal";
 import {commands} from "@/game/commands";
 
 
 import {gameEngine} from "@/game/engine/GameEngine";
+import VirtualKeyboard from './kits/VirtualKeyboard.vue'
 
 // 注册命令
 Object.values(commands).forEach(command => {
@@ -184,7 +193,10 @@ onMounted(() => {
     typingSoundRef.value.preload = 'auto';
     typingSoundRef.value.volume = 0.2;
   }
-});
+
+  const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}')
+  terminalStore.showKeyboard = settings.showKeyboard || false;
+})
 
 onUnmounted(() => {
   // 清理音频资源
@@ -198,6 +210,86 @@ onUnmounted(() => {
 // const handleClick = () => {
 //   inputRef.value?.focus();
 // };
+
+const terminalStore = useTerminalStore()
+
+const onKeyboardInput = (value: string | { key: string, modifiers: string[], type: 'shortcut' }) => {
+  if (typeof value === 'string') {
+    // 普通按键输入时才聚焦输入框
+    inputRef.value?.focus();
+    
+    switch(value) {
+      case 'Backspace':
+        inputContent.value = inputContent.value.slice(0, -1);
+        break;
+      case 'Enter':
+        handleCommand();
+        break;
+      default:
+        inputContent.value += value;
+        handleInput({ target: { value: inputContent.value } } as any);
+    }
+  } else if (value.type === 'shortcut') {
+    // 处理组合键
+    const { key, modifiers } = value
+    const commandKey = modifiers.includes('Meta')
+    const optionKey = modifiers.includes('Alt')
+    
+    // 常用组合键处理
+    if (commandKey) {
+      switch(key.toLowerCase()) {
+        case 'k': // Command + K 清屏
+          terminalStore.clearHistory()
+          break
+        case 'c': // Command + C 复制
+          // 如果有选中文本，则复制
+          const selectedText = window.getSelection()?.toString()
+          if (selectedText) {
+            navigator.clipboard.writeText(selectedText)
+            // 不要聚焦输入框，保持文本选中状态
+          } else if (inputContent.value) {
+            // 如果输入框有内容，复制输入框内容
+            navigator.clipboard.writeText(inputContent.value)
+          } else {
+            // 如果没有选中文本且输入框为空，发送中断信号
+            terminalStore.addLine("output", "^C")
+            inputContent.value = ""
+            // 中断后才聚焦输入框
+            inputRef.value?.focus();
+          }
+          break
+        case 'v': // Command + V 粘贴
+          // 粘贴时需要聚焦输入框
+          inputRef.value?.focus();
+          navigator.clipboard.readText().then(text => {
+            if (text) {
+              inputContent.value += text
+              handleInput({ target: { value: inputContent.value } } as any)
+            }
+          }).catch(err => {
+            console.error('Failed to read clipboard:', err)
+          })
+          break
+        case 'l': // Command + L 清屏
+          terminalStore.clearHistory()
+          inputRef.value?.focus();
+          break
+        case 'i': // Command + Option + I
+          if (optionKey) {
+            terminalStore.addLine("output", "Opening developer tools...")
+          }
+          break
+      }
+    }
+  }
+};
+
+// 监听键盘状态变化并保存
+watch(() => terminalStore.showKeyboard, (newValue) => {
+  const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}')
+  settings.showKeyboard = newValue
+  localStorage.setItem('terminalSettings', JSON.stringify(settings))
+})
 </script>
 
 <style lang="scss" scoped>

@@ -9,13 +9,15 @@ interface TerminalState {
   }>;
   currentDirectory: string;
   commandHistory: string[];
+  showKeyboard: boolean;
 }
 
 export const useTerminalStore = defineStore('terminal', {
   state: (): TerminalState => ({
     history: [],
     currentDirectory: '~',
-    commandHistory: []
+    commandHistory: [],
+    showKeyboard: false
   }),
 
   actions: {
@@ -42,6 +44,10 @@ export const useTerminalStore = defineStore('terminal', {
 
     setCommandHistory(history: string[]) {
       this.commandHistory = [...history];
+    },
+
+    toggleKeyboard(show: boolean) {
+      this.showKeyboard = show;
     }
   }
 }); 

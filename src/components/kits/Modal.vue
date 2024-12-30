@@ -1,6 +1,6 @@
 <template>
   <Transition :name="transitionName">
-    <div class="modal-overlay" :style="{zIndex: currentZIndex }" v-if="visible">
+    <div class="modal-overlay" :style="{zIndex: currentZIndex }" v-if="visible" @mousedown.self="handleClose">
 
       <div class="modal-content"
            :style="{ 
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted} from "vue";
+import {useTerminalStore} from "../../stores/terminal";
 
 // 全局 z-index 管理
 let globalZIndex = 1000;
@@ -114,6 +115,15 @@ const onClose = () => {
   emit("close");
 };
 
+// 在模态框关闭时重置键盘状态
+const handleClose = (e: MouseEvent) => {
+  const terminalStore = useTerminalStore();
+  terminalStore.showKeyboard = false;
+  localStorage.setItem('terminalSettings', JSON.stringify({ showKeyboard: false }));
+  if (e.target === e.currentTarget) {
+    emit('close')
+  }
+};
 
 // 在组件挂载时添加全局事件监听
 onMounted(() => {
