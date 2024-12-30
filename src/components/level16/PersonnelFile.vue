@@ -167,8 +167,8 @@ const statusClass = computed(() => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-image: linear-gradient(rgba(255, 46, 46, 0.5) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 46, 46, 0.2) 1px, transparent 1px);
+          background-image: linear-gradient(rgba($primary-color, 0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba($primary-color, 0.1) 1px, transparent 1px);
           background-size: 20px 20px;
           animation: grid 1s linear infinite;
           z-index: 1;

@@ -496,16 +496,15 @@ onUnmounted(() => {
   width: 720px;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.95);
-  padding: 10px;
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid transparent;
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
-  z-index: 99999;
+  z-index: 10000;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
   user-select: none;
-  position: relative;
 
   // 流动光效边框 - 使用标准属性
   &::before {
@@ -580,8 +579,7 @@ onUnmounted(() => {
 .keyboard-container {
   width: 100%;
   max-width: 900px;
-  margin: 0 auto;
-  padding: 8px;
+  padding:0 8px 8px 8px;
 }
 
 .keyboard-row {
@@ -603,7 +601,7 @@ onUnmounted(() => {
   height: 100%;
   min-width: 0;
   padding: 0 4px;
-  font-size: 12px;
+  font-size: 14px;
   background: rgba(20, 20, 20, 0.1);
   border: 1px solid rgba($primary-color, 0.2);
   border-radius: 6px;
@@ -641,7 +639,7 @@ onUnmounted(() => {
   // 点击和激活状态
   &:active,
   &.key-active {
-    transform: translateY(1px);
+    transform: translateY(1px) scale(1.6);
     box-shadow: none;
     background: rgba(40, 40, 40, 0.95);
     border-color: rgba(0, 255, 0, 0.6);
@@ -679,7 +677,7 @@ onUnmounted(() => {
 }
 
 .function-key {
-  font-size: 12px;
+  font-size: 14px;
   background: #111;
 }
 
@@ -691,7 +689,7 @@ onUnmounted(() => {
   .key {
     min-width: 30px;
     height: 35px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .key-wide {
@@ -792,7 +790,7 @@ onUnmounted(() => {
 
 .key {
   text-transform: lowercase;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 6px;
   &.esc {
     background: #1c1c1c;
