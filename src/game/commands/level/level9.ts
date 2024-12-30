@@ -57,7 +57,7 @@ const timelineCommand: Command = {
 4. 关联进程：svchost.exe`;
         }
 
-        return "未找到指定���事件ID";
+        return "未找到指定事件ID";
     }
 };
 

@@ -75,4 +75,10 @@ export const deleteSaveCommand: Command = {
         saveStore.deleteSave(saveId);
         return `存档 #${saveId} 已删除`;
     }
-}; 
+};
+
+export const saveCommands: { [key: string]: Command } = {
+    save: saveCommand,
+    load: loadCommand,
+    deleteSave: deleteSaveCommand,
+};
