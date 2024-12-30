@@ -511,7 +511,7 @@ onUnmounted(() => {
   &::before {
     content: '';
     position: absolute;
-    inset: -1px; // 边框位于元素外部
+    inset: -1px; 
     border-radius: 8px;
     background: linear-gradient(
             90deg,
@@ -525,7 +525,6 @@ onUnmounted(() => {
     z-index: -1;
   }
 
-  // 遮罩层，创建边框效果
   &::after {
     content: '';
     position: absolute;

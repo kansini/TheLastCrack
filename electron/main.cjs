@@ -1,7 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
-const loudness = require('loudness')
+const loudness = (() => {
+  try {
+    return require('loudness')
+  } catch (err) {
+    console.error('Failed to load loudness module:', err)
+    return {
+      getVolume: async () => 100,
+      setVolume: async () => {},
+      getMuted: async () => false,
+      setMuted: async () => {}
+    }
+  }
+})()
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({

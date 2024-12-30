@@ -1,0 +1,22 @@
+{
+  "files": [
+    "dist/**/*",
+    "electron/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "node_modules/loudness/build/Release/",
+      "to": "node_modules/loudness/build/Release/",
+      "filter": ["**/*"]
+    }
+  ],
+  "mac": {
+    "target": ["dmg"],
+    "extraFiles": [
+      {
+        "from": "node_modules/loudness/build/Release/",
+        "to": "Resources/app.asar.unpacked/node_modules/loudness/build/Release/"
+      }
+    ]
+  }
+} 

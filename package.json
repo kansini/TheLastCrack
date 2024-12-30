@@ -15,7 +15,9 @@
     "build:mac-arm": "vite build --mode production && electron-builder --mac --arm64",
     "build:win": "vite build && electron-builder --win --config electron-builder.config.js",
     "build:win-portable": "vite build && electron-builder --win portable --config electron-builder.config.js",
-    "build:win-zip": "vite build && electron-builder --win zip --config electron-builder.config.js"
+    "build:win-zip": "vite build && electron-builder --win zip --config electron-builder.config.js",
+    "rebuild": "electron-rebuild -f -w loudness",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@types/three": "^0.171.0",
