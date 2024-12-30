@@ -1,69 +1,101 @@
-import type { Command } from '@/types/terminal';
-import { useTerminalStore } from '@/stores/terminal';
-import { createApp, h } from 'vue';
-import MatrixEffect from '@/components/easter/MatrixEffect.vue';
+import type { Command } from "@/types/terminal";
+import { useTerminalStore } from "@/stores/terminal";
+import { useLanguageStore } from "@/stores/language";
+import { matrixLocales } from "../locales/matrix";
 
-// Matrix 效果命令
 export const matrixCommand: Command = {
     name: "matrix",
-    description: "??????????",
-    execute: async (args: string[]) => {
-        const store = useTerminalStore();
-        
-        // 解析持续时间参数（秒）
-        let duration = 20;  // 默认20秒
-        if (args.length > 0) {
-            const requestedDuration = parseInt(args[0]);
-            if (!isNaN(requestedDuration) && requestedDuration > 0) {
-                duration = Math.min(Math.max(requestedDuration, 5), 300);  // 限制在5-300秒之间
+    description: "启动黑客帝国特效",
+    execute: () => {
+        const terminalStore = useTerminalStore();
+        const { currentLanguage } = useLanguageStore();
+        const t = matrixLocales[currentLanguage];
+
+        try {
+            // 创建 canvas 元素
+            const canvas = document.createElement('canvas');
+            canvas.id = 'matrix-effect';
+            canvas.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background: black;
+                opacity: 0.9;
+            `;
+            document.body.appendChild(canvas);
+
+            // 设置 canvas 大小
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // 获取绘图上下文
+            const ctx = canvas.getContext('2d');
+            if (!ctx) throw new Error('无法获取 canvas 上下文');
+
+            // 设置字符大小和列数
+            const fontSize = 14;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops: number[] = new Array(columns).fill(1);
+
+            // 绘制函数
+            function draw() {
+                if (!ctx) return;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    // 随机选择字符类型
+                    const charType = Math.random();
+                    let text;
+                    
+                    if (charType < 0.4) {
+                        // 40% 概率显示 0 或 1
+                        text = Math.random() > 0.5 ? '0' : '1';
+                    } else if (charType < 0.7) {
+                        // 30% 概率显示字母
+                        text = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                    } else {
+                        // 30% 概率显示中文字符
+                        text = String.fromCharCode(0x4e00 + Math.floor(Math.random() * 0x9fff - 0x4e00));
+                    }
+
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
             }
+
+            // 开始动画
+            const animationId = setInterval(draw, 33);
+
+            // 添加点击事件监听器来停止动画
+            const stopMatrix = () => {
+                clearInterval(animationId);
+                canvas.remove();
+                window.removeEventListener('resize', resizeCanvas);
+                terminalStore.addLine('output', t.stopText);
+            };
+            canvas.addEventListener('click', stopMatrix);
+
+            terminalStore.addLine('output', t.startText);
+        } catch (error) {
+            terminalStore.addLine('output', t.errorText + error);
         }
 
-        // 逐行显示文字
-        const messages = [
-            "[系统] 正在进入矩阵...",
-            "[系统] Wake up, Neo...",
-            "[系统] The Matrix has you...",
-            "[系统] Follow the white rabbit...",
-            "[系统] Knock, knock, Neo...",
-            `\nMatrix效果将持续 ${duration} 秒...`
-        ];
-
-        // 使用 Promise 逐行显示文字
-        for (const message of messages) {
-            store.addLine("output", message);
-            await new Promise(resolve => setTimeout(resolve, 800));
-        }
-
-        // 等待最后一行显示完毕后再创建 Matrix 效果
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
-        // 创建并挂载 Matrix 效果
-        const matrixContainer = document.createElement('div');
-        document.body.appendChild(matrixContainer);
-        const matrixApp = createApp({
-            render: () => h(MatrixEffect)
-        });
-        
-        // 挂载组件并获取实例
-        const matrixInstance = matrixApp.mount(matrixContainer) as any;
-        
-        // 启动动画
-        if (matrixInstance && typeof matrixInstance.startAnimation === 'function') {
-            matrixInstance.startAnimation();
-        }
-
-        // 指定时间后自动清理
-        setTimeout(() => {
-            if (matrixInstance && typeof matrixInstance.stopAnimation === 'function') {
-                matrixInstance.stopAnimation();
-            }
-            setTimeout(() => {
-                matrixApp.unmount();
-                document.body.removeChild(matrixContainer);
-            }, 500);
-        }, duration * 1000);
-
-        return "";
+        return '';
     }
 }; 

@@ -1,11 +1,15 @@
 import type {Command} from "@/types/terminal";
 import {useTerminalStore} from "@/stores/terminal";
+import {useLanguageStore} from "@/stores/language";
+import {countdownLocales} from "../locales/countdown";
 
 export const countdownCommand: Command = {
     name: "countdown",
     description: "启动倒计时序列",
     execute: () => {
         const terminalStore = useTerminalStore();
+        const {currentLanguage} = useLanguageStore();
+        const t = countdownLocales[currentLanguage];
 
         // 禁用鼠标和键盘
         const disableInteraction = () => {
@@ -56,7 +60,6 @@ export const countdownCommand: Command = {
         // 阻止刷新和关闭页面
         const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
             e.preventDefault();
-            // e.returnValue = "";
             return "";
         };
         window.addEventListener("beforeunload", beforeUnloadHandler);
@@ -64,10 +67,13 @@ export const countdownCommand: Command = {
         // 警告音效
         const playWarningSound = () => {
             try {
+                const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}');
+                if (!settings.soundEnabled) return null;
+
                 const audio = new Audio();
-                // 使用更简单的警告音效
                 audio.src = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgA";
                 audio.loop = true;
+                audio.volume = settings.soundVolume ?? 0.3;
                 const playPromise = audio.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
@@ -77,10 +83,7 @@ export const countdownCommand: Command = {
                 return audio;
             } catch (error) {
                 console.log("Failed to create audio:", error);
-                return {
-                    pause: () => {
-                    } // 提供一个空的 pause 方法
-                };
+                return null;
             }
         };
 
@@ -92,15 +95,15 @@ export const countdownCommand: Command = {
 
         const updateDisplay = () => {
             const display = `
-⚠️ 💣💥 警告：系统即将自毁 💥💣 ⚠️
+${t.warningTitle}
 ================================
 
-         倒计时: ${count} 秒
+         ${t.countdownText.replace('%s', count.toString())}
 
 ================================
-${count <= 5 ? "\n⚠️  💣💥警告：无法中止自毁程序💥💣  ⚠️" : ""}
-${count <= 3 ? "\n⚠️  💣💥警告：系统关键模块已锁定💥💣  ⚠️" : ""}
-${count <= 2 ? "\n⚠️  💣💥警告：正在清除所有数据💥💣  ⚠️" : ""}
+${count <= 5 ? "\n" + t.warningText : ""}
+${count <= 3 ? "\n" + t.criticalText : ""}
+${count <= 2 ? "\n" + t.dataText : ""}
 `;
             terminalStore.clearHistory();
             terminalStore.addLine("output", display, "countdown-warning");
@@ -112,17 +115,14 @@ ${count <= 2 ? "\n⚠️  💣💥警告：正在清除所有数据💥💣  ⚠
 
             if (count <= 0) {
                 clearInterval(interval);
-                warningSound.pause();
+                if (warningSound) warningSound.pause();
                 enableInteraction();
                 window.removeEventListener("beforeunload", beforeUnloadHandler);
 
                 // 恢复正常显示
                 setTimeout(() => {
                     terminalStore.clearHistory();
-                    terminalStore.addLine("output", `
-自毁程序已中止 
-系统恢复正常! 🎉😊🎉😊🎉😊
-`, "countdown-complete");
+                    terminalStore.addLine("output", t.completedText, "countdown-complete");
                 }, 1000);
             }
         }, 1000);

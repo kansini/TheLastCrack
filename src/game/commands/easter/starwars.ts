@@ -1,5 +1,7 @@
 import type { Command } from '@/types/terminal';
 import { useTerminalStore } from '@/stores/terminal';
+import { useLanguageStore } from '@/stores/language';
+import { starwarsLocales } from '../locales/starwars';
 import { createApp, h } from 'vue';
 import StarWarsEffect from '@/components/easter/StarWarsEffect.vue';
 
@@ -9,15 +11,17 @@ export const starwarsCommand: Command = {
     description: "??????????",
     execute: async () => {
         const store = useTerminalStore();
+        const { currentLanguage } = useLanguageStore();
+        const t = starwarsLocales[currentLanguage];
         
         // 显示初始化消息
-        store.addLine("output", `[系统] 很久很久以前，在一个遥远的银河系...`);
+        store.addLine("output", t.initText);
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        store.addLine("output", `[系统] 准备进入超空间跳跃...`);
+        store.addLine("output", t.prepareText);
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        store.addLine("output", `[系统] 愿原力与你同在...`);
+        store.addLine("output", t.forceText);
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         // 创建并挂载 Star Wars 效果
@@ -36,10 +40,10 @@ export const starwarsCommand: Command = {
         app.unmount();
         document.body.removeChild(container);
         
-        store.addLine("output", `[系统] 超空间跳跃结束...`);
+        store.addLine("output", t.endText);
         await new Promise(resolve => setTimeout(resolve, 200));
         
-        store.addLine("output", `[系统] 愿原力与你同在...`);
+        store.addLine("output", t.forceText);
 
         return "";
     }
