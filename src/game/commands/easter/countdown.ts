@@ -56,7 +56,7 @@ export const countdownCommand: Command = {
         // 阻止刷新和关闭页面
         const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
             e.preventDefault();
-            e.returnValue = "";
+            // e.returnValue = "";
             return "";
         };
         window.addEventListener("beforeunload", beforeUnloadHandler);

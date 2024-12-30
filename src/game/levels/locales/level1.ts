@@ -1,4 +1,4 @@
-import {LevelLocales} from "./index.ts"
+import {LevelLocales} from "./index"
 
 export const level1Locales: LevelLocales = {
   zh: {

@@ -38,7 +38,3 @@ export const commands: { [key: string]: Command } = {
     ...level17Commands,
     ...level18Commands,
 };
-
-export const getCommands = () => {
-    return commands;
-};
