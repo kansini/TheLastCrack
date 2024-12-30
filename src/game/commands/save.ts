@@ -2,46 +2,54 @@ import type {Command} from "@/types/terminal";
 import {useSaveStore} from "@/stores/save";
 import {getCurrentLevelData} from "@/game/levels";
 import {useGameStore} from "@/stores/game";
+import {useLanguageStore} from "@/stores/language";
+import {saveLocales} from "./locales/save";
 
 export const saveCommand: Command = {
     name: "save",
-    description: "保存游戏进度",
+    description: saveLocales.zh.save.description,
     execute: (args: string[]) => {
+        const {currentLanguage} = useLanguageStore();
+        const t = saveLocales[currentLanguage].save;
+
         if (!args.length) {
-            return "Usage: save <存档名称>";
+            return t.usage;
         }
 
         const saveStore = useSaveStore();
         const saveName = args.join(" ");
         const saveId = saveStore.createSave(saveName);
 
-        return `游戏保存到存档 #${saveId}: ${saveName}`;
+        return t.success.replace('%s', saveId.toString()).replace('%s', saveName);
     }
 };
 
 export const loadCommand: Command = {
     name: "load",
-    description: "加载游戏存档",
+    description: saveLocales.zh.load.description,
     execute: (args: string[]) => {
+        const {currentLanguage} = useLanguageStore();
+        const t = saveLocales[currentLanguage].load;
+
         if (!args.length) {
             const saveStore = useSaveStore();
             const saves = saveStore.getSaves();
             if (saves.length === 0) {
-                return "没有找到任何存档";
+                return t.noSaves;
             }
-            return `可用存档：\n${saves.map(s => {
+            return `${t.availableSaves}\n${saves.map(s => {
                 const levelData = getCurrentLevelData(s.save.currentLevel);
-                return `#${s.id}: ${s.name} (第${s.save.currentLevel}关 - ${levelData.title}) [${new Date(s.save.timestamp).toLocaleString()}]`;
-            }).join("\n")}\n\n请用 load <存档ID> 来加载存档`;
+                const levelText = t.level.replace('%s', s.save.currentLevel.toString()).replace('%s', levelData.title);
+                return `#${s.id}: ${s.name} (${levelText}) [${new Date(s.save.timestamp).toLocaleString()}]`;
+            }).join("\n")}${t.loadPrompt}`;
         }
 
         const saveId = parseInt(args[0]);
         if (isNaN(saveId)) {
-            return "请输入有效的存档ID";
+            return t.invalidId;
         }
 
         const saveStore = useSaveStore();
-
         const gameStore = useGameStore();
 
         if (saveStore.loadSave(saveId)) {
@@ -49,31 +57,36 @@ export const loadCommand: Command = {
             if (saveData) {
                 const levelData = getCurrentLevelData(saveData.currentLevel);
                 gameStore.loadSavedGame(saveData);
-                return `存档读取成功！\n当前位于第${saveData.currentLevel}关 - ${levelData.title}`;
+                return t.loadSuccess
+                    .replace('%s', saveData.currentLevel.toString())
+                    .replace('%s', levelData.title);
             }
-            return "存档读取成功！";
+            return t.loadSuccess.replace('%s', '').replace('%s', '');
         } else {
-            return `未找到存档 #${saveId}`;
+            return t.saveNotFound.replace('%s', saveId.toString());
         }
     }
 };
 
 export const deleteSaveCommand: Command = {
     name: "deletesave",
-    description: "删除游戏存档",
+    description: saveLocales.zh.delete.description,
     execute: (args: string[]) => {
+        const {currentLanguage} = useLanguageStore();
+        const t = saveLocales[currentLanguage].delete;
+
         if (!args.length) {
-            return "Usage: deletesave <存档ID>";
+            return t.usage;
         }
 
         const saveId = parseInt(args[0]);
         if (isNaN(saveId)) {
-            return "请输入有效的存档ID";
+            return t.invalidId;
         }
 
         const saveStore = useSaveStore();
         saveStore.deleteSave(saveId);
-        return `存档 #${saveId} 已删除`;
+        return t.success.replace('%s', saveId.toString());
     }
 };
 

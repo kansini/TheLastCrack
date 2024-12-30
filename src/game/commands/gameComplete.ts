@@ -1,5 +1,7 @@
 import { useTerminalStore } from "@/stores/terminal";
 import { useGameStore } from "@/stores/game";
+import { useLanguageStore } from "@/stores/language";
+import { gameCompleteLocales } from "./locales/gameComplete";
 import { createApp, h } from 'vue';
 import ConfettiEffect from '@/components/easter/ConfettiEffect.vue';
 
@@ -64,6 +66,8 @@ const waitForInput = async (terminalStore: any): Promise<string> => {
 export const showGameComplete = async () => {
     const terminalStore = useTerminalStore();
     const gameStore = useGameStore();
+    const { currentLanguage } = useLanguageStore();
+    const t = gameCompleteLocales[currentLanguage];
     
     // 清屏
     terminalStore.clearHistory();
@@ -88,41 +92,22 @@ export const showGameComplete = async () => {
     }
 
     // ASCII 艺术标题
-    const title = [
-        "    ____                            __      __  _           _ ",
-        "   / ___| __ _ _ __ ___   ___      \\ \\    / / (_) _ __   | |",
-        "  | |    / _` | '_ ` _ \\ / _ \\      \\ \\/\\/ /  | || '_ \\  | |",
-        "  | |___| (_| | | | | | |  __/       \\    /   | || | | | |_|",
-        "   \\____|\\__,_|_| |_| |_|\\___|        \\/\\/    |_||_| |_| (_)"
-    ];
-
-    // 闪烁显示标题
-    for (const line of title) {
+    for (const line of t.title) {
         terminalStore.addLine('output', line);
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     // 闪烁显示祝贺文字
     await new Promise(resolve => setTimeout(resolve, 500));
-    await flashText(terminalStore, "  ★ ★ ★ ★ ★ 恭喜你通关了 The Last Crack! ★ ★ ★ ★ ★");
+    await flashText(terminalStore, t.congratulations);
 
     // 打字机效果显示成就
     terminalStore.addLine('output', "");
-    await typewriterEffect(terminalStore, "     你成功完成了所有关卡，成为了一名真正的黑客高手！");
+    await typewriterEffect(terminalStore, t.achievement);
     
     // 制作人员名单
-    const credits = [
-        "",
-        "     制作人员名单：",
-        "     - 游戏设计：Old Flood",
-        "     - 关卡设计：Old Flood",
-        "     - 程序开发：Old Flood",
-        "     - 特别感谢：所有测试玩家",
-        ""
-    ];
-
     await new Promise(resolve => setTimeout(resolve, 1000));
-    for (const line of credits) {
+    for (const line of t.credits) {
         terminalStore.addLine('output', line);
         await new Promise(resolve => setTimeout(resolve, 200));
     }
@@ -136,15 +121,15 @@ export const showGameComplete = async () => {
 
     // 最终消息和选择
     await new Promise(resolve => setTimeout(resolve, 1000));
-    terminalStore.addLine('output', '');  // 添加一个空行
-    await typewriterEffect(terminalStore, "是否重新开始游戏？(Y/N): ");
+    terminalStore.addLine('output', '');
+    await typewriterEffect(terminalStore, t.restart);
     
     // 等待用户输入
     let response = await waitForInput(terminalStore);
     
     // 验证输入，只接受 Y 或 N
     while (response !== 'Y' && response !== 'N') {
-        await typewriterEffect(terminalStore, "请输入 Y 或 N: ");
+        await typewriterEffect(terminalStore, t.invalidInput);
         response = await waitForInput(terminalStore);
     }
     
@@ -159,10 +144,8 @@ export const showGameComplete = async () => {
     if (response === 'Y') {
         gameStore.startNewGame();
         terminalStore.clearHistory();
-        return `欢迎回到第一关！
-
-输入 help 查看可用命令`;
+        return t.welcome;
     } else {
-        return "感谢游玩！期待与你的下次相遇！";
+        return t.thanks;
     }
 }; 
