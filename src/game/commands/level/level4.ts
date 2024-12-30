@@ -1,52 +1,56 @@
 import type {Command} from "@/types/terminal";
 import {useGameStore} from "@/stores/game";
+import {useLanguageStore} from "@/stores/language";
+import {level4Locales} from "../locales/level4";
 
-const psCommand: Command = {
+export const psCommand: Command = {
     name: "ps",
-    description: "查看进程列表",
+    description: level4Locales.zh.ps.description,
     execute: () => {
+        const {currentLanguage} = useLanguageStore();
+        const t = level4Locales[currentLanguage].ps;
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 4) {
-            return "ps: 命令不可用";
+            return `ps: ${t.failed}`;
         }
 
-        return `PID    名称          CPU    内存   状态
-1234   sysservice   85%   45%    运行中
-2345   normal.exe   2%    5%     运行中
-3456   update.exe   1%    3%     运行中`;
+        return `${t.processList}
+${t.header}
+1234   sysservice   85%   45%    ${t.process.status}
+2345   normal.exe   2%    5%     ${t.process.status}
+3456   update.exe   1%    3%     ${t.process.status}`;
     }
 }; // level4
 
-
-const killCommand: Command = {
+export const killCommand: Command = {
     name: "kill",
-    description: "终止进程",
+    description: level4Locales.zh.kill.description,
     execute: (args: string[]) => {
+        const {currentLanguage} = useLanguageStore();
+        const t = level4Locales[currentLanguage].kill;
         if (!args.length) {
-            return "Usage: kill <PID>";
+            return t.usage;
         }
 
         const gameStore = useGameStore();
         if (gameStore.currentLevel !== 4) {
-            return "kill: 命令不可用";
+            return `kill: ${t.failed}`;
         }
 
         const pid = args[0];
         if (pid === "1234") {
             gameStore.completeTask("kill_malware");
-            return `进程已终止。
-系统状态开始恢复正常...
-
-发现通关密码：D@t@B@se_2024`;
+            return t.terminated;
         }
 
         if (pid === "1") {
-            return "错误：无法终止系统核心进程";
+            return t.invalidPid;
         }
 
-        return `kill: 进程 ${pid} 不存在`;
+        return t.notFound.replace('%s', pid);
     }
 }; // level4
+
 export const level4Commands: { [key: string]: Command } = {
     ps: psCommand,
     kill: killCommand
