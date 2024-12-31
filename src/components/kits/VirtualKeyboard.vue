@@ -1,46 +1,47 @@
 <template>
-  <div class="virtual-keyboard"
-       :class="{ 'is-visible': visible }"
-       :style="{ transform: `translate(${position.x}px, ${position.y}px)` }"
-       @mousedown.prevent
-       @touchstart.prevent>
-    <!-- 顶部栏 -->
-    <div class="keyboard-header">
-      <div class="header-placeholder"></div>
-      <div class="drag-handle"
-           @mousedown="startDrag"
-           @touchstart="startDrag">
-        <div class="drag-dots">
-          <span></span><span></span><span></span>
+  <transition name="slide-bottom">
+    <div class="virtual-keyboard-container" v-if="visible">
+      <div class="virtual-keyboard"
+           :style="{ transform: `translate(${position.x}px, ${position.y}px)` }"
+           @mousedown.prevent
+           @touchstart.prevent>
+        <!-- 顶部栏 -->
+        <div class="keyboard-header">
+          <div class="header-placeholder"></div>
+          <div class="drag-handle"
+               @mousedown="startDrag"
+               @touchstart="startDrag">
+            <div class="drag-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="close-button" @click="$emit('close')">×</div>
         </div>
-      </div>
-      <div class="close-button" @click="$emit('close')">×</div>
-    </div>
 
-    <div class="keyboard-container" @mousedown.prevent @touchstart.prevent>
-      <!-- 功能键区域 -->
-      <div class="keyboard-row function-keys">
-        <div v-for="item in functionKeys"
-             :key="item.key"
-             class="key function-key"
-             :style="{ flex: item.width }"
-             :class="{ 'key-active': activeKeys.includes(item.key) }"
-             @click="onKeyClick(item.key)">
-          {{ item.key }}
-        </div>
-      </div>
+        <div class="keyboard-container" @mousedown.prevent @touchstart.prevent>
+          <!-- 功能键区域 -->
+          <div class="keyboard-row function-keys">
+            <div v-for="item in functionKeys"
+                 :key="item.key"
+                 class="key function-key"
+                 :style="{ flex: item.width }"
+                 :class="{ 'key-active': activeKeys.includes(item.key) }"
+                 @click="onKeyClick(item.key)">
+              {{ item.key }}
+            </div>
+          </div>
 
-      <!-- 主键区域 -->
-      <div class="keyboard-main">
-        <div v-for="(row, rowIndex) in mainKeys"
-             :key="rowIndex"
-             class="keyboard-row">
-          <div v-for="item in row"
-               :key="item.key"
-               class="key"
-               :style="{ flex: item.width }"
-               :class="{
-                 'key-active': activeKeys.includes(item.key) || 
+          <!-- 主键区域 -->
+          <div class="keyboard-main">
+            <div v-for="(row, rowIndex) in mainKeys"
+                 :key="rowIndex"
+                 class="keyboard-row">
+              <div v-for="item in row"
+                   :key="item.key"
+                   class="key"
+                   :style="{ flex: item.width }"
+                   :class="{
+                 'key-active': activeKeys.includes(item.key) ||
                               (item.key === 'Enter' && activeKeys.includes('Enter')) ||
                               (item.key === 'Delete' && activeKeys.includes('Backspace')) ||
                               (item.key === 'Space' && activeKeys.includes(' ')) ||
@@ -48,50 +49,53 @@
                               (item.key === 'option' && isOptionPressed) ||
                               (item.key === 'control' && isControlPressed)
                }"
-               @click="onKeyClick(item.key)">
-            {{ item.key }}
-          </div>
-        </div>
-
-        <!-- 底部区域 -->
-        <div class="keyboard-row bottom-row">
-          <div class="key" style="flex: 1.25" @click="onKeyClick('fn')">fn</div>
-          <div class="key" style="flex: 1.25"
-               :class="{ 'key-active': isControlPressed }"
-               @click="onKeyClick('control')">control
-          </div>
-          <div class="key" style="flex: 1.25"
-               :class="{ 'key-active': isOptionPressed }"
-               @click="onKeyClick('option')">option
-          </div>
-          <div class="key" style="flex: 1.25"
-               :class="{ 'key-active': isCommandPressed }"
-               @click="onKeyClick('⌘')">⌘
-          </div>
-          <div class="key" style="flex: 5"
-               :class="{ 'key-active': activeKeys.includes('Space') }"
-               @click="onKeyClick('Space')">space
-          </div>
-          <div class="key" style="flex: 1.25"
-               :class="{ 'key-active': isCommandPressed }"
-               @click="onKeyClick('⌘')">⌘
-          </div>
-          <div class="key" style="flex: 1.25"
-               :class="{ 'key-active': isOptionPressed }"
-               @click="onKeyClick('option')">option
-          </div>
-          <div class="arrows" style="flex: 1.5">
-            <div class="key key-arrow">←</div>
-            <div class="arrows-updown">
-              <div class="key key-arrow">↑</div>
-              <div class="key key-arrow">↓</div>
+                   @click="onKeyClick(item.key)">
+                {{ item.key }}
+              </div>
             </div>
-            <div class="key key-arrow">→</div>
+
+            <!-- 底部区域 -->
+            <div class="keyboard-row bottom-row">
+              <div class="key" style="flex: 1.25" @click="onKeyClick('fn')">fn</div>
+              <div class="key" style="flex: 1.25"
+                   :class="{ 'key-active': isControlPressed }"
+                   @click="onKeyClick('control')">control
+              </div>
+              <div class="key" style="flex: 1.25"
+                   :class="{ 'key-active': isOptionPressed }"
+                   @click="onKeyClick('option')">option
+              </div>
+              <div class="key" style="flex: 1.25"
+                   :class="{ 'key-active': isCommandPressed }"
+                   @click="onKeyClick('⌘')">⌘
+              </div>
+              <div class="key" style="flex: 5"
+                   :class="{ 'key-active': activeKeys.includes('Space') }"
+                   @click="onKeyClick('Space')">space
+              </div>
+              <div class="key" style="flex: 1.25"
+                   :class="{ 'key-active': isCommandPressed }"
+                   @click="onKeyClick('⌘')">⌘
+              </div>
+              <div class="key" style="flex: 1.25"
+                   :class="{ 'key-active': isOptionPressed }"
+                   @click="onKeyClick('option')">option
+              </div>
+              <div class="arrows" style="flex: 1.5">
+                <div class="key key-arrow">←</div>
+                <div class="arrows-updown">
+                  <div class="key key-arrow">↑</div>
+                  <div class="key key-arrow">↓</div>
+                </div>
+                <div class="key key-arrow">→</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+  </transition>
 </template>
 
 <script setup lang="ts">
@@ -474,7 +478,7 @@ onMounted(() => {
   // 计算初始位置：水平居中，垂直位置从顶部开始
   position.value = {
     x: 0,
-    y: -400 // 从顶部向下400px的位置
+    y: -348 // 从顶部向下400px的位置
   }
 })
 
@@ -490,54 +494,59 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.virtual-keyboard {
-  position: fixed;
-  left: 50%;
-  width: 720px;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.95);
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
-  z-index: 10000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  user-select: none;
+.virtual-keyboard-container {
 
-  // 流动光效边框 - 使用标准属性
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -1px; 
-    border-radius: 8px;
-    background: linear-gradient(
-            90deg,
-            rgba($primary-color, .1),
-            rgba($primary-color, .8),
-            rgba($primary-color, .1)
-    );
-    background-size: 300% 100%;
-    animation: borderFlow 8s linear infinite;
-    pointer-events: none;
-    z-index: -1;
-  }
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+  .virtual-keyboard {
+    position: fixed;
+    left: 50%;
+    width: 720px;
+    transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.95);
+    padding: 8px;
     border-radius: 8px;
-    z-index: -1;
-  }
+    border: 1px solid transparent;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+    z-index: 10000;
+    //opacity: 0;
+    //pointer-events: none;
+    user-select: none;
 
-  &.is-visible {
-    opacity: 1;
-    pointer-events: all;
+    // 流动光效边框 - 使用标准属性
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 8px;
+      background: linear-gradient(
+              90deg,
+              rgba($primary-color, .1),
+              rgba($primary-color, .8),
+              rgba($primary-color, .1)
+      );
+      background-size: 300% 100%;
+      animation: borderFlow 8s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      border-radius: 8px;
+      z-index: -1;
+    }
+
+    &.is-visible {
+      opacity: 1;
+      height: 342px;
+      pointer-events: all;
+    }
   }
 }
+
 
 @keyframes borderFlow {
   0%, 100% {
@@ -579,7 +588,7 @@ onUnmounted(() => {
 .keyboard-container {
   width: 100%;
   max-width: 900px;
-  padding:0 8px 8px 8px;
+  padding: 0 8px 8px 8px;
 }
 
 .keyboard-row {
@@ -792,6 +801,7 @@ onUnmounted(() => {
   text-transform: lowercase;
   font-size: 14px;
   border-radius: 6px;
+
   &.esc {
     background: #1c1c1c;
   }

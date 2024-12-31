@@ -332,7 +332,7 @@ const levelCommand: Command = {
         const t = basicLocales[currentLanguage].level;
         const levelData = getCurrentLevelData(gameStore.currentLevel);
 
-        return `${t.currentLevel}${gameStore.currentLevel}】${levelData.title}
+        return `${t.currentLevel}[${gameStore.currentLevel}]${levelData.title}
 ${levelData.description}
 
 ${t.objectives}

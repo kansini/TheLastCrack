@@ -1,7 +1,8 @@
 import {defineStore} from "pinia";
 import {useTerminalStore} from "./terminal";
 import {getCurrentLevelData} from "@/game/levels";
-import {useLanguageStore} from "./language";
+
+// import {useLanguageStore} from "./language";
 
 interface GameState {
     gameStarted: boolean;
@@ -54,23 +55,23 @@ export const useGameStore = defineStore("game", {
 
             this.currentLevel = level;
             this.currentDirectory = "~";
-            
+
             const terminalStore = useTerminalStore();
-            const languageStore = useLanguageStore();
-            const t = languageStore.t;
+
 
             if (!this.gameStarted) {
                 terminalStore.clearHistory();
             }
-            
-            terminalStore.addLine("output", `【${t('level')}${level}】${levelData.title}`);
-            terminalStore.addLine("output", levelData.description);
-            if (levelData.objectives) {
-                terminalStore.addLine("output", `\n${t('objectives')}`);
-                levelData.objectives.forEach(obj => {
-                    terminalStore.addLine("output", `- ${obj}`);
-                });
-            }
+            // const languageStore = useLanguageStore();
+            // const t = languageStore.t;
+            // terminalStore.addLine("output", `【${t('level')}${level}】${levelData.title}`);
+            // terminalStore.addLine("output", levelData.description);
+            // if (levelData.objectives) {
+            //     terminalStore.addLine("output", `\n${t('objectives')}`);
+            //     levelData.objectives.forEach(obj => {
+            //         terminalStore.addLine("output", `- ${obj}`);
+            //     });
+            // }
         },
 
         completeTask(taskId: string) {
@@ -90,14 +91,14 @@ export const useGameStore = defineStore("game", {
             this.completedTasks.push(levelCompleted);
 
             try {
-                const settings = JSON.parse(localStorage.getItem('terminalSettings') || '{}');
+                const settings = JSON.parse(localStorage.getItem("terminalSettings") || "{}");
                 const sound = new Audio(new URL("../assets/audio/success.mp3", import.meta.url).href);
                 sound.volume = settings.soundVolume ?? 0.3;
                 sound.play().catch(err => {
-                    console.debug('Success sound play prevented:', err);
+                    console.debug("Success sound play prevented:", err);
                 });
             } catch (error) {
-                console.debug('Error playing success sound:', error);
+                console.debug("Error playing success sound:", error);
             }
 
             this.currentLevel += 1;

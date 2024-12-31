@@ -76,7 +76,7 @@ export const basicLocales: Record<Language, {
   zh: {
     help: {
       description: "显示所有可用命令",
-      availableCommands: "可用命令：",
+      availableCommands: "可用命令:",
       helpDesc: "显示帮助信息",
       lsDesc: "列出目录内容",
       cdDesc: "切换目录",
@@ -101,7 +101,7 @@ export const basicLocales: Record<Language, {
       correctPassword: "密码正确，正在进入下一关...",
       welcome: "密码正确！欢迎进入下一关...",
       level: "【第%s关】",
-      objectives: "目标：",
+      objectives: "目标:",
       needClue: "你还没有找到必要的线索！",
       needDecode: "你需要先使用 decode 命令解密文本！",
       needFile: "你需要先查看相关文件获取密码线索！",
@@ -129,17 +129,17 @@ export const basicLocales: Record<Language, {
     },
     level: {
       description: "显示当前关卡信息",
-      currentLevel: "当前关卡：",
-      objectives: "目标："
+      currentLevel: "当前关卡:",
+      objectives: "目标:"
     },
     hint: {
       description: "显示提示信息",
-      available: "可用提示："
+      available: "可用提示:"
     },
     goto: {
       description: "跳转到指定关卡",
-      jumpedTo: "已跳转到第%s关：",
-      objectives: "目标："
+      jumpedTo: "已跳转到第%s关:",
+      objectives: "目标:"
     },
     keyboard: {
       description: "打开虚拟键盘",
